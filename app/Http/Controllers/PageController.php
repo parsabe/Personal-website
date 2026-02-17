@@ -19,13 +19,12 @@ class PageController extends Controller
     {
         return view('contact');
     }
-    public function publications()
+
+
+    public function projects()
     {
-        return view('publications');
+        return view('projects');
     }
-
-
-
     public function BlackWall()
     {
         return view('BlackWall');
@@ -63,14 +62,23 @@ class PageController extends Controller
         return view('sandika');
     }
 
-    public function projects()
+
+
+
+    public function publications()
     {
-        return view('projects');
+        return view('publications');
     }
-    public function teaching()
+
+    public function blackwall_paper()
     {
-        return view('teaching');
+        return view('blackwall_paper');
     }
+    
+
+
+
+ 
     public function myplaylist()
     {
         return view('myplaylist');
