@@ -127,6 +127,10 @@ class PageController extends Controller
     }
 
 
+    public function fun()
+    {
+        return view('fun');
+    }
 
     public function support()
     {
