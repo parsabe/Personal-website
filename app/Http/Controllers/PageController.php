@@ -148,6 +148,10 @@ class PageController extends Controller
         return view('privacy-policy');
     }
 
+    public function copyright()
+    {
+        return view('copyright');
+    }
 
 
 }
