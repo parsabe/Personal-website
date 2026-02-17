@@ -33,7 +33,7 @@ class PageController extends Controller
     {
         return view('mlmatrix');
     }
-    public function SCP ()
+    public function SCP()
     {
         return view('SCP');
     }
@@ -74,15 +74,67 @@ class PageController extends Controller
     {
         return view('blackwall_paper');
     }
-    
+
+    public function moodium()
+    {
+        return view('moodium');
+    }
+
+    public function scm()
+    {
+        return view('scm');
+    }
+
+    public function captcha()
+    {
+        return view('captcha');
+    }
+    public function ai_blockchain()
+    {
+        return view('ai-blockchain');
+    }
+    public function synergy_blockchain()
+    {
+        return view('synergy-blockchain');
+    }
+    public function php_vuls()
+    {
+        return view('php-vuls');
+    }
+    public function crm()
+    {
+        return view('crm');
+    }
+    public function qca()
+    {
+        return view('qca');
+    }
 
 
-
- 
     public function myplaylist()
     {
         return view('myplaylist');
     }
+
+    public function search()
+    {
+        return view('search');
+    }
+
+    public function VPS_server()
+    {
+        return view('VPS-server');
+    }
+
+
+
+    public function support()
+    {
+        return view('buy-coffee');
+    }
+
+
+
     public function legal_notice()
     {
         return view('legal-notice');
@@ -91,5 +143,7 @@ class PageController extends Controller
     {
         return view('privacy-policy');
     }
+
+
 
 }
