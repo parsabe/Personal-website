@@ -58,7 +58,6 @@ class PageController extends Controller
     {
         return view('hounaartoolkit');
     }
-
     public function sandika()
     {
         return view('sandika');
