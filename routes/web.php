@@ -5,7 +5,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController; // <--- 1. Import the Class
 
 
-Route::control
+Route::controller(PageController::class)->group(function () { // <--- 2. Define the Route Group
+    Route::get('/', 'home')->name('home');
+    Route::get('/about', 'about')->name('about');
+    Route::get('/contact', 'contact')->name('contact');
+    Route::get('/publications', 'publications')->name('publications');
+    Route::get('/projects', 'projects')->name('projects');
+    Route::get('/teaching', 'teaching')->name('teaching');
+    Route::get('/myplaylist', 'myplaylist')->name('myplaylist');
+    Route::get('/fun', 'fun')->name('fun');
+    Route::get('/support', 'support')->name('support');
+    Route::get('/legal-notice', 'legal_notice')->name('legal-notice');
+    Route::get('/privacy-policy', 'privacy_policy')->name('privacy-policy');
+    Route::get('/copyright', 'copyright')->name('copyright');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
