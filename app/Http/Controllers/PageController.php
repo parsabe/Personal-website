@@ -20,7 +20,6 @@ class PageController extends Controller
         return view('contact');
     }
 
-
     public function projects()
     {
         return view('projects');
@@ -61,9 +60,6 @@ class PageController extends Controller
     {
         return view('sandika');
     }
-
-
-
 
     public function publications()
     {
