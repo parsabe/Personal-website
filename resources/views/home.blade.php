@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parsa Besharat - Researcher & AI Engineer</title>
 
-    <meta name="description" content="Parsa Besharat is a Researcher and AI Engineer.">
+    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently persuing his
+    MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -19,11 +20,6 @@
 
 <body
     class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10 min-h-screen relative overflow-x-hidden">
-
-    <div class="bg-layer bg-image-1"></div>
-    <div class="bg-layer bg-image-2"></div>
-
-    <div class="fixed inset-0 bg-black/20 dark:bg-black/60 z[-1] transition-colors duration-700"></div>
 
     <div id="main-container"
         class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden min-h-[80vh] z-10 transition-colors duration-700">
