@@ -30,7 +30,7 @@
     class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10 min-h-screen relative overflow-x-hidden">
 
     <div id="main-container"
-        class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden min-h-[80vh] z-10 transition-colors duration-700">
+        class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[85vh] z-10 transition-colors duration-700">
 
         <div class="absolute top-6 right-8 flex items-center gap-5 z-50">
             <button id="theme-toggle" class="p-2.5 rounded-full ios-glass transition hover:scale-110">
@@ -47,7 +47,7 @@
 
         @include('sidebar')
 
-        <main class="flex-1 p-8 lg:p-14 relative flex flex-col justify-center">
+        <main class="flex-1 p-8 lg:p-14 relative flex flex-col justify-center overflow-y-auto">
             <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12 lg:mt-0">
 
                 <div>

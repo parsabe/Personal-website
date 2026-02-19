@@ -9,8 +9,9 @@
         <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Researcher - AI Engineer</p>
     </div>
 
-    <nav class="flex-1 overflow-y-auto space-y-1.5 pr-2">
+   <nav class="flex-1 overflow-y-auto space-y-1.5 pr-2">
         @php
+            // The 'route' keys now perfectly match the ->name('...') definitions in web.php
             $menuItems = [
                 ['name' => 'Home', 'route' => 'home', 'icon' => '🏠'],
                 ['name' => 'About', 'route' => 'about', 'icon' => '👤'],
@@ -19,14 +20,17 @@
                 ['name' => 'Publications', 'route' => 'publications', 'icon' => '📚'],
                 ['name' => 'My Playlist', 'route' => 'myplaylist', 'icon' => '🎵'],
                 ['name' => 'Search', 'route' => 'search', 'icon' => '🔍'],
-                ['name' => 'VPN Server', 'route' => 'vpn', 'icon' => '☁️'],
-                ['name' => 'Club', 'route' => 'club', 'icon' => '🎮'],
+                ['name' => 'VPN Server', 'route' => 'vpn-server', 'icon' => '☁️'],
+                ['name' => 'Club', 'route' => 'fun', 'icon' => '🎮'],
                 ['name' => 'Support', 'route' => 'support', 'icon' => '☕'],
             ];
         @endphp
+
         @foreach($menuItems as $item)
-            <a href="/{{ $item['route'] }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 hover:bg-white/40 dark:hover:bg-black/40 font-semibold text-gray-800 dark:text-gray-200 hover:shadow-sm">
+            <a href="{{ route($item['route']) }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 font-semibold text-gray-800 dark:text-gray-200 hover:shadow-sm hover:bg-white/40 dark:hover:bg-black/40 
+                {{ request()->routeIs($item['route']) ? 'bg-white/50 dark:bg-black/50 shadow-md border border-white/20 dark:border-white/10' : 'border border-transparent' }}">
+                
                 <span class="text-lg">{{ $item['icon'] }}</span>
                 {{ $item['name'] }}
             </a>
