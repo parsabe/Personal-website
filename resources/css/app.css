@@ -7,7 +7,9 @@
 
 /* 2. Custom Background & Scrollbar Styles */
 body {
-    transition: background-image 0.5s ease-in-out, background-color 0.5s ease-in-out;
+    transition:
+        background-image 0.5s ease-in-out,
+        background-color 0.5s ease-in-out;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -15,15 +17,96 @@ body {
 }
 
 body.light {
-    background-image: url('/images/light.png');
-    background-color: #f3f4f6; 
+    background-image: url("/images/light.png");
+    background-color: #f3f4f6;
 }
 
 body.dark {
-    background-image: url('/images/dark.png');
-    background-color: #111827; 
+    background-image: url("/images/dark.png");
+    background-color: #111827;
 }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.4); border-radius: 10px; }
+/* 1. Buttery Smooth Background Animation */
+.bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    transition: opacity 2s ease-in-out;
+}
+
+.bg-image-1 {
+    background-image: url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80");
+    animation: fadeImg1 20s infinite;
+}
+
+.bg-image-2 {
+    background-image: url("https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80");
+    animation: fadeImg2 20s infinite;
+    opacity: 0; /* Starts hidden */
+}
+
+@keyframes fadeImg1 {
+    0%,
+    45%,
+    100% {
+        opacity: 1;
+    }
+    50%,
+    95% {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeImg2 {
+    0%,
+    45%,
+    100% {
+        opacity: 0;
+    }
+    50%,
+    95% {
+        opacity: 1;
+    }
+}
+
+/* 2. Custom iOS Glass Class (Mapped from your CSS) */
+.ios-glass {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.25),
+        rgba(255, 255, 255, 0.05)
+    );
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 4px 30px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Dark mode variant for the glass */
+.dark .ios-glass {
+    background: linear-gradient(
+        135deg,
+        rgba(20, 25, 35, 0.6),
+        rgba(20, 25, 35, 0.3)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 4px 30px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(156, 163, 175, 0.4);
+    border-radius: 10px;
+}
