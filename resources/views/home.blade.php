@@ -57,16 +57,20 @@
             </div>
 
             <nav class="flex-1 overflow-y-auto space-y-1.5 pr-2">
-                @php
+              @php
                     $menuItems = [
                         ['name' => 'Home', 'route' => 'home', 'icon' => '🏠'],
                         ['name' => 'About', 'route' => 'about', 'icon' => '👤'],
                         ['name' => 'Contact', 'route' => 'contact', 'icon' => '✉️'],
                         ['name' => 'Projects', 'route' => 'projects', 'icon' => '💼'],
                         ['name' => 'Publications', 'route' => 'publications', 'icon' => '📚'],
+                        ['name' => 'My Playlist', 'route' => 'myplaylist', 'icon' => '🎵'],
+                        ['name' => 'Search', 'route' => 'search', 'icon' => '🔍'],
+                        ['name' => 'VPS Server', 'route' => 'VPS_server', 'icon' => '☁️'],
+                        ['name' => 'Fun', 'route' => 'fun', 'icon' => '🎮'],
+                        ['name' => 'Support', 'route' => 'support', 'icon' => '☕'],
                     ];
                 @endphp
-
                 @foreach($menuItems as $item)
                     <a href="/{{ $item['route'] }}"
                         class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 hover:bg-white/40 dark:hover:bg-black/40 font-semibold text-gray-800 dark:text-gray-200 hover:shadow-sm">
