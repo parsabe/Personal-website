@@ -13,16 +13,16 @@ class PageController extends Controller
 
     public function about()
     {
-        return view('about');
+        return view('pages.about');
     }
     public function contact()
     {
-        return view('contact');
+        return view('pages.contact');
     }
 
     public function projects()
     {
-        return view('projects');
+        return view('pages.projects');
     }
     public function BlackWall()
     {
@@ -63,7 +63,7 @@ class PageController extends Controller
 
     public function publications()
     {
-        return view('publications');
+        return view('pages.publications');
     }
 
     public function blackwall_paper()
@@ -109,28 +109,28 @@ class PageController extends Controller
 
     public function myplaylist()
     {
-        return view('myplaylist');
+        return view('pages.myplaylist');
     }
 
     public function search()
     {
-        return view('search');
+        return view('pages.search');
     }
 
     public function VPN_server()
     {
-        return view('vpn');
+        return view('pages.vpn');
     }
 
 
     public function fun()
     {
-        return view('club');
+        return view('pages.club');
     }
 
     public function support()
     {
-        return view('support');
+        return view('pages.support');
     }
 
 
