@@ -117,20 +117,20 @@ class PageController extends Controller
         return view('search');
     }
 
-    public function VPS_server()
+    public function VPN_server()
     {
-        return view('VPS-server');
+        return view('vpn');
     }
 
 
     public function fun()
     {
-        return view('fun');
+        return view('club');
     }
 
     public function support()
     {
-        return view('buy-coffee');
+        return view('support');
     }
 
 

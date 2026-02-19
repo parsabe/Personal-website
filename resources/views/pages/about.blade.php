@@ -53,21 +53,22 @@
                 <div>
                     <span
                         class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6">
-                        👋 HELLO!
+                         ABOUT ME
                     </span>
 
                     <h1
-                        class="text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
-                        I'm <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-600 dark:from-orange-400 dark:to-pink-500">Parsa
-                            Besharat.</span>
+                        class="text-4xl lg:text-5xl font-extrabold mb-6 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
+                        Parsa <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-600 dark:from-orange-400 dark:to-pink-500">Besharat.</span>
                     </h1>
 
-                    <p
-                        class="text-lg text-gray-800 dark:text-gray-200 leading-relaxed mb-10 font-medium drop-shadow-sm">
-                        I am an Iranian Researcher and AI Engineer, currently pursuing his
-                        MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.
-                    </p>
+                    <div class="text-base lg:text-lg text-gray-800 dark:text-gray-200 leading-relaxed mb-10 font-medium drop-shadow-sm space-y-4">
+                        <p>I am currently pursuing a Master's degree in Data Science at TU Freiberg, fueled by a deep passion for utilizing data to create impactful solutions.</p>
+                        <p>My journey has led me to a position as a Working Student Senior Software Engineer, where I am eager to apply my expertise and contribute to image-based data coordination.</p>
+                        <p>In addition, I have a strong interest in Artificial Intelligence and its vast potential. My goal is to specialize in this domain, leveraging my foundation in Data Science to uncover insights that enhance operational efficiency and drive strategic innovation.</p>
+                        <p>Bringing together Artificial Intelligence, Data Science, Software, and IT Engineering defines my professional vision. I believe that this interconnected approach is the key to developing groundbreaking solutions and making a lasting difference.</p>
+                        <p>I’d love to connect and explore new opportunities where data-driven insights lead to transformative possibilities!</p>
+                    </div>
 
                     <div class="flex flex-wrap items-center gap-5">
                         <a href="/contact"
