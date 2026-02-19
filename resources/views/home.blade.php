@@ -6,34 +6,40 @@
     <title>Parsa Besharat</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
- <script>
+    <script>
         window.tailwind = { config: { darkMode: 'class' } };
     </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-
 </head>
-<body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10">
-
-    <button id="theme-toggle" class="fixed top-6 right-6 z-50 p-3 rounded-full bg-white/30 dark:bg-black/30 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-lg transition hover:scale-110">
-        <span id="theme-icon-light" class="hidden text-xl">☀️</span>
-        <span id="theme-icon-dark" class="hidden text-xl">🌙</span>
-    </button>
+<body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10 min-h-screen transition-colors duration-500">
 
     <div class="relative w-full max-w-6xl flex flex-col md:flex-row bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-2xl rounded-[2.5rem] overflow-hidden min-h-[80vh]">
         
-        <aside class="w-full md:w-64 flex flex-col border-b md:border-b-0 md:border-r border-white/50 dark:border-white/10 p-6 lg:p-8">
+        <div class="absolute top-6 right-8 flex items-center gap-5 z-50">
             
-            <div class="flex flex-col items-center mb-8">
-                <img src="/public/images/profile.jpg" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-white/50 dark:border-gray-700/50 shadow-md mb-3">
+            <button id="theme-toggle" class="p-2.5 rounded-full bg-white/50 dark:bg-black/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-sm transition hover:scale-110">
+                <span id="theme-icon-light" class="hidden text-sm">☀️</span>
+                <span id="theme-icon-dark" class="hidden text-sm">🌙</span>
+            </button>
+
+            <div class="flex gap-2">
+                <div class="w-3.5 h-3.5 rounded-full bg-red-500 shadow-sm border border-red-600/50"></div>
+                <div class="w-3.5 h-3.5 rounded-full bg-yellow-400 shadow-sm border border-yellow-500/50"></div>
+                <div class="w-3.5 h-3.5 rounded-full bg-green-500 shadow-sm border border-green-600/50"></div>
+            </div>
+        </div>
+
+        <aside class="w-full md:w-64 flex flex-col border-b md:border-b-0 md:border-r border-white/50 dark:border-white/10 p-6 lg:p-8 relative z-20">
+            
+            <div class="flex flex-col items-center mb-8 mt-4 md:mt-0">
+                <img src="{{ asset('images/profile.jpg') }}" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-white/50 dark:border-gray-700/50 shadow-md mb-3 object-cover aspect-square">
                 <h2 class="text-2xl font-bold tracking-tight">Parsa Besharat</h2>
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Researcher - AI Engineer</p>
             </div>
 
             <nav class="flex-1 overflow-y-auto space-y-1.5 pr-2">
                 @php
-                    // Your exact requested menu list
                     $menuItems = [
                         ['name' => 'Home', 'route' => 'home', 'icon' => '🏠'],
                         ['name' => 'About', 'route' => 'about', 'icon' => '👤'],
@@ -66,7 +72,7 @@
             <div class="absolute top-0 left-10 w-48 h-48 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 dark:opacity-10 animate-pulse"></div>
             <div class="absolute bottom-10 right-20 w-64 h-64 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 dark:opacity-10 animate-pulse delay-1000"></div>
 
-            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12 lg:mt-0">
                 
                 <div>
                     <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 rounded-full text-sm font-bold mb-6 backdrop-blur-md shadow-sm">
@@ -93,71 +99,12 @@
 
                 <div class="relative flex justify-center mt-10 lg:mt-0">
                     <div class="absolute inset-0 bg-orange-100 dark:bg-orange-900/30 rounded-full transform scale-90 -z-10 blur-md"></div>
-                    <img src="https://ui-avatars.com/api/?name=User&size=512&background=random" alt="Hero Portrait" class="w-full max-w-sm rounded-full object-cover border-[6px] border-white/60 dark:border-gray-800/60 shadow-2xl">
+                    <img src="{{ asset('images/profile.jpg') }}" alt="Hero Portrait" class="w-full max-w-sm rounded-full object-cover aspect-square border-[6px] border-white/60 dark:border-gray-800/60 shadow-2xl">
                 </div>
             </div>
         </main>
 
     </div>
 
-    <script>
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const iconLight = document.getElementById('theme-icon-light');
-        const iconDark = document.getElementById('theme-icon-dark');
-        const html = document.documentElement;
-        const body = document.body;
-
-        // 1. Determine the starting theme (Local Storage overrides OS preference)
-        function getInitialTheme() {
-            if (localStorage.getItem('theme')) {
-                return localStorage.getItem('theme');
-            }
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                return 'dark';
-            }
-            return 'light';
-        }
-
-        // 2. Apply the theme safely to the DOM
-        function applyTheme(theme) {
-            if (theme === 'dark') {
-                html.classList.add('dark');
-                // Ensure body has the 'dark' class for the background image CSS
-                body.classList.remove('light');
-                body.classList.add('dark');
-                // Toggle icons
-                iconLight.classList.remove('hidden');
-                iconDark.classList.add('hidden');
-            } else {
-                html.classList.remove('dark');
-                // Ensure body has the 'light' class for the background image CSS
-                body.classList.remove('dark');
-                body.classList.add('light');
-                // Toggle icons
-                iconDark.classList.remove('hidden');
-                iconLight.classList.add('hidden');
-            }
-            // Save preference
-            localStorage.setItem('theme', theme);
-        }
-
-        // 3. Initialize on page load
-        let currentTheme = getInitialTheme();
-        applyTheme(currentTheme);
-
-        // 4. Handle manual toggle button clicks
-        themeToggleBtn.addEventListener('click', () => {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            applyTheme(currentTheme);
-        });
-
-        // 5. Listen for OS theme changes in real-time
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            // Only auto-switch if the user hasn't explicitly set a preference manually
-            if (!localStorage.getItem('theme')) {
-                applyTheme(event.matches ? 'dark' : 'light');
-            }
-        });
-    </script>
 </body>
 </html>
