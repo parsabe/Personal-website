@@ -8,6 +8,13 @@
 
     <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently persuing his
     MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="author" content="Parsa Besharat">
+    <meta name="keywords"
+        content="Parsa Besharat, Researcher, AI Engineer, Data Scientist, Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, TU Freiberg University, Germany">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
+
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -16,6 +23,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <link rel="icon" href="/public/images/profile.jpg">
 </head>
 
 <body

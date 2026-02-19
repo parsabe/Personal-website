@@ -5,30 +5,55 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 2. Custom Background & Scrollbar Styles */
+/* 2. Base Body Styles */
 body {
-    transition:
-        background-image 0.5s ease-in-out,
-        background-color 0.5s ease-in-out;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
     min-height: 100vh;
-}
-
-body.light {
-    background-image: url("/images/light.png");
     background-color: #f3f4f6;
+    position: relative;
+    /* We handle the background images via ::before and ::after for smooth fading */
 }
 
 body.dark {
-    background-image: url("/images/dark.png");
     background-color: #111827;
 }
 
+/* 3. Buttery Smooth Background Transition via Opacity Fading */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: -2;
+    transition: opacity 1s ease-in-out; /* This controls the smoothness of the wallpaper swap */
+}
 
+/* Light Mode Background Image (Visible by default) */
+body::before {
+    background-image: url("/images/light.png");
+    opacity: 1; 
+}
 
-/* 2. Custom iOS Glass Class (Mapped from your CSS) */
+/* Dark Mode Background Image (Hidden by default) */
+body::after {
+    background-image: url("/images/dark.png");
+    opacity: 0; 
+}
+
+/* Crossfade trigger: When the body has the .dark class */
+body.dark::before {
+    opacity: 0; /* Fade out light image */
+}
+
+body.dark::after {
+    opacity: 1; /* Fade in dark image */
+}
+
+/* 4. Custom iOS Glass Class (True Apple Style) */
 .ios-glass {
     background: linear-gradient(
         135deg,
@@ -43,7 +68,7 @@ body.dark {
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-/* Dark mode variant for the glass */
+/* Dark mode variant for the glass container */
 .dark .ios-glass {
     background: linear-gradient(
         135deg,
@@ -56,6 +81,7 @@ body.dark {
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
+/* 5. Custom Scrollbar Styles */
 ::-webkit-scrollbar {
     width: 6px;
 }
