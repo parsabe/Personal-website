@@ -18,6 +18,7 @@ body.dark {
 }
 
 /* 3. Buttery Smooth Background Transition via Opacity Fading */
+/* 3. Buttery Smooth Background Transition via Opacity Fading */
 body::before,
 body::after {
     content: "";
@@ -29,7 +30,8 @@ body::after {
     background-position: center;
     background-attachment: fixed;
     z-index: -2;
-    transition: opacity 1s ease-in-out; /* This controls the smoothness of the wallpaper swap */
+    /* CHANGE THIS LINE from 1s to 0.7s to perfectly match JS duration-700 */
+    transition: opacity 0.7s ease-in-out; 
 }
 
 /* Light Mode Background Image (Visible by default) */
