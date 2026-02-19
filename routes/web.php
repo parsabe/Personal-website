@@ -13,11 +13,9 @@ Route::controller(PageController::class)->group(function () { // <--- 2. Define 
     Route::get('/projects', 'projects')->name('projects');
     Route::get('/teaching', 'teaching')->name('teaching');
     Route::get('/myplaylist', 'myplaylist')->name('myplaylist');
-    Route::get('/fun', 'fun')->name('fun');
+    Route::get('/club', 'club')->name('club');
     Route::get('/support', 'support')->name('support');
-    Route::get('/legal-notice', 'legal_notice')->name('legal-notice');
-    Route::get('/privacy-policy', 'privacy_policy')->name('privacy-policy');
-    Route::get('/copyright', 'copyright')->name('copyright');
+
 });
 
 Route::get('/dashboard', function () {

@@ -77,34 +77,46 @@
                             Work Experience
                         </h3>
                         
-                        <div class="relative border-l-2 border-gray-200 dark:border-gray-800 ml-3.5 space-y-12 pb-4">
+                        <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-3.5 space-y-12 pb-4">
                             
                             <!-- TU Bergakademie Freiberg -->
                             <div class="relative pl-8">
                                 <div class="absolute -left-[9px] top-1.5 h-5 w-5 rounded-full border-4 border-white dark:border-gray-900 bg-orange-500"></div>
                                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
                                     <h4 class="text-xl font-bold text-gray-900 dark:text-white">TU Bergakademie Freiberg</h4>
-                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Part-time · 8 mos</span>
+                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Part-time · 1 yr 5 mos</span>
                                 </div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Freiberg, Saxony, Germany · On-site</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Freiberg, Saxony, Germany</p>
                                 
-                                <div class="space-y-6">
-                                    <div class="relative border-l-2 border-gray-200 dark:border-gray-800 ml-1 pl-6">
-                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">Working Student Data Scientist</h5>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Jan 2025 – Apr 2025 · 4 mos</p>
+                                <div class="space-y-8">
+                                    <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
+                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">Head Research Assistant</h5>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Apr 2025 – Present · 10 mos · On-site</p>
                                         <div class="flex flex-wrap gap-2">
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">PyTorch</span>
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">Machine Learning</span>
+                                            @foreach(['Local LLMs', 'Agentic AI', 'Azure Data Factory', 'Azure Data Lake', 'Azure Databricks', 'Azure ML', 'Azure Data Warehouse', 'Microsoft Fabric'] as $skill)
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
+                                            @endforeach
                                         </div>
                                     </div>
-                                    <div class="relative border-l-2 border-gray-200 dark:border-gray-800 ml-1 pl-6">
-                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">Working Student Software Engineer</h5>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Sep 2024 – Dec 2024 · 4 mos</p>
+                                    <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
+                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">Working Student Data Scientist</h5>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Jan 2025 – Apr 2025 · 4 mos · Hybrid</p>
                                         <div class="flex flex-wrap gap-2">
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">Software Development</span>
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">Deep Learning</span>
+                                            @foreach(['Deep Learning', 'NI LabVIEW'] as $skill)
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
+                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">Working Student Software Engineer</h5>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Sep 2024 – Dec 2024 · 4 mos · On-site</p>
+                                        <div class="flex flex-wrap gap-2">
+                                            @foreach(['DBT', 'Kali Linux', 'Software Development', 'Snowflake', 'Deep Learning', 'NI LabVIEW'] as $skill)
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -114,28 +126,30 @@
                             <div class="relative pl-8">
                                 <div class="absolute -left-[9px] top-1.5 h-5 w-5 rounded-full border-4 border-white dark:border-gray-900 bg-orange-500"></div>
                                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
-                                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">SAPCO Company</h4>
-                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Full-time · 1 yr 4 mos</span>
+                                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">SAPCO</h4>
+                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Full-time · 1 yr 9 mos</span>
                                 </div>
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Tehran, Iran · On-site</p>
                                 
-                                <div class="space-y-6">
-                                    <div class="relative border-l-2 border-gray-200 dark:border-gray-800 ml-1 pl-6">
-                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">Data Scientist</h5>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Dec 2022 – Sep 2023 · 10 mos</p>
+                                <div class="space-y-8">
+                                    <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
+                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">AI Engineer</h5>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Sep 2022 – Sep 2023 · 1 yr 1 mo</p>
                                         <div class="flex flex-wrap gap-2">
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">PyTorch</span>
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">SQL</span>
+                                            @foreach(['Machine Learning', 'NLP', 'Responsible AI', 'Local LLMs', 'Generative AI', 'Deep Learning'] as $skill)
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
+                                            @endforeach
                                         </div>
                                     </div>
-                                    <div class="relative border-l-2 border-gray-200 dark:border-gray-800 ml-1 pl-6">
-                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">Software Engineer</h5>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Jun 2022 – Dec 2022 · 7 mos</p>
+                                    <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
+                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
+                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">Data Scientist</h5>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Jan 2022 – Sep 2022 · 9 mos</p>
                                         <div class="flex flex-wrap gap-2">
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">Software Development</span>
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">Web Servers</span>
+                                            @foreach(['Machine Learning', 'Power BI', 'Google Data Studio', 'Deep Learning', 'Python'] as $skill)
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -146,27 +160,29 @@
                                 <div class="absolute -left-[9px] top-1.5 h-5 w-5 rounded-full border-4 border-white dark:border-gray-900 bg-orange-500"></div>
                                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
                                     <h4 class="text-xl font-bold text-gray-900 dark:text-white">ApexTeam</h4>
-                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Part-time · 3 yrs 3 mos</span>
+                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Part-time · 2 yrs 11 mos</span>
                                 </div>
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Karaj, Iran · Hybrid</p>
                                 
-                                <div class="space-y-6">
-                                    <div class="relative border-l-2 border-gray-200 dark:border-gray-800 ml-1 pl-6">
-                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+                                <div class="space-y-8">
+                                    <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
+                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
                                         <h5 class="font-semibold text-gray-800 dark:text-gray-200">Data Scientist</h5>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">May 2020 – May 2022 · 2 yrs 1 mo</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">May 2020 – Jan 2022 · 1 yr 9 mos</p>
                                         <div class="flex flex-wrap gap-2">
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">Web Servers</span>
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">Microsoft SQL Server</span>
+                                            @foreach(['Data Analysis', 'Deep Learning', 'MySQL / PostgreSQL'] as $skill)
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
+                                            @endforeach
                                         </div>
                                     </div>
-                                    <div class="relative border-l-2 border-gray-200 dark:border-gray-800 ml-1 pl-6">
-                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+                                    <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
+                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
                                         <h5 class="font-semibold text-gray-800 dark:text-gray-200">Software Engineer</h5>
                                         <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Mar 2019 – May 2020 · 1 yr 3 mos</p>
                                         <div class="flex flex-wrap gap-2">
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">Web Servers</span>
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">Bash</span>
+                                            @foreach(['PHP', 'Laravel', 'Backend Development', 'Nginx'] as $skill)
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -177,27 +193,29 @@
                                 <div class="absolute -left-[9px] top-1.5 h-5 w-5 rounded-full border-4 border-white dark:border-gray-900 bg-orange-500"></div>
                                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-1">
                                     <h4 class="text-xl font-bold text-gray-900 dark:text-white">Islamic Azad University</h4>
-                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Part-time · 1 yr</span>
+                                    <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Part-time · 6 mos</span>
                                 </div>
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Karaj, Iran · On-site</p>
                                 
-                                <div class="space-y-6">
-                                    <div class="relative border-l-2 border-gray-200 dark:border-gray-800 ml-1 pl-6">
-                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+                                <div class="space-y-8">
+                                    <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
+                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
                                         <h5 class="font-semibold text-gray-800 dark:text-gray-200">Research Assistant</h5>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Feb 2019 – Sep 2019 · 8 mos</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Jan 2019 – Mar 2019 · 3 mos</p>
                                         <div class="flex flex-wrap gap-2">
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">SQL</span>
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">IT Infrastructure</span>
+                                            @foreach(['IT Infrastructure', 'SQL', 'MySQL'] as $skill)
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
+                                            @endforeach
                                         </div>
                                     </div>
-                                    <div class="relative border-l-2 border-gray-200 dark:border-gray-800 ml-1 pl-6">
-                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+                                    <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
+                                        <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
                                         <h5 class="font-semibold text-gray-800 dark:text-gray-200">Teacher Assistant</h5>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Oct 2018 – Feb 2019 · 5 mos</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Oct 2018 – Dec 2018 · 3 mos</p>
                                         <div class="flex flex-wrap gap-2">
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">SQL</span>
-                                            <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">PHP</span>
+                                            @foreach(['SQL', 'PHP', 'Python'] as $skill)
+                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -213,7 +231,7 @@
                             Education
                         </h3>
                         
-                        <div class="relative border-l-2 border-gray-200 dark:border-gray-800 ml-3.5 space-y-10 pb-4">
+                        <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-3.5 space-y-10 pb-4">
                             <!-- TU Bergakademie Freiberg -->
                             <div class="relative pl-8">
                                 <div class="absolute -left-[9px] top-1.5 h-5 w-5 rounded-full border-4 border-white dark:border-gray-900 bg-pink-500"></div>
@@ -243,10 +261,10 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @php
                                 $certs = [
-                                    ['title' => 'Microsoft Azure Fundamentals (AZ-900)', 'issuer' => 'Microsoft', 'date' => 'Issued July 2025', 'id' => 'Credential ID: 64228f9b79adc...'],
-                                    ['title' => 'CS50: Introduction to Computer Science', 'issuer' => 'Harvard University', 'date' => 'Issued March 2024', 'id' => ''],
-                                    ['title' => 'Big Data Programming Languages', 'issuer' => 'Udemy', 'date' => 'Issued December 2022', 'id' => 'Credential ID: 0004'],
-                                    ['title' => 'CS50’s Introduction to AI with Python', 'issuer' => 'Harvard University', 'date' => 'Issued April 2024', 'id' => ''],
+                                    ['title' => 'Artificial Intelligence and Business Strategy', 'issuer' => 'Project Management Institute', 'date' => 'Issued July 2025', 'skills' => 'Business Strategy • AI for Business'],
+                                    ['title' => 'AZ-900 Microsoft Azure Fundamentals', 'issuer' => 'Microsoft', 'date' => 'Issued July 2025', 'skills' => 'Azure Products • Microsoft Fabric • IAM • Cloud Compute • Storage • ML Studio'],
+                                    ['title' => 'Microsoft Power BI Data Analyst Associate (PL-300)', 'issuer' => 'Microsoft', 'date' => 'Issued July 2025', 'skills' => 'Microsoft Fabric • Power BI • Linux • Python • ML • Data Science'],
+                                    ['title' => 'AI with Python — CS50', 'issuer' => 'Harvard University', 'date' => 'Issued April 2024', 'skills' => 'SQL • Neural Networks • Search/Optimization'],
                                 ];
                             @endphp
                             @foreach($certs as $cert)
@@ -254,9 +272,47 @@
                                 <h5 class="font-bold text-gray-900 dark:text-white mb-1">{{ $cert['title'] }}</h5>
                                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $cert['issuer'] }}</p>
                                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ $cert['date'] }}</p>
-                                @if($cert['id'])
-                                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5 truncate">{{ $cert['id'] }}</p>
+                                @if(isset($cert['skills']))
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                                        <strong class="text-gray-700 dark:text-gray-300">Skills:</strong> {{ $cert['skills'] }}
+                                    </p>
                                 @endif
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <!-- Patents Section -->
+                    <div id="patents" class="mb-16">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
+                            <span class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400 text-xl">💡</span>
+                            Patents
+                        </h3>
+                        <div class="grid grid-cols-1 gap-6">
+                            @php
+                                $patents = [
+                                    [
+                                        'title' => 'Netrunner Architecture for Rogue Agent Mitigation',
+                                        'meta' => 'Patent: TU7823436 • Issued Jan 21, 2026',
+                                        'desc' => 'Honored for the "BlackWall" architecture, which implements asynchronous traffic analysis to autonomously detect and block rogue AI behaviors.'
+                                    ],
+                                    [
+                                        'title' => 'Data-Driven Scientific Discovery',
+                                        'meta' => 'Patent: TU7825912 • Issued Sep 9, 2025',
+                                        'desc' => 'Recognized for a SINDy-based financial forecasting proposal that successfully integrates differential equations into dynamic economic modeling.'
+                                    ],
+                                    [
+                                        'title' => 'From Words to Feelings: LLM-Based Emotion AI',
+                                        'meta' => 'Patent App: TU7824224 • Filed Jun 25, 2025',
+                                        'desc' => 'Advanced LLM framework capable of recognizing and predicting human emotions from diverse data modalities (text, speech, video) using cross-modal embeddings and attention-based fusion.'
+                                    ]
+                                ];
+                            @endphp
+                            @foreach($patents as $patent)
+                            <div class="ios-glass p-6 rounded-2xl border border-white/20 dark:border-white/10 hover:scale-[1.01] transition-transform duration-300">
+                                <h5 class="font-bold text-gray-900 dark:text-white text-lg mb-2">{{ $patent['title'] }}</h5>
+                                <p class="text-sm font-medium text-orange-600 dark:text-orange-400 mb-3">{{ $patent['meta'] }}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{{ $patent['desc'] }}</p>
                             </div>
                             @endforeach
                         </div>
