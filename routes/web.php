@@ -4,13 +4,35 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController; // <--- 1. Import the Class
 
+use App\Http\Controllers\ContactController; // <-- Don't forget to import this!
 
+// ==========================================
+// Independent Routes & Closures
+// ==========================================
+
+// Contact Form Routes (Moved here so ContactController handles them)
+Route::get('/contact', [ContactController::class, 'index'])->name('contact'); // Re-added the name('contact') so your navbar doesn't break!
+Route::post('/contact', [ContactController::class, 'store']);
+
+// Standalone Views
+Route::get('/chatroom', function () {
+    return view('chatroom');
+});
+
+Route::get('/sandika', function () {
+    return view('sandika');
+});
+
+
+// ==========================================
+// PageController Group
+// ==========================================
 Route::controller(PageController::class)->group(function () {
     
     // --- Main Navigation Pages ---
     Route::get('/', 'home')->name('home');
     Route::get('/about', 'about')->name('about');
-    Route::get('/contact', 'contact')->name('contact');
+    // (Removed /contact from here since ContactController handles it now)
     Route::get('/search', 'search')->name('search');
     Route::get('/myplaylist', 'myplaylist')->name('myplaylist');
     Route::get('/vpn-server', 'VPN_server')->name('vpn-server');
@@ -26,7 +48,10 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/projects/parsai', 'parsai')->name('projects.parsai');
     Route::get('/projects/netnexus', 'netnexus')->name('projects.netnexus');
     Route::get('/projects/hounaartoolkit', 'hounaartoolkit')->name('projects.hounaartoolkit');
-    Route::get('/projects/sandika', 'sandika')->name('projects.sandika');
+    
+    // Note: You now have '/sandika' (above) AND '/projects/sandika' (below). 
+    // Both are perfectly fine, they just point to different URLs!
+    Route::get('/projects/sandika', 'sandika')->name('projects.sandika'); 
 
     // --- Publications ---
     Route::get('/publications', 'publications')->name('publications');
