@@ -24,7 +24,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
 <body
@@ -48,9 +47,9 @@
 
         @include('sidebar')
 
-        <main class="flex-1 p-8 lg:p-14 relative overflow-y-auto">
+        <main class="flex-1 p-8 lg:p-14 relative overflow-y-auto scroll-smooth">
             <div class="relative z-10 mt-12 lg:mt-0">
-                <div data-aos="fade-up">
+                <div>
                     <span
                         class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6">
                          ABOUT ME
@@ -72,7 +71,7 @@
 
 
                     <!-- Work Experience Section -->
-                    <div id="work" class="mb-16" data-aos="fade-up">
+                    <div id="work" class="mb-16">
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
                             <span class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg text-orange-600 dark:text-orange-400 text-xl">💼</span>
                             Work Experience
@@ -226,7 +225,7 @@
                     </div>
 
                     <!-- Education Section -->
-                    <div id="education" class="mb-16" data-aos="fade-up">
+                    <div id="education" class="mb-16">
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
                             <span class="p-2 bg-pink-100 dark:bg-pink-900/30 rounded-lg text-pink-600 dark:text-pink-400 text-xl">🎓</span>
                             Education
@@ -254,7 +253,7 @@
                     </div>
 
                     <!-- Certificates Section -->
-                    <div id="certificates" class="mb-16" data-aos="fade-up">
+                    <div id="certificates" class="mb-16">
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
                             <span class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400 text-xl">📜</span>
                             Certificates
@@ -284,7 +283,7 @@
                     </div>
 
                     <!-- Patents Section -->
-                    <div id="patents" class="mb-16" data-aos="fade-up">
+                    <div id="patents" class="mb-16">
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
                             <span class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400 text-xl">💡</span>
                             Patents
@@ -320,7 +319,7 @@
                     </div>
 
                     <!-- Skills Section -->
-                    <div id="skills" class="mb-8" data-aos="fade-up">
+                    <div id="skills" class="mb-8">
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
                             <span class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg text-green-600 dark:text-green-400 text-xl">🛠️</span>
                             Skills
@@ -356,11 +355,6 @@
         </main>
 
     </div>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init();
-    </script>
 </body>
 
 </html>
