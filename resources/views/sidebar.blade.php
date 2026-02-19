@@ -28,6 +28,7 @@
                 ['name' => 'Sandika', 'route' => 'sandika', 'icon' => '🤖'],
                 ['name' => 'Nigma', 'route' => 'nigma', 'icon' => '🧩'],
                 ['name' => 'Abie Motlagh', 'route' => 'abie', 'icon' => '👾'],
+                
             ];
         @endphp
 
