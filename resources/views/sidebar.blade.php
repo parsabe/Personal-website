@@ -24,7 +24,7 @@
                 ['name' => 'VPN Server', 'route' => 'vpn-server', 'icon' => '☁️'],
                 ['name' => 'Club', 'route' => 'fun', 'icon' => '🎮'],
                 ['name' => 'Support', 'route' => 'support', 'icon' => '☕'],
-                ['name' => 'Chatroom', 'route' => 'chatroom', 'icon' => '💬'],
+                ['name' => 'Chat', 'route' => 'chat', 'icon' => '💬'],
                 ['name' => 'Sandika', 'route' => 'sandika', 'icon' => '🤖'],
                 ['name' => 'Nigma', 'route' => 'nigma', 'icon' => '🧩'],
                 ['name' => 'Abie Motlagh', 'route' => 'abie', 'icon' => '👾'],
