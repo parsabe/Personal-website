@@ -15,6 +15,7 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         window.tailwind = { config: { darkMode: 'class' } };
     </script>
@@ -48,6 +49,28 @@
         <main class="flex-1 p-8 lg:p-14 relative flex flex-col justify-center overflow-y-auto">
             <div class="max-w-2xl mx-auto w-full">
                 <h2 class="text-4xl font-bold mb-8 text-gray-900 dark:text-white drop-shadow-sm">Contact Me</h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <a href="https://github.com/parsabe" target="_blank" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-black/40 transition-all group">
+                        <i class="fab fa-github text-3xl mb-2 text-gray-900 dark:text-white group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs font-bold text-gray-700 dark:text-gray-300">GitHub</span>
+                    </a>
+                    
+                    <a href="https://www.linkedin.com/in/parsabe" target="_blank" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-black/40 transition-all group">
+                        <i class="fab fa-linkedin text-3xl mb-2 text-[#0077b5] group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs font-bold text-gray-700 dark:text-gray-300">LinkedIn</span>
+                    </a>
+
+                    <a href="https://www.researchgate.net/profile/Parsa-Besharat" target="_blank" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-black/40 transition-all group">
+                        <i class="fab fa-researchgate text-3xl mb-2 text-[#00ccbb] group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs font-bold text-gray-700 dark:text-gray-300">ResearchGate</span>
+                    </a>
+
+                    <a href="mailto:parsa.besharat@student.tu-freiberg.de" class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-black/40 transition-all group">
+                        <i class="fas fa-envelope text-3xl mb-2 text-[#EA4335] group-hover:scale-110 transition-transform"></i>
+                        <span class="text-xs font-bold text-gray-700 dark:text-gray-300">Email</span>
+                    </a>
+                </div>
                 
                 @if(session('success'))
                     <div class="mb-6 p-4 rounded-xl bg-green-100/80 dark:bg-green-900/50 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 backdrop-blur-sm">
