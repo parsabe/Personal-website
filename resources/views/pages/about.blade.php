@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        @include('partials.sidebar')
+        @include('sidebar')
 
         <main class="flex-1 p-8 lg:p-14 relative flex flex-col justify-center">
             <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12 lg:mt-0">
