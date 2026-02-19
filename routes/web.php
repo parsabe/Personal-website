@@ -8,7 +8,7 @@ use App\Http\Controllers\PageController; // <--- 1. Import the Class
 Route::controller(PageController::class)->group(function () {
     
     // --- Main Navigation Pages ---
-    Route::get('/', 'home')->name('home');
+    Route::get('/', 'home')->name('/');
     Route::get('/about', 'about')->name('about');
     Route::get('/contact', 'contact')->name('contact');
     Route::get('/search', 'search')->name('search');
