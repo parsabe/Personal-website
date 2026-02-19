@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parsa Besharat - Researcher & AI Engineer</title>
+    <title>Playlist - Parsa Besharat</title>
 
     <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
     MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">

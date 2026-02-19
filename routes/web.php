@@ -38,16 +38,21 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/vpn-server', 'VPN_server')->name('vpn-server');
     Route::get('/fun', 'fun')->name('fun'); 
     Route::get('/support', 'support')->name('support');
+    Route::get('/pages/nigma', 'nigma')->name('nigma');
+    Route::get('/pages/chat/chat', 'chat')->name('chat');
+    Route::get('/pages/abie-motlagh/abie', 'abie')->name('abie');
+    Route::get('/pages/sandika/sandika', 'proj_sandika')->name('sandika');
+
 
     // --- Projects ---
     Route::get('/pages/projects/', 'projects')->name('projects');
-    Route::get('/pages/projects//blackwall', 'BlackWall')->name('projects.blackwall');
-    Route::get('/pages/projects//mlmatrix', 'Mlmatrix')->name('projects.mlmatrix');
-    Route::get('/pages/projects//scp', 'SCP')->name('projects.scp');
-    Route::get('/pages/projects//ceasar-toolkit', 'CeasarToolkit')->name('projects.ceasartoolkit');
-    Route::get('/pages/projects//parsai', 'parsai')->name('projects.parsai');
-    Route::get('/pages/projects//netnexus', 'netnexus')->name('projects.netnexus');
-    Route::get('/pages/projects//hounaartoolkit', 'hounaartoolkit')->name('projects.hounaartoolkit');
+    Route::get('/pages/projects/blackwall', 'BlackWall')->name('projects.blackwall');
+    Route::get('/pages/projects/mlmatrix', 'Mlmatrix')->name('projects.mlmatrix');
+    Route::get('/pages/projects/scp', 'SCP')->name('projects.scp');
+    Route::get('/pages/projects/ceasar-toolkit', 'CeasarToolkit')->name('projects.ceasartoolkit');
+    Route::get('/pages/projects/parsai', 'parsai')->name('projects.parsai');
+    Route::get('/pages/projects/netnexus', 'netnexus')->name('projects.netnexus');
+    Route::get('/pages/projects/hounaartoolkit', 'hounaartoolkit')->name('projects.hounaartoolkit');
     
     // Note: You now have '/sandika' (above) AND '/pages/projects//sandika' (below). 
     // Both are perfectly fine, they just point to different URLs!

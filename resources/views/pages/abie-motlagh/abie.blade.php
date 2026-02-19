@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parsa Besharat - Researcher & AI Engineer</title>
+    <title>Abie Motlagh Book Store - Parsa Besharat</title>
 
     <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
     MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
@@ -48,41 +48,28 @@
         </div>
 
         @include('sidebar')
+        <main class="flex-1 p-8 lg:p-14 relative flex flex-col justify-center items-center overflow-y-auto">
+            <div class="relative z-10 text-center">
+                
+                <span class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6">
+                    🚧 UNDER CONSTRUCTION
+                </span>
 
-        <main class="flex-1 p-8 lg:p-14 relative flex flex-col justify-center overflow-y-auto">
-            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12 lg:mt-0">
+                <h1 class="text-5xl lg:text-7xl font-extrabold mb-6 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
+                    Coming <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-600 dark:from-orange-400 dark:to-pink-500">Soon.</span>
+                </h1>
 
-                <div>
-                    <span
-                        class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6">
-                        👋 HELLO!
-                    </span>
+                <p class="text-lg text-gray-800 dark:text-gray-200 leading-relaxed mb-10 font-medium drop-shadow-sm max-w-lg mx-auto">
+                    I am currently working on this page. Please check back later for updates!
+                </p>
 
-                    <h1
-                        class="text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
-                        I'm <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-600 dark:from-orange-400 dark:to-pink-500">Parsa
-                            Besharat.</span>
-                    </h1>
-
-                    <p
-                        class="text-lg text-gray-800 dark:text-gray-200 leading-relaxed mb-10 font-medium drop-shadow-sm">
-                        I am an Iranian Researcher and AI Engineer, currently pursuing my
-                        MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.
-                    </p>
-
-                    <div class="flex flex-wrap items-center gap-5">
-                        <a href="/contact"
-                            class="px-8 py-3.5 bg-gradient-to-r from-orange-500 to-pink-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition transform border border-white/20">
-                            Contact me
-                        </a>
-                    </div>
+                <div class="flex justify-center gap-5">
+                    <a href="{{ route('home') }}"
+                        class="px-8 py-3.5 bg-gradient-to-r from-orange-500 to-pink-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition transform border border-white/20">
+                        Back to Home
+                    </a>
                 </div>
 
-                <div class="relative flex justify-center mt-10 lg:mt-0">
-                    <img src="{{ asset('images/profile.jpg') }}" alt="Hero Portrait"
-                        class="w-full max-w-sm rounded-full object-cover object-[50%_25%] aspect-square border-4 border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.2)]">
-                </div>
             </div>
         </main>
 

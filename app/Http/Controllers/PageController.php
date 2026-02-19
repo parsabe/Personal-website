@@ -26,39 +26,39 @@ class PageController extends Controller
     }
     public function BlackWall()
     {
-        return view('BlackWall');
+        return view('pages.projects.BlackWall');
     }
     public function Mlmatrix()
     {
-        return view('mlmatrix');
+        return view('pages.projects.mlmatrix');
     }
     public function SCP()
     {
-        return view('SCP');
+        return view('pages.projects.SCP');
     }
 
     public function CeasarToolkit()
     {
-        return view('CeasarToolkit');
+        return view('pages.projects.CeasarToolkit');
     }
 
     public function parsai()
     {
-        return view('Parsai');
+        return view('pages.projects.Parsai');
     }
 
     public function netnexus()
     {
-        return view('netnexus');
+        return view('pages.projects.netnexus');
     }
 
     public function hounaartoolkit()
     {
-        return view('hounaartoolkit');
+        return view('pages.projects.hounaartoolkit');
     }
-    public function sandika()
+    public function proj_sandika()
     {
-        return view('sandika');
+        return view('pages.projects.sandika');
     }
 
     public function publications()
@@ -133,6 +133,22 @@ class PageController extends Controller
         return view('pages.support');
     }
 
+    public function nigma()
+    {
+        return view('pages.nigma.nigma');
+    }
+    public function chat()
+    {
+        return view('pages.chat.chat');
+    }
+    public function abie()
+    {
+        return view('pages.abie-motlagh.abie');
+    }
+    public function sandika()
+    {
+        return view('pages.sandika.sandika');
+    }
 
 
 
