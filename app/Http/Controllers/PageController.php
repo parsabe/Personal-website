@@ -135,19 +135,6 @@ class PageController extends Controller
 
 
 
-    public function legal_notice()
-    {
-        return view('legal-notice');
-    }
-    public function privacy_policy()
-    {
-        return view('privacy-policy');
-    }
-
-    public function copyright()
-    {
-        return view('copyright');
-    }
 
 
 }
