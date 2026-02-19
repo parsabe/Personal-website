@@ -1,30 +1,89 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('content')
-<div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
-    <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Contact Me</h2>
-    
-    <form method="POST" action="{{ route('contact') }}" class="space-y-6">
-        @csrf
-        <div>
-            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
-            <input type="text" id="name" name="name" required 
-                class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 dark:text-white">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Parsa Besharat</title>
+
+    <meta name="description" content="Contact Parsa Besharat">
+    <meta name="author" content="Parsa Besharat">
+    <meta name="robots" content="index, follow">
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.tailwind = { config: { darkMode: 'class' } };
+    </script>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <link rel="icon" href="{{ asset('images/profile.jpg') }}">
+</head>
+
+<body
+    class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10 min-h-screen relative overflow-x-hidden">
+
+    <div id="main-container"
+        class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[85vh] z-10 transition-colors duration-700">
+
+        <div class="absolute top-6 right-8 flex items-center gap-5 z-50">
+            <button id="theme-toggle" class="p-2.5 rounded-full ios-glass transition hover:scale-110">
+                <span id="theme-icon-light" class="hidden text-sm">☀️</span>
+                <span id="theme-icon-dark" class="hidden text-sm">🌙</span>
+            </button>
+
+            <div class="flex gap-2">
+                <div class="w-3.5 h-3.5 rounded-full bg-[#ff5f56] shadow-sm border border-[#e0443e]"></div>
+                <div class="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] shadow-sm border border-[#dea123]"></div>
+                <div class="w-3.5 h-3.5 rounded-full bg-[#27c93f] shadow-sm border border-[#1aab29]"></div>
+            </div>
         </div>
-        
-        <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email address</label>
-            <input type="email" id="email" name="email" required 
-                class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 dark:text-white">
-        </div>
-        
-        <div>
-            <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
-            <textarea id="message" name="message" rows="5" required 
-                class="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-gray-900 dark:text-white"></textarea>
-        </div>
-        
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-colors duration-300 shadow-md hover:shadow-lg">Send Message</button>
-    </form>
-</div>
-@endsection
+
+        @include('sidebar')
+
+        <main class="flex-1 p-8 lg:p-14 relative flex flex-col justify-center overflow-y-auto">
+            <div class="max-w-2xl mx-auto w-full">
+                <h2 class="text-4xl font-bold mb-8 text-gray-900 dark:text-white drop-shadow-sm">Contact Me</h2>
+                
+                @if(session('success'))
+                    <div class="mb-6 p-4 rounded-xl bg-green-100/80 dark:bg-green-900/50 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 backdrop-blur-sm">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('contact') }}" class="space-y-5">
+                    @csrf
+                    <div class="group">
+                        <label for="name" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 ml-1">Name</label>
+                        <input type="text" id="name" name="name" required 
+                            class="w-full px-5 py-3.5 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all text-gray-900 dark:text-white placeholder-gray-500 backdrop-blur-sm hover:bg-white/60 dark:hover:bg-black/30">
+                    </div>
+                    
+                    <div class="group">
+                        <label for="email" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 ml-1">Email address</label>
+                        <input type="email" id="email" name="email" required 
+                            class="w-full px-5 py-3.5 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all text-gray-900 dark:text-white placeholder-gray-500 backdrop-blur-sm hover:bg-white/60 dark:hover:bg-black/30">
+                    </div>
+                    
+                    <div class="group">
+                        <label for="message" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 ml-1">Message</label>
+                        <textarea id="message" name="message" rows="5" required 
+                            class="w-full px-5 py-3.5 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all text-gray-900 dark:text-white placeholder-gray-500 backdrop-blur-sm hover:bg-white/60 dark:hover:bg-black/30 resize-none"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full py-4 px-6 bg-gradient-to-r from-orange-500 to-pink-600 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 border border-white/20 mt-2">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </main>
+
+    </div>
+
+</body>
+
+</html>
