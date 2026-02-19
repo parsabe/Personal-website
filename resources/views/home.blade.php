@@ -6,39 +6,13 @@
     <title>Parsa Besharat</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class', // This tells Tailwind to look for a 'dark' class on the HTML tag
-        }
+ <script>
+        window.tailwind = { config: { darkMode: 'class' } };
     </script>
 
-    <style>
-        /* Smooth transition for the background swap */
-        body {
-            transition: background-image 0.5s ease-in-out, background-color 0.5s ease-in-out;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-        }
-        
-        /* Light Theme Background */
-        body.light {
-            background-image: url('/images/light.png');
-            background-color: #f3f4f6; /* Fallback if image fails to load */
-        }
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        /* Dark Theme Background */
-        body.dark {
-            background-image: url('/images/dark.png');
-            background-color: #111827; /* Fallback if image fails to load */
-        }
-        
-        /* Subtly style the scrollbar inside the glass menu */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.4); border-radius: 10px; }
-    </style>
+
 </head>
 <body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10">
 
@@ -53,8 +27,8 @@
             
             <div class="flex flex-col items-center mb-8">
                 <img src="https://ui-avatars.com/api/?name=Your+Name&background=random" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-white/50 dark:border-gray-700/50 shadow-md mb-3">
-                <h2 class="text-2xl font-bold tracking-tight">Your Name</h2>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Web Developer</p>
+                <h2 class="text-2xl font-bold tracking-tight">Parsa Besharat</h2>
+                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Researcher - AI Engineer</p>
             </div>
 
             <nav class="flex-1 overflow-y-auto space-y-1.5 pr-2">
@@ -83,7 +57,7 @@
             </nav>
 
             <div class="mt-6 pt-6 border-t border-white/50 dark:border-white/10 text-center">
-                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">&copy; 2026 Your Name.</p>
+                <p class="text-xs font-medium text-gray-500 dark:text-gray-400">&copy; 2026 Parsa Besharat.</p>
             </div>
         </aside>
 
@@ -100,7 +74,7 @@
                     </span>
                     
                     <h1 class="text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight text-gray-900 dark:text-white">
-                        I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-500">Your Name.</span>
+                        I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-500">Parsa Besharat.</span>
                     </h1>
                     
                     <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-10">
@@ -109,7 +83,7 @@
                     
                     <div class="flex flex-wrap items-center gap-5">
                         <a href="/contact" class="px-8 py-3.5 bg-gradient-to-r from-orange-400 to-pink-500 text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition transform">
-                            Hire Me
+                            Contact me
                         </a>
                         <a href="/projects" class="px-6 py-3 font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2 hover:text-orange-500 dark:hover:text-orange-400 transition group">
                             View Works <span class="text-xl group-hover:translate-x-1 transition">→</span>
