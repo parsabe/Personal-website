@@ -24,6 +24,8 @@
                 ['name' => 'VPN Server', 'route' => 'vpn-server', 'icon' => '☁️'],
                 ['name' => 'Club', 'route' => 'fun', 'icon' => '🎮'],
                 ['name' => 'Support', 'route' => 'support', 'icon' => '☕'],
+                ['name' => 'Chatroom', 'route' => 'chatroom', 'icon' => '💬'],
+                ['name' => 'Sandika', 'route' => 'sandika', 'icon' => '🤖'],
             ];
         @endphp
 

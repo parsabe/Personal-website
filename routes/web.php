@@ -17,11 +17,11 @@ Route::post('/contact', [ContactController::class, 'store']);
 // Standalone Views
 Route::get('/chatroom', function () {
     return view('chatroom');
-});
+})->name('chatroom');
 
 Route::get('/sandika', function () {
     return view('sandika');
-});
+})->name('sandika');
 
 
 // ==========================================
