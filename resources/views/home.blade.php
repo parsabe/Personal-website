@@ -26,7 +26,7 @@
         <aside class="w-full md:w-64 flex flex-col border-b md:border-b-0 md:border-r border-white/50 dark:border-white/10 p-6 lg:p-8">
             
             <div class="flex flex-col items-center mb-8">
-                <img src="https://ui-avatars.com/api/?name=Your+Name&background=random" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-white/50 dark:border-gray-700/50 shadow-md mb-3">
+                <img src="/public/images/profile.jpg" alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-white/50 dark:border-gray-700/50 shadow-md mb-3">
                 <h2 class="text-2xl font-bold tracking-tight">Parsa Besharat</h2>
                 <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Researcher - AI Engineer</p>
             </div>
