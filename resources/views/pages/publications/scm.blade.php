@@ -10,13 +10,23 @@
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
 </head>
 <body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10 min-h-screen relative overflow-x-hidden">
-    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[85vh] z-10 transition-colors duration-700">
+      <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[85vh] z-10 transition-colors duration-700">
+
         <div class="absolute top-6 right-8 flex items-center gap-5 z-50">
+            
             <button id="theme-toggle" class="p-2.5 rounded-full ios-glass transition hover:scale-110">
                 <span id="theme-icon-light" class="hidden text-sm">☀️</span>
                 <span id="theme-icon-dark" class="hidden text-sm">🌙</span>
             </button>
+
+            <div class="flex gap-2">
+                <div class="w-3.5 h-3.5 rounded-full bg-[#ff5f56] shadow-sm border border-[#e0443e]"></div>
+                <div class="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] shadow-sm border border-[#dea123]"></div>
+                <div class="w-3.5 h-3.5 rounded-full bg-[#27c93f] shadow-sm border border-[#1aab29]"></div>
+            </div>
+            
         </div>
+
         @include('sidebar')
         <main class="flex-1 p-6 lg:p-10 overflow-y-auto scrollbar-hide">
             <div class="max-w-4xl mx-auto space-y-12 pb-20">

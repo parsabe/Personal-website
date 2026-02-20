@@ -10,19 +10,73 @@
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
 </head>
 <body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10 min-h-screen relative overflow-x-hidden">
-    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[85vh] z-10 transition-colors duration-700">
+      <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[85vh] z-10 transition-colors duration-700">
+
         <div class="absolute top-6 right-8 flex items-center gap-5 z-50">
+            
             <button id="theme-toggle" class="p-2.5 rounded-full ios-glass transition hover:scale-110">
                 <span id="theme-icon-light" class="hidden text-sm">☀️</span>
                 <span id="theme-icon-dark" class="hidden text-sm">🌙</span>
             </button>
+
+            <div class="flex gap-2">
+                <div class="w-3.5 h-3.5 rounded-full bg-[#ff5f56] shadow-sm border border-[#e0443e]"></div>
+                <div class="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] shadow-sm border border-[#dea123]"></div>
+                <div class="w-3.5 h-3.5 rounded-full bg-[#27c93f] shadow-sm border border-[#1aab29]"></div>
+            </div>
+            
         </div>
+
         @include('sidebar')
-        <main class="flex-1 p-8 lg:p-14 relative overflow-y-auto">
-            <div class="relative z-10 mt-12 lg:mt-0">
-                <h1 class="text-4xl font-bold mb-6">An Analysis on Vulnerabilities (PHP)</h1>
-                <p class="mb-6">SAPCO • Dec 7, 2022</p>
-                <a href="https://www.researchgate.net/publication/392627125_Vulnerability_appraisals_in_web_PHP" target="_blank" class="text-blue-500 hover:underline">View on ResearchGate</a>
+        <main class="flex-1 p-6 lg:p-10 overflow-y-auto scrollbar-hide">
+            <div class="max-w-4xl mx-auto space-y-12 pb-20">
+                
+                <header class="text-center space-y-6 pt-4">
+                    <span class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-blue-600 dark:text-blue-400 rounded-full text-sm font-bold shadow-sm">
+                        📄 RESEARCH PAPER
+                    </span>
+                    <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white drop-shadow-sm leading-tight">
+                        Vulnerability appraisals in web (PHP)
+                    </h1>
+                    
+                    <div class="flex flex-col items-center justify-center gap-2 text-gray-600 dark:text-gray-400 font-medium">
+                        <p class="text-lg text-gray-800 dark:text-gray-200 font-semibold">Parsa Besharat</p>
+                        <p class="text-sm">December 2022</p>
+                    </div>
+                </header>
+
+                <section class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md rounded-3xl p-8 border border-white/20 shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-blue-500 to-purple-600"></div>
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Abstract</h2>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-justify mb-4">
+                        With a 45.43% piece of the pie, PHP is a logical language generally utilized for web application improvement. It is a device utilized for dynamic and compelling web applications, and like all programming dialects, it stays powerless and dependent upon security blemishes. 
+                    </p>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-justify">
+                        This article will direct you on the most proficient method to get your site against normal PHP weaknesses like SQL infusion assaults, cross-site prearranging, meeting obsession, and so forth. No doubt, PHP has a presence of over 25 years. It is the power behind 80% of sites.
+                    </p>
+                    
+                    <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-3 uppercase tracking-wider">Keywords</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-semibold rounded-full">PHP</span>
+                            <span class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-semibold rounded-full">Web Security</span>
+                            <span class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-semibold rounded-full">SQL Injection</span>
+                            <span class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-semibold rounded-full">Cross-Site Scripting (XSS)</span>
+                            <span class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs font-semibold rounded-full">Session Fixation</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="flex justify-center pt-4">
+                    <a href="https://www.researchgate.net/publication/392627125_Vulnerability_appraisals_in_web_PHP" target="_blank" 
+                       class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-white/20">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                        Read Full Research Paper
+                    </a>
+                </div>
+
             </div>
         </main>
     </div>
