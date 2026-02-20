@@ -47,7 +47,7 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/projects/netnexus', 'netnexus')->name('projects.netnexus');
     Route::get('/projects/hounaartoolkit', 'hounaartoolkit')->name('projects.hounaartoolkit');
     Route::get('/projects/funroot', 'funroot')->name('projects.funroot');
-    Route::get('/projects/sandika', 'sandika')->name('projects.sandika'); 
+    Route::get('/projects/sandika', 'proj_sandika')->name('projects.sandika'); 
 
     // --- Publications ---
     Route::get('/publications', 'publications')->name('publications');

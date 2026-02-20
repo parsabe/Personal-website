@@ -98,7 +98,7 @@ class PageController extends Controller
     }
     public function ai_blockchain()
     {
-        return view('<pages class="publications"></pages>ai-blockchain');
+        return view('pages.publications.ai-blockchain');
     }
     public function synergy_blockchain()
     {
