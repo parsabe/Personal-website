@@ -20,7 +20,7 @@
                 ['name' => 'Publications', 'route' => 'publications', 'icon' => '📚'],
                 ['name' => 'My Playlist', 'route' => 'myplaylist', 'icon' => '🎵'],
                 ['name' => 'Search', 'route' => 'search', 'icon' => '🔍'],
-                ['name' => 'Favorite Books', 'route' => 'abie', 'icon' => '👾'],
+                ['name' => 'Favorite Books', 'route' => 'abie', 'icon' => '📕'],
                 ['name' => 'VPN Server', 'route' => 'vpn-server', 'icon' => '☁️'],
                 ['name' => 'Club', 'route' => 'fun', 'icon' => '🎮'],
                 ['name' => 'Blogs', 'route' => 'support', 'icon' => '☕'],
