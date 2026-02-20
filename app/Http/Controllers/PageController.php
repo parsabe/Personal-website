@@ -165,6 +165,6 @@ class PageController extends Controller
 
     public function blog()
     {
-        return view('pages.blog');
+        return view('pages.blogs');
     }
 }
