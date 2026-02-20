@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use App\Models\Project;
+
 class SearchController extends Controller
 {
     public function index(Request $request)
@@ -16,7 +16,8 @@ class SearchController extends Controller
                 ->orWhere('description', 'like', "%{$query}%")
                 ->get();
         } else {
-            $projects = Project::all();
+            // Return an empty collection instead of pulling all projects
+            $projects = collect();
         }
 
         return view('pages.search', compact('projects'));

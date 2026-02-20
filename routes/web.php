@@ -34,6 +34,8 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/chat', 'chat')->name('chat');
     Route::get('/abie-motlagh', 'abie')->name('abie');
     Route::get('/chat', 'chat')->name('chat');
+    Route::get('/sandika', 'sandika')->name('sandika');
+
 
     Route::get('/search', [App\Http\Controllers\SearchController::class, 'index'])->name('search');
 
