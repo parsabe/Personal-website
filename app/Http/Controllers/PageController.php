@@ -160,4 +160,11 @@ class PageController extends Controller
     {
         return view('pages.sandika.sandika');
     }
+
+
+
+    public function blog()
+    {
+        return view('pages.blog');
+    }
 }

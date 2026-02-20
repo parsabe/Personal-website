@@ -20,7 +20,7 @@ Route::post('/contact', [ContactController::class, 'store']);
 // PageController Group
 // ==========================================
 Route::controller(PageController::class)->group(function () {
-    
+
     // --- Main Navigation Pages ---
     Route::get('/', 'home')->name('home');
     Route::get('/about', 'about')->name('about');
@@ -28,14 +28,14 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/search', 'search')->name('search');
     Route::get('/myplaylist', 'myplaylist')->name('myplaylist');
     Route::get('/vpn', 'VPN_server')->name('vpn-server');
-    Route::get('/fun', 'fun')->name('fun'); 
+    Route::get('/fun', 'fun')->name('fun');
     Route::get('/support', 'support')->name('support');
     Route::get('/nigma', 'nigma')->name('nigma');
     Route::get('/chat', 'chat')->name('chat');
     Route::get('/abie-motlagh', 'abie')->name('abie');
-    Route::get('/sandika', 'sandika')->name('sandika');
     Route::get('/chat', 'chat')->name('chat');
 
+    Route::get('/search', [App\Http\Controllers\SearchController::class, 'index'])->name('search');
 
     // --- Projects ---
     Route::get('/projects', 'projects')->name('projects');
@@ -47,7 +47,7 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/projects/netnexus', 'netnexus')->name('projects.netnexus');
     Route::get('/projects/hounaartoolkit', 'hounaartoolkit')->name('projects.hounaartoolkit');
     Route::get('/projects/funroot', 'funroot')->name('projects.funroot');
-    Route::get('/projects/sandika', 'proj_sandika')->name('projects.sandika'); 
+    Route::get('/projects/sandika', 'proj_sandika')->name('projects.sandika');
 
     // --- Publications ---
     Route::get('/publications', 'publications')->name('publications');
@@ -61,6 +61,8 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/publications/crm', 'crm')->name('publications.crm');
     Route::get('/publications/qca', 'qca')->name('publications.qca');
 
+    // --- Blogs ---
+    Route::get('/blog', 'blog')->name('blog');
 });
 
 Route::get('/dashboard', function () {
@@ -73,4 +75,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

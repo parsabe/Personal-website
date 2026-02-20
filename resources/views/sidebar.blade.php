@@ -23,7 +23,7 @@
                 ['name' => 'Search', 'route' => 'search', 'icon' => '🔍'],
                 ['name' => 'VPN Server', 'route' => 'vpn-server', 'icon' => '☁️'],
                 ['name' => 'Club', 'route' => 'fun', 'icon' => '🎮'],
-                ['name' => 'Support', 'route' => 'support', 'icon' => '☕'],
+                ['name' => 'Blogs', 'route' => 'support', 'icon' => '☕'],
                 ['name' => 'Chat', 'route' => 'chat', 'icon' => '💬'],
                 ['name' => 'Sandika', 'route' => 'sandika', 'icon' => '🤖'],
                 ['name' => 'Nigma', 'route' => 'nigma', 'icon' => '🧩'],
