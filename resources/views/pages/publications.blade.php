@@ -85,7 +85,7 @@
                             class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                             <div
                                 class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden relative group">
-                                <img src="{{ asset('images/moodium.jpg') }}" alt="Moodium"
+                                <img src="{{ asset('images/moodium.png') }}" alt="Moodium"
                                     class="w-full h-full object-cover">
 
                             </div>
@@ -108,7 +108,7 @@
                             class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                             <div
                                 class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden relative group">
-                                <img src="{{ asset('images/financial_forecasting.jpg') }}"
+                                <img src="{{ asset('images/scm.jpeg') }}"
                                     alt="Financial Forecasting Equations" class="w-full h-full object-cover">
 
                             </div>
@@ -132,7 +132,7 @@
                             class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                             <div
                                 class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden relative group">
-                                <img src="{{ asset('images/captcha.jpg') }}" alt="CAPTCHA Unmasked"
+                                <img src="{{ asset('images/captcha.png') }}" alt="CAPTCHA Unmasked"
                                     class="w-full h-full object-cover">
 
                             </div>
@@ -156,7 +156,7 @@
                             class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                             <div
                                 class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden relative group">
-                                <img src="{{ asset('images/ai_blockchain.jpg') }}" alt="AI and Blockchain"
+                                <img src="{{ asset('images/ai-block.png') }}" alt="AI and Blockchain"
                                     class="w-full h-full object-cover">
 
                             </div>
@@ -180,7 +180,7 @@
                             class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                             <div
                                 class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden relative group">
-                                <img src="{{ asset('images/synergy_blockchain.jpg') }}" alt="Synergy of Blockchain"
+                                <img src="{{ asset('images/blockchain.jpg') }}" alt="Synergy of Blockchain"
                                     class="w-full h-full object-cover">
 
                             </div>
@@ -201,7 +201,7 @@
                             class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                             <div
                                 class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden relative group">
-                                <img src="{{ asset('images/php_vulnerabilities.jpg') }}" alt="PHP Vulnerabilities"
+                                <img src="{{ asset('images/vuls.png') }}" alt="PHP Vulnerabilities"
                                     class="w-full h-full object-cover">
 
                             </div>
@@ -224,7 +224,7 @@
                             class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                             <div
                                 class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden relative group">
-                                <img src="{{ asset('images/data_mining_crm.jpg') }}" alt="Data Mining CRM"
+                                <img src="{{ asset('images/crm.png') }}" alt="Data Mining CRM"
                                     class="w-full h-full object-cover">
 
                             </div>
@@ -246,7 +246,7 @@
                             class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                             <div
                                 class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden relative group">
-                                <img src="{{ asset('images/qca.jpg') }}" alt="QCA" class="w-full h-full object-cover">
+                                <img src="{{ asset('images/qca.png') }}" alt="QCA" class="w-full h-full object-cover">
 
                             </div>
                             <h2 class="text-xl font-bold mb-1 text-gray-800 dark:text-gray-100">Quantum-dot Cellular
