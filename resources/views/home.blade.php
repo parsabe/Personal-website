@@ -26,6 +26,27 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
+      <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Parsa Besharat",
+    "url": "https://www.hounaar.com",
+    "image": "https://www.hounaar.com/assets/logo-DYQ-NPeT.jpg",
+    "sameAs": [
+      "https://www.linkedin.com/in/parsabe",
+      "https://github.com/parsabe"
+    ],
+    "jobTitle": ["AI Engineer", "Data Scientist", "Software Engineer"], 
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Hounaar",
+      "url": "https://www.hounaar.com"
+    },
+    "description": "Parsa Besharat is an AI Engineer, Data Scientist, Software and IT Engineer."
+  }
+  </script>
+
 </head>
 
 <body

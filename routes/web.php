@@ -38,30 +38,30 @@ Route::controller(PageController::class)->group(function () {
 
 
     // --- Projects ---
-    Route::get('projects/', 'projects')->name('projects');
-    Route::get('projects/blackwall', 'BlackWall')->name('projects.blackwall');
-    Route::get('projects/mlmatrix', 'Mlmatrix')->name('projects.mlmatrix');
-    Route::get('projects/scp', 'SCP')->name('projects.scp');
-    Route::get('projects/ceasar-toolkit', 'CeasarToolkit')->name('projects.ceasartoolkit');
-    Route::get('projects/parsai', 'parsai')->name('projects.parsai');
-    Route::get('projects/netnexus', 'netnexus')->name('projects.netnexus');
-    Route::get('projects/hounaartoolkit', 'hounaartoolkit')->name('projects.hounaartoolkit');
+    Route::get('/projects', 'projects')->name('projects');
+    Route::get('/projects/blackwall', 'BlackWall')->name('projects.blackwall');
+    Route::get('/projects/mlmatrix', 'Mlmatrix')->name('projects.mlmatrix');
+    Route::get('/projects/scp', 'SCP')->name('projects.scp');
+    Route::get('/projects/ceasar-toolkit', 'CeasarToolkit')->name('projects.ceasartoolkit');
+    Route::get('/projects/parsai', 'parsai')->name('projects.parsai');
+    Route::get('/projects/netnexus', 'netnexus')->name('projects.netnexus');
+    Route::get('/projects/hounaartoolkit', 'hounaartoolkit')->name('projects.hounaartoolkit');
     
     // Note: You now have '/sandika' (above) AND ' projects//sandika' (below). 
     // Both are perfectly fine, they just point to different URLs!
     Route::get('/projects/sandika', 'sandika')->name('projects.sandika'); 
 
     // --- Publications ---
-    Route::get('publications/', 'publications')->name('publications');
-    Route::get('publications//blackwall-paper', 'blackwall_paper')->name('publications.blackwall_paper');
-    Route::get('publications//moodium', 'moodium')->name('publications.moodium');
-    Route::get('publications//scm', 'scm')->name('publications.scm');
-    Route::get('publications//captcha', 'captcha')->name('publications.captcha');
-    Route::get('publications//ai-blockchain', 'ai_blockchain')->name('publications.ai_blockchain');
-    Route::get('publications//synergy-blockchain', 'synergy_blockchain')->name('publications.synergy_blockchain');
-    Route::get('publications//php-vuls', 'php_vuls')->name('publications.php_vuls');
-    Route::get('publications//crm', 'crm')->name('publications.crm');
-    Route::get('publications//qca', 'qca')->name('publications.qca');
+    Route::get('/publications', 'publications')->name('publications');
+    Route::get('/publications/blackwall-paper', 'blackwall_paper')->name('publications.blackwall_paper');
+    Route::get('/publications/moodium', 'moodium')->name('publications.moodium');
+    Route::get('/publications/scm', 'scm')->name('publications.scm');
+    Route::get('/publications/captcha', 'captcha')->name('publications.captcha');
+    Route::get('/publications/ai-blockchain', 'ai_blockchain')->name('publications.ai_blockchain');
+    Route::get('/publications/synergy-blockchain', 'synergy_blockchain')->name('publications.synergy_blockchain');
+    Route::get('publications/php-vuls', 'php_vuls')->name('publications.php_vuls');
+    Route::get('publications/crm', 'crm')->name('publications.crm');
+    Route::get('publications/qca', 'qca')->name('publications.qca');
 
 });
 
