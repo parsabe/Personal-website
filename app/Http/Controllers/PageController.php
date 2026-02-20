@@ -152,9 +152,9 @@ class PageController extends Controller
     {
         return view('pages.chat.chat');
     }
-    public function abie()
+    public function books()
     {
-        return view('pages.abie-motlagh.abie');
+        return view('pages.books');
     }
     public function sandika()
     {

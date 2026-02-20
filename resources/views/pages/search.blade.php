@@ -48,11 +48,11 @@
   
 <main class="flex-1 p-6 lg:p-10 overflow-y-auto scrollbar-hide">
             <div class="max-w-6xl mx-auto">
-                <h1 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">Search Projects</h1>
+                <h1 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">Search here ...</h1>
 
                 <form action="{{ route('search') }}" method="GET" class="mb-8">
                     <div class="relative flex items-center">
-                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search projects..."
+                        <input type="text" name="q" value="{{ request('q') }}" placeholder="Search here..."
                             class="w-full pl-4 pr-12 py-3 rounded-xl bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 dark:text-gray-100 placeholder-gray-500 shadow-sm transition-all duration-300">
                         <button type="submit" class="absolute right-3 text-gray-500 hover:text-blue-600 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

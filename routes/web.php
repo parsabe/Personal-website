@@ -32,7 +32,7 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/support', 'support')->name('support');
     Route::get('/nigma', 'nigma')->name('nigma');
     Route::get('/chat', 'chat')->name('chat');
-    Route::get('/abie-motlagh', 'abie')->name('abie');
+    Route::get('/books', 'books')->name('books');
     Route::get('/chat', 'chat')->name('chat');
     Route::get('/sandika', 'sandika')->name('sandika');
 
