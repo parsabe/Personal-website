@@ -64,7 +64,7 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/publications/qca', 'qca')->name('publications.qca');
 
     // --- Blogs ---
-    Route::get('/blogs', 'blogs')->name('blogs');
+    Route::get('/blog', 'blog')->name('blog');
 });
 
 Route::get('/dashboard', function () {
