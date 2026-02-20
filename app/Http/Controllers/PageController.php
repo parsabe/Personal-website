@@ -26,7 +26,7 @@ class PageController extends Controller
     }
     public function BlackWall()
     {
-        return view('pages.projects.BlackWall');
+        return view('pages.projects.blackwall');
     }
     public function Mlmatrix()
     {
@@ -34,17 +34,17 @@ class PageController extends Controller
     }
     public function SCP()
     {
-        return view('pages.projects.SCP');
+        return view('pages.projects.scp');
     }
 
     public function CeasarToolkit()
     {
-        return view('pages.projects.CeasarToolkit');
+        return view('pages.projects.ceasartoolkit');
     }
 
     public function parsai()
     {
-        return view('pages.projects.Parsai');
+        return view('pages.projects.parsai');
     }
 
     public function netnexus()
@@ -68,42 +68,42 @@ class PageController extends Controller
 
     public function blackwall_paper()
     {
-        return view('blackwall_paper');
+        return view('pages.publications.blackwall_paper');
     }
 
     public function moodium()
     {
-        return view('moodium');
+        return view('pages.publications.moodium');
     }
 
     public function scm()
     {
-        return view('scm');
+        return view('pages.publications.scm');
     }
 
     public function captcha()
     {
-        return view('captcha');
+        return view('pages.publications.captcha');
     }
     public function ai_blockchain()
     {
-        return view('ai-blockchain');
+        return view('<pages class="publications"></pages>ai-blockchain');
     }
     public function synergy_blockchain()
     {
-        return view('synergy-blockchain');
+        return view('pages.publications.synergy-blockchain');
     }
     public function php_vuls()
     {
-        return view('php-vuls');
+        return view('pages.publications.php-vuls');
     }
     public function crm()
     {
-        return view('crm');
+        return view('pages.publications.crm');
     }
     public function qca()
     {
-        return view('qca');
+        return view('pages.publications.qca');
     }
 
 

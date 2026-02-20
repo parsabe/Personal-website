@@ -66,7 +66,7 @@
                             A domain-aware and interpretable framework designed to identify, assess, and rank high-risk
                             content across online platforms.
                         </p>
-                        <a href="{{ route('projects.blackwall') }}" target="_blank"
+                        <a href="{{ route('projects.blackwall') }}"
                             class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
                             Read more
                         </a>
@@ -84,7 +84,7 @@
                             This repository features four in-depth articles covering a range of cutting-edge
                             technologies and their applications.
                         </p>
-                        <a href="{{ route('projects.mlmatrix') }}" target="_blank"
+                        <a href="{{ route('projects.mlmatrix') }}"
                             class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
                             Read more
                         </a>
@@ -101,7 +101,7 @@
                         <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow">
                             This repository contains my projects that I do just for fun.
                         </p>
-                        <a href="{{ route('projects.funroot') }}" target="_blank"
+                        <a href="{{ route('projects.funroot') }}"
                             class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
                             Read more
                         </a>
@@ -111,7 +111,7 @@
                     <div
                         class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                         <div class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden">
-                            <img src="{{ asset('images/projects/ceasar.png') }}" alt="Ceasar Toolkit"
+                            <img src="{{ asset('images/ceasar.png') }}" alt="Ceasar Toolkit"
                                 class="w-full h-full object-cover">
                         </div>
                         <h2 class="text-xl font-bold mb-2 text-gray-800 dark:text-gray-100">Ceasar Toolkit</h2>
@@ -119,7 +119,7 @@
                             Ceasar Cipher Toolkit is a free, open-source CLI framework for encoding and decoding files
                             using the classic Ceasar cipher.
                         </p>
-                        <a href="{{ route('projects.ceasar-toolkit') }}" target="_blank"
+                        <a href="{{ route('projects.ceasartoolkit') }}"
                             class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
                             Read more
                         </a>
@@ -129,15 +129,14 @@
                     <div
                         class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                         <div class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden">
-                            <img src="{{ asset('images/scp.png') }}" alt="SCP"
-                                class="w-full h-full object-cover">
+                            <img src="{{ asset('images/scp.png') }}" alt="SCP" class="w-full h-full object-cover">
                         </div>
                         <h2 class="text-xl font-bold mb-2 text-gray-800 dark:text-gray-100">SCP</h2>
                         <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow">
                             This project provides a modular, extensible, and research-oriented deep learning pipeline
                             for image classification.
                         </p>
-                        <a href="{{ route('projects.scp') }}" target="_blank"
+                        <a href="{{ route('projects.scp') }}"
                             class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
                             Read more
                         </a>
@@ -155,7 +154,7 @@
                             A collection of innovative web projects including a dynamic website, an engaging online
                             riddle game, a social media platform, and a chat portal.
                         </p>
-                        <a href="{{ route('projects.netnexus') }}" target="_blank"
+                        <a href="{{ route('projects.netnexus') }}"
                             class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
                             Read more
                         </a>
@@ -165,15 +164,14 @@
                     <div
                         class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                         <div class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden">
-                            <img src="{{ asset('images/parsai.jpg') }}" alt="Parsai"
-                                class="w-full h-full object-cover">
+                            <img src="{{ asset('images/parsai.jpg') }}" alt="Parsai" class="w-full h-full object-cover">
                         </div>
                         <h2 class="text-xl font-bold mb-2 text-gray-800 dark:text-gray-100">Parsai</h2>
                         <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow">
                             Parsai combines a powerful VS Code extension and a Telegram bot to provide versatile coding
                             assistance using OpenAI's GPT-4.
                         </p>
-                        <a href="{{ route('projects.parsai') }}" target="_blank"
+                        <a href="{{ route('projects.parsai') }}"
                             class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
                             Read more
                         </a>
@@ -191,7 +189,7 @@
                             HounaarToolkit is a versatile Python toolkit that provides a set of tools for various tasks,
                             including data analysis, YouTube video downloading, and more.
                         </p>
-                        <a href="{{ route('projects.hounaartoolkit') }}" target="_blank"
+                        <a href="{{ route('projects.hounaartoolkit') }}"
                             class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
                             Read more
                         </a>
@@ -209,7 +207,7 @@
                             Sandika is an Online Simple Social media platform where poeple can post texts, images,
                             videos, solve riddles and some more.
                         </p>
-                        <a href="{{ route('projects.sandika') }}" target="_blank"
+                        <a href="{{ route('projects.sandika') }}"
                             class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
                             Read more
                         </a>
