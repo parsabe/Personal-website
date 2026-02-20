@@ -11,7 +11,6 @@
 
     <nav class="flex-1 overflow-y-auto space-y-1.5 pr-2">
         @php
-            // The 'route' keys now perfectly match the ->name('...') definitions in web.php
             $menuItems = [
                 ['name' => 'Home', 'route' => 'home', 'icon' => '🏠'],
                 ['name' => 'About', 'route' => 'about', 'icon' => '👤'],
@@ -24,17 +23,27 @@
                 ['name' => 'VPN Server', 'route' => 'vpn-server', 'icon' => '☁️'],
                 ['name' => 'Club', 'route' => 'fun', 'icon' => '🎮'],
                 ['name' => 'Blog', 'route' => 'blog', 'icon' => '☕'],
-                ['name' => 'Chat', 'route' => 'chat', 'icon' => '💬'],
-                ['name' => 'Sandika', 'route' => 'sandika', 'icon' => '🤖'],
-                ['name' => 'Nigma', 'route' => 'nigma', 'icon' => '🧩'],
-
+                
+                // External Subdomains using 'url' instead of 'route'
+                ['name' => 'Chat', 'url' => 'https://blue-pearl.parsabe.com', 'icon' => '💬'],
+                ['name' => 'Sandika', 'url' => 'https://sandika.parsabe.com', 'icon' => '🤖'],
+                ['name' => 'Nigma', 'url' => 'https://nigma.parsabe.com', 'icon' => '🧩'],
             ];
         @endphp
 
         @foreach($menuItems as $item)
-            <a href="{{ route($item['route']) }}"
+            @php
+                // Determine if this is an external URL or a local route
+                $isExternal = isset($item['url']);
+                $href = $isExternal ? $item['url'] : route($item['route']);
+                
+                // Active state only applies to local routes
+                $isActive = !$isExternal && request()->routeIs($item['route']);
+            @endphp
+            
+            <a href="{{ $href }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 font-semibold text-gray-800 dark:text-gray-200 hover:shadow-sm hover:bg-white/40 dark:hover:bg-black/40 
-                    {{ request()->routeIs($item['route']) ? 'bg-white/50 dark:bg-black/50 shadow-md border border-white/20 dark:border-white/10' : 'border border-transparent' }}">
+                    {{ $isActive ? 'bg-white/50 dark:bg-black/50 shadow-md border border-white/20 dark:border-white/10' : 'border border-transparent' }}">
 
                 <span class="text-lg">{{ $item['icon'] }}</span>
                 {{ $item['name'] }}
