@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moodium - Parsa Besharat</title>
+    <title>Moodium Paper - Parsa Besharat</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -18,12 +18,21 @@
             </button>
         </div>
         @include('sidebar')
-        <main class="flex-1 p-8 lg:p-14 relative overflow-y-auto">
-            <div class="relative z-10 mt-12 lg:mt-0">
-                <h1 class="text-4xl font-bold mb-6">Moodium</h1>
-                <p class="text-lg">Details coming soon.</p>
-            </div>
-        </main>
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
 </body>
 </html>
