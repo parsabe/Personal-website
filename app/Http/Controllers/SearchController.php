@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
+use App\Models\Project;
 class SearchController extends Controller
 {
     public function index(Request $request)
