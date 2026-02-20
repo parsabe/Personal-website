@@ -27,7 +27,7 @@ Route::controller(PageController::class)->group(function () {
     // (Removed /contact from here since ContactController handles it now)
     Route::get('/search', 'search')->name('search');
     Route::get('/myplaylist', 'myplaylist')->name('myplaylist');
-    Route::get('/vpn-server', 'VPN_server')->name('vpn-server');
+    Route::get('/vpn', 'VPN_server')->name('vpn-server');
     Route::get('/fun', 'fun')->name('fun'); 
     Route::get('/support', 'support')->name('support');
     Route::get('/nigma', 'nigma')->name('nigma');
