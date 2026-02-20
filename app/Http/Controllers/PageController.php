@@ -61,6 +61,17 @@ class PageController extends Controller
         return view('pages.projects.sandika');
     }
 
+    public function funroot()
+    {
+        return view('pages.projects.funroot');
+    }
+
+
+
+
+
+
+
     public function publications()
     {
         return view('pages.publications');
@@ -149,8 +160,4 @@ class PageController extends Controller
     {
         return view('pages.sandika.sandika');
     }
-
-
-
-
 }
