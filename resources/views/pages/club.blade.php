@@ -42,6 +42,16 @@
     </style>
 </head>
 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E441FBGYXG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-E441FBGYXG');
+</script>
+
 <body>
     <div class="wer">
         <button onclick="p();" class="mdc-button foo-button mdc-ripple-upgraded" style="--mdc-ripple-fg-size:48px; --mdc-ripple-fg-scale:2.0511874580968796; --mdc-ripple-fg-translate-start:31px, -4px; --mdc-ripple-fg-translate-end:16.400001525878906px, -6px;">
