@@ -9,24 +9,33 @@ class PageController extends Controller
 {
     public function home()
     {
-        // 2. ADD THIS ENTIRE SCHEMA BLOCK
-        $personSchema = Schema::person()
-            ->name('Parsa Besharat') // Enter your full real name
+        // 1. Build your personal data (with the email fixed!)
+        $personData = Schema::person()
+            ->name('Parsa Besharat')
             ->url(url('/'))
-            ->jobTitle('Researcher - AI Engineer') // Change to your actual title
+            ->jobTitle('Researcher - AI Engineer')
+            ->email('parsa.besharat@student.tu-freiberg.de')
             ->affiliation(
-                Schema::organization()->name('TU Bergakademie Freiberg') // Change to your actual affiliation
+                Schema::organization()->name('TU Bergakademie Freiberg')
             )
             ->sameAs([
-                'https://www.linkedin.com/in/parsabe', // Add your real links
+                'https://www.linkedin.com/in/parsabe',
                 'https://github.com/parsabe',
-                'https://researchgate.net/profile/Parsa-Besharat',
-                'mailto:parsa.besharat@student.tu-freiberg.de',
+                'https://researchgate.net/profile/Parsa-Besharat'
             ]);
 
-        // 3. UPDATE YOUR RETURN STATEMENT TO PASS THE DATA
-        return view('home', compact('personSchema'));
+        // 2. Wrap it all in the ProfilePage schema so Google Rich Results accepts it
+        $profileSchema = Schema::profilePage()
+            ->mainEntity($personData);
+
+        // 3. Pass the $profileSchema to your view
+        return view('home', compact('profileSchema'));
     }
+
+
+
+
+
     public function about()
     {
         return view('pages.about');

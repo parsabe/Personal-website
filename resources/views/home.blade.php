@@ -26,7 +26,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
- {!! $personSchema->toScript() !!}
+
+
+
+
+{!! $profileSchema->toScript() !!}
 
 </head>
 
