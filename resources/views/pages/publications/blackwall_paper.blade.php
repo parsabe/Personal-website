@@ -5,6 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlackWall Paper - Parsa Besharat</title>
+
+    <meta name="description" content="BlackWall is a domain-aware and interpretable framework designed to identify, assess, and rank high-risk content across online platforms to prevent AI from going rogue. Research by Parsa Besharat.">
+    <meta name="author" content="Parsa Besharat">
+    <meta name="keywords" content="BlackWall, AI Safety, Suicidal Ideation Detection, Interpretable AI, Generative AI Moderation, Rogue AI Prevention, Parsa Besharat, Research Paper">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="BlackWall Paper - Parsa Besharat">
+    <meta property="og:description" content="BlackWall is a domain-aware and interpretable framework designed to identify, assess, and rank high-risk content across online platforms to prevent AI from going rogue.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])

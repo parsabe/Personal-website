@@ -6,11 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ceasar Toolkit Project- Parsa Besharat</title>
 
-    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
-    MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="description" content="Ceasar Toolkit is a free, open-source Python CLI framework for Ceasar cipher encoding, PDF encryption, and folder encryption using EncFS. Developed by Parsa Besharat.">
     <meta name="author" content="Parsa Besharat">
-    <meta name="keywords"
-        content="Parsa Besharat, Researcher, AI Engineer, Data Scientist, Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, TU Freiberg University, Germany">
+    <meta name="keywords" content="Ceasar Toolkit, Ceasar Cipher, Python CLI, PDF Encryption, Folder Encryption, EncFS, Open Source, Parsa Besharat, Cryptography Tool, Security">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Ceasar Toolkit Project - Parsa Besharat">
+    <meta property="og:description" content="Ceasar Toolkit is a free, open-source Python CLI framework for Ceasar cipher encoding, PDF encryption, and folder encryption using EncFS.">
+    <meta property="og:image" content="{{ asset('images/ceasar.png') }}">
+    <meta name="twitter:card" content="summary_large_image">
+
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
 

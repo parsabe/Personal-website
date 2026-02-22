@@ -35,7 +35,7 @@
     </button>
 
     <div class="flex flex-col items-center mb-8 mt-8 md:mt-0">
-        <img src="{{ asset('images/profile.jpg') }}" alt="Profile Picture"
+        <img src="{{ asset('images/profile.jpg') }}" alt="Parsa Besharat"
             class="w-24 h-24 rounded-full border-[3px] border-white/40 shadow-lg mb-3 object-cover object-[50%_25%] aspect-square">
         <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white drop-shadow-md">Parsa
             Besharat</h2>

@@ -14,9 +14,29 @@
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
 
-<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Parsa Besharat - Researcher & AI Engineer">
+    <meta property="og:description"
+        content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+    <meta property="profile:first_name" content="Parsa">
+    <meta property="profile:last_name" content="Besharat">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Parsa Besharat - Researcher & AI Engineer">
+    <meta name="twitter:description"
+        content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="twitter:image" content="{{ asset('images/profile.jpg') }}">
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -30,18 +50,18 @@
 
 
 
-{!! $profileSchema->toScript() !!}
+    {!! $profileSchema->toScript() !!}
 
 </head>
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-E441FBGYXG"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-  gtag('config', 'G-E441FBGYXG');
+    gtag('config', 'G-E441FBGYXG');
 </script>
 
 <body

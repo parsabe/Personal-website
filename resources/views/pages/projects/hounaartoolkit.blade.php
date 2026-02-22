@@ -6,11 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HounaarToolkit Project - Parsa Besharat</title>
 
-    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
-    MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="description" content="HounaarToolkit is a versatile Python toolkit for data analysis, YouTube downloading, crypto price checking, network scanning, and rootkit detection. Developed by Parsa Besharat.">
     <meta name="author" content="Parsa Besharat">
-    <meta name="keywords"
-        content="Parsa Besharat, Researcher, AI Engineer, Data Scientist, Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, TU Freiberg University, Germany">
+    <meta name="keywords" content="HounaarToolkit, Python Toolkit, Data Analysis AI, YouTube Downloader, Crypto Price Checker, Network Scanner, Rootkit Detection, Type Rover, Open Source, Parsa Besharat">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="HounaarToolkit Project - Parsa Besharat">
+    <meta property="og:description" content="HounaarToolkit is a versatile Python toolkit for data analysis, YouTube downloading, crypto price checking, network scanning, and rootkit detection.">
+    <meta property="og:image" content="https://github.com/hounaar/HounaarToolkit/blob/main/logo.png?raw=true">
+    <meta name="twitter:card" content="summary_large_image">
+
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
 

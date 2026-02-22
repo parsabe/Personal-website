@@ -4,13 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetNexus Project - Parsa Besharat</title>
+    <title>Parsai Project - Parsa Besharat</title>
 
-    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
-    MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="description" content="Parsai is an Edge, Firefox, and Chrome extension, as well as a Telegram bot, designed to provide versatile coding assistance using OpenAI's GPT-4. Developed by Parsa Besharat.">
     <meta name="author" content="Parsa Besharat">
-    <meta name="keywords"
-        content="Parsa Besharat, Researcher, AI Engineer, Data Scientist, Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, TU Freiberg University, Germany">
+    <meta name="keywords" content="Parsai, GPT-4 Extension, Chrome Extension, Firefox Extension, Edge Extension, Telegram Bot, AI Coding Assistant, OpenAI, Parsa Besharat">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Parsai Project - Parsa Besharat">
+    <meta property="og:description" content="Parsai is an Edge, Firefox, and Chrome extension, as well as a Telegram bot, designed to provide versatile coding assistance using OpenAI's GPT-4.">
+    <meta property="og:image" content="https://github.com/parsabe/Parsai/blob/main/main.jpg?raw=true">
+    <meta name="twitter:card" content="summary_large_image">
+
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
 

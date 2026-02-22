@@ -6,11 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NetNexus Project - Parsa Besharat</title>
 
-    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
-    MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="description" content="NetNexus is a collection of innovative web projects by Parsa Besharat, including Blue Pearl Chat Portal, Nigma Riddle Game, Sandika Social Media, and Huffman Algorithm implementation.">
     <meta name="author" content="Parsa Besharat">
-    <meta name="keywords"
-        content="Parsa Besharat, Researcher, AI Engineer, Data Scientist, Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, TU Freiberg University, Germany">
+    <meta name="keywords" content="NetNexus, Web Projects, Blue Pearl Chat, Nigma Riddle Game, Sandika Social Media, Huffman Algorithm, PHPortal, Parsa Besharat, Open Source">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="NetNexus Project - Parsa Besharat">
+    <meta property="og:description" content="NetNexus is a collection of innovative web projects by Parsa Besharat, including Blue Pearl Chat Portal, Nigma Riddle Game, Sandika Social Media, and more.">
+    <meta property="og:image" content="https://github.com/parsabe/NetNexus/blob/master/logo.png?raw=true">
+    <meta name="twitter:card" content="summary_large_image">
+
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
 

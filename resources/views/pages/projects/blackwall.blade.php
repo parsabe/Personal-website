@@ -6,13 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BlackWall Project- Parsa Besharat</title>
 
-    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
-    MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="description" content="BlackWall is a domain-aware and interpretable AI framework designed to identify, assess, and rank high-risk content to prevent AI from going rogue.">
     <meta name="author" content="Parsa Besharat">
-    <meta name="keywords"
-        content="Parsa Besharat, Researcher, AI Engineer, Data Scientist, Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, TU Freiberg University, Germany">
+    <meta name="keywords" content="BlackWall, AI Safety, Rogue AI, Content Moderation, Suicidal Ideation Detection, Machine Learning, Parsa Besharat, Domain Adversarial Training">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="BlackWall Project - Parsa Besharat">
+    <meta property="og:description" content="BlackWall is a domain-aware and interpretable AI framework designed to identify, assess, and rank high-risk content to prevent AI from going rogue.">
+    <meta property="og:image" content="https://github.com/parsabe/BlackWall/blob/master/baclwall-poster.png?raw=true">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="BlackWall Project - Parsa Besharat">
+    <meta name="twitter:description" content="BlackWall is a domain-aware and interpretable AI framework designed to identify, assess, and rank high-risk content to prevent AI from going rogue.">
+    <meta name="twitter:image" content="https://github.com/parsabe/BlackWall/blob/master/baclwall-poster.png?raw=true">
 
 
 

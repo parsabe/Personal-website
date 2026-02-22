@@ -6,13 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favorite Books - Parsa Besharat</title>
 
-    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
-    MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="description" content="Discover Parsa Besharat's favorite books and reading recommendations on Artificial Intelligence, History, Biography, and Personal Growth.">
     <meta name="author" content="Parsa Besharat">
-    <meta name="keywords"
-        content="Parsa Besharat, Researcher, AI Engineer, Data Scientist, Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, TU Freiberg University, Germany">
+    <meta name="keywords" content="Books, Reading List, Parsa Besharat, Recommended Books, AI, History, Biography, Sapiens, Arnold">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Favorite Books - Parsa Besharat">
+    <meta property="og:description" content="Discover Parsa Besharat's favorite books and reading recommendations on Artificial Intelligence, History, Biography, and Personal Growth.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Favorite Books - Parsa Besharat">
+    <meta name="twitter:description" content="Discover Parsa Besharat's favorite books and reading recommendations on Artificial Intelligence, History, Biography, and Personal Growth.">
+    <meta name="twitter:image" content="{{ asset('images/profile.jpg') }}">
 
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>

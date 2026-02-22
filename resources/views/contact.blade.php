@@ -4,24 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Parsa Besharat</title>
+    <title>Contact Parsa Besharat | AI Engineer & Researcher</title>
 
-    <meta name="description" content="Contact Parsa Besharat">
+    <meta name="description" content="Get in touch with Parsa Besharat for AI research collaborations, data science projects, or professional inquiries. Connect via Email, LinkedIn, or GitHub.">
     <meta name="author" content="Parsa Besharat">
     <meta name="robots" content="index, follow">
 
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="canonical" href="{{ url()->current() }}">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        window.tailwind = { config: { darkMode: 'class' } };
-    </script>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Contact Parsa Besharat | AI Engineer & Researcher">
+    <meta property="og:description" content="Reach out for collaborations in AI and Research. Available via email and professional social networks.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Contact Parsa Besharat">
+    <meta name="twitter:description" content="AI Engineer & Researcher. Get in touch for professional inquiries.">
+    <meta name="twitter:image" content="{{ asset('images/profile.jpg') }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
 </head>
 

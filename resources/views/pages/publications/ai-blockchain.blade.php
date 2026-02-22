@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI and Blockchain — Enhancing Security & Transparency - Parsa Besharat</title>
+
+    <meta name="description" content="Research paper by Parsa Besharat exploring the synergy between AI and Blockchain to enhance security, transparency, and integrity across various industries.">
+    <meta name="author" content="Parsa Besharat">
+    <meta name="keywords" content="AI, Blockchain, Artificial Intelligence, Security, Transparency, Smart Contracts, Decentralization, Data Integrity, Research Paper, Parsa Besharat">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="AI and Blockchain — Enhancing Security & Transparency - Parsa Besharat">
+    <meta property="og:description" content="Research paper by Parsa Besharat exploring the synergy between AI and Blockchain to enhance security, transparency, and integrity across various industries.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CAPTCHA Unmasked: The Math That Outsmarts Bots - Parsa Besharat</title>
+
+    <meta name="description" content="Research paper by Parsa Besharat exploring the mathematical underpinnings, image processing techniques, and machine learning integration in CAPTCHA systems to distinguish humans from bots.">
+    <meta name="author" content="Parsa Besharat">
+    <meta name="keywords" content="CAPTCHA, Cybersecurity, Image Processing, Machine Learning, Affine Transformations, Neural Networks, Bot Detection, Parsa Besharat, Research Paper">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="CAPTCHA Unmasked: The Math That Outsmarts Bots - Parsa Besharat">
+    <meta property="og:description" content="Research paper by Parsa Besharat exploring the mathematical underpinnings, image processing techniques, and machine learning integration in CAPTCHA systems.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])

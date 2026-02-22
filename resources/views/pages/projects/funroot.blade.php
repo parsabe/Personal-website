@@ -6,11 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FunRoot Project - Parsa Besharat</title>
 
-    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
-    MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="description" content="FunRoot is a collection of fun open-source projects and coding practices by Parsa Besharat, including Matrix Grub, Chess in Python, DevOps Roadmaps, and more.">
     <meta name="author" content="Parsa Besharat">
-    <meta name="keywords"
-        content="Parsa Besharat, Researcher, AI Engineer, Data Scientist, Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, TU Freiberg University, Germany">
+    <meta name="keywords" content="FunRoot, Parsa Besharat, Open Source Projects, Matrix Grub, Chess Python, DevOps Roadmap, ChatApp, 2048 Game, Coding Practice, GitHub">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="FunRoot Project - Parsa Besharat">
+    <meta property="og:description" content="FunRoot is a collection of fun open-source projects and coding practices by Parsa Besharat, including Matrix Grub, Chess in Python, DevOps Roadmaps, and more.">
+    <meta property="og:image" content="{{ asset('images/funroot.png') }}">
+    <meta name="twitter:card" content="summary_large_image">
+
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
 

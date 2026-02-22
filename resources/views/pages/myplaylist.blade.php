@@ -6,13 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Playlist - Parsa Besharat</title>
 
-    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
-    MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="description" content="Listen to Parsa Besharat's favorite tracks and mixes on Spotify and YouTube. A curated collection of music for coding and relaxation.">
     <meta name="author" content="Parsa Besharat">
-    <meta name="keywords"
-        content="Parsa Besharat, Researcher, AI Engineer, Data Scientist, Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, TU Freiberg University, Germany">
+    <meta name="keywords" content="Playlist, Music, Spotify, YouTube, Parsa Besharat, Favorite Tracks, Mixes, Coding Music">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Playlist - Parsa Besharat">
+    <meta property="og:description" content="Listen to Parsa Besharat's favorite tracks and mixes on Spotify and YouTube. A curated collection of music for coding and relaxation.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Playlist - Parsa Besharat">
+    <meta name="twitter:description" content="Listen to Parsa Besharat's favorite tracks and mixes on Spotify and YouTube. A curated collection of music for coding and relaxation.">
+    <meta name="twitter:image" content="{{ asset('images/profile.jpg') }}">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -105,5 +119,3 @@
 </body>
 
 </html>
-
-

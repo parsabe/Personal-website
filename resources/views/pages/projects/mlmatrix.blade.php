@@ -6,11 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MLMatrix Project - Parsa Besharat</title>
 
-    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
-    MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
+    <meta name="description" content="MLMatrix is a comprehensive repository of Data Science and AI projects by Parsa Besharat, covering Scientific ML, Data Assimilation, High Performance Computing, and Crypto Currency Datasets.">
     <meta name="author" content="Parsa Besharat">
-    <meta name="keywords"
-        content="Parsa Besharat, Researcher, AI Engineer, Data Scientist, Machine Learning, Deep Learning, Natural Language Processing, Computer Vision, TU Freiberg University, Germany">
+    <meta name="keywords" content="MLMatrix, Data Science, AI, Machine Learning, Scientific ML, Data Assimilation, High Performance Computing, Crypto Datasets, Parsa Besharat, Research">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="MLMatrix Project - Parsa Besharat">
+    <meta property="og:description" content="MLMatrix is a comprehensive repository of Data Science and AI projects by Parsa Besharat, covering Scientific ML, Data Assimilation, High Performance Computing, and more.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
 

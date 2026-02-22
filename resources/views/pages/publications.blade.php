@@ -6,8 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publications - Parsa Besharat</title>
 
-    <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer.">
+    <meta name="description" content="Read research papers and publications by Parsa Besharat on AI, Machine Learning, Blockchain, and Data Science. Featuring BlackWall, Moodium, and more.">
     <meta name="author" content="Parsa Besharat">
+    <meta name="keywords" content="Publications, Research Papers, Parsa Besharat, AI Research, Machine Learning, Blockchain, Data Science, BlackWall, Moodium, QCA">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Publications - Parsa Besharat">
+    <meta property="og:description" content="Read research papers and publications by Parsa Besharat on AI, Machine Learning, Blockchain, and Data Science. Featuring BlackWall, Moodium, and more.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Publications - Parsa Besharat">
+    <meta name="twitter:description" content="Read research papers and publications by Parsa Besharat on AI, Machine Learning, Blockchain, and Data Science. Featuring BlackWall, Moodium, and more.">
+    <meta name="twitter:image" content="{{ asset('images/profile.jpg') }}">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>

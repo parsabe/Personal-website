@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Mining Usage in CRM - Parsa Besharat</title>
+
+    <meta name="description" content="Research paper by Parsa Besharat on the usage of Data Mining in Customer Relationship Management (CRM) to enhance customer retention, loyalty, and service quality through predictive analytics.">
+    <meta name="author" content="Parsa Besharat">
+    <meta name="keywords" content="Data Mining, CRM, Customer Relationship Management, Customer Retention, Predictive Analytics, Business Intelligence, Parsa Besharat, Research Paper">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Data Mining Usage in CRM - Parsa Besharat">
+    <meta property="og:description" content="Research paper by Parsa Besharat on the usage of Data Mining in Customer Relationship Management (CRM) to enhance customer retention, loyalty, and service quality.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
