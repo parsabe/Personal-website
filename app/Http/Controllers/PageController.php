@@ -3,14 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Spatie\SchemaOrg\Schema; // 1. ADD THIS IMPORT HERE!
 
 class PageController extends Controller
 {
     public function home()
     {
-        return view('home');
-    }
+        // 2. ADD THIS ENTIRE SCHEMA BLOCK
+        $personSchema = Schema::person()
+            ->name('Parsa Besharat') // Enter your full real name
+            ->url(url('/'))
+            ->jobTitle('Researcher - AI Engineer') // Change to your actual title
+            ->affiliation(
+                Schema::organization()->name('TU Bergakademie Freiberg') // Change to your actual affiliation
+            )
+            ->sameAs([
+                'https://www.linkedin.com/in/parsabe', // Add your real links
+                'https://github.com/parsabe',
+                'https://researchgate.net/profile/Parsa-Besharat',
+                'mailto:parsa.besharat@student.tu-freiberg.de',
+            ]);
 
+        // 3. UPDATE YOUR RETURN STATEMENT TO PASS THE DATA
+        return view('home', compact('personSchema'));
+    }
     public function about()
     {
         return view('pages.about');

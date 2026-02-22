@@ -2,33 +2,46 @@
 
 namespace App\Console\Commands;
 
-use Spatie\Sitemap\SitemapGenerator;
 use Illuminate\Console\Command;
+use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\Tags\Url;
 
 class GenerateSitemap extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:generate-sitemap';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    /**
-     * Execute the console command.
-     */
-
+    protected $signature = 'sitemap:generate';
+    protected $description = 'Generate the sitemap.';
 
     public function handle()
     {
-        SitemapGenerator::create('https://parsabe.com')
-            ->writeToFile(public_path('sitemap.xml'));
+        $sitemap = Sitemap::create();
+
+        // 1. Array of your named routes from the menu
+        $menuRoutes = [
+            'home',
+            'about',
+            'contact',
+            'projects',
+            'publications',
+            'myplaylist',
+            'search', 
+            'books',
+            'vpn-server',
+            'fun',
+            'blog',
+        ];
+
+        // 2. Loop through the menu and add them to the sitemap
+        foreach ($menuRoutes as $routeName) {
+            $sitemap->add(
+                Url::create(route($routeName))
+                    ->setPriority($routeName === 'home' ? 1.0 : 0.8)
+                    ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+            );
+        }
+
+        // 3. Save to public folder
+        $sitemap->writeToFile(public_path('sitemap.xml'));
+
+        $this->info('Sitemap generated successfully with all menu items!');
     }
 }
