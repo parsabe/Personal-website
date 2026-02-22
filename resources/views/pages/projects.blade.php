@@ -35,6 +35,7 @@
 
   gtag('config', 'G-E441FBGYXG');
 </script>
+ 
 
 <body
     class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10 min-h-screen relative overflow-x-hidden">
@@ -59,7 +60,18 @@
 
         <main class="flex-1 p-6 lg:p-10 overflow-y-auto scrollbar-hide">
             <div class="max-w-6xl mx-auto">
-                <h1 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100">Projects</h1>
+                <div id="projects">
+                    <span
+                        class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6">
+                        🚀 PROJECTS
+                    </span>
+
+                    <h1
+                        class="text-4xl lg:text-5xl font-extrabold mb-8 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
+                        Featured <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">Projects.</span>
+                    </h1>
+                    <hr class="border-gray-200 dark:border-gray-700 mb-8 opacity-50">
 
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -226,6 +238,7 @@
 
 
 
+                </div>
                 </div>
         </main>
     </div>

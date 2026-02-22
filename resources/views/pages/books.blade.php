@@ -60,6 +60,19 @@
         @include('sidebar')
         <main class="flex-1 p-6 lg:p-10 overflow-y-auto scrollbar-hide">
             <div class="max-w-6xl mx-auto">
+                <div id="books">
+                    <span
+                        class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6">
+                        📚 BOOKS
+                    </span>
+
+                    <h1
+                        class="text-4xl lg:text-5xl font-extrabold mb-8 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
+                        Favorite <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">Books.</span>
+                    </h1>
+                    <hr class="border-gray-200 dark:border-gray-700 mb-8 opacity-50">
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
                         <img src="{{ asset('images/ai.jpg') }}" alt="AI" class="w-full h-full object-cover">
@@ -79,6 +92,7 @@
                     <div class="rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300">
                         <img src="{{ asset('images/source.jpg') }}" alt="Source" class="w-full h-full object-cover">
                     </div>
+                </div>
                 </div>
             </div>
         </main>

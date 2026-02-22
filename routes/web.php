@@ -6,6 +6,12 @@ use App\Http\Controllers\PageController; // <--- 1. Import the Class
 
 use App\Http\Controllers\ContactController; // <-- Don't forget to import this!
 
+use Spatie\Sitemap\SitemapGenerator;
+
+Route::get('/generate-sitemap', function () {
+    SitemapGenerator::create('https://parsabe.com')->writeToFile(public_path('sitemap.xml'));
+    return 'Sitemap generated!';
+});
 // ==========================================
 // Independent Routes & Closures
 // ==========================================

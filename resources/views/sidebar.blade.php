@@ -25,7 +25,7 @@
 
 <aside
     id="sidebar"
-    class="fixed inset-y-0 left-0 z-50 w-64 transform -translate-x-full md:translate-x-0 md:static md:block flex flex-col border-r border-white/20 dark:border-white/10 bg-white/95 dark:bg-gray-900/95 md:bg-transparent md:dark:bg-transparent backdrop-blur-xl md:backdrop-blur-none p-6 lg:p-8 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none h-full">
+    class="fixed inset-y-0 left-0 z-50 w-64 transform -translate-x-full md:translate-x-0 md:static flex flex-col border-r border-white/20 dark:border-white/10 bg-white/95 dark:bg-gray-900/95 md:bg-transparent md:dark:bg-transparent backdrop-blur-xl md:backdrop-blur-none p-6 lg:p-8 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none h-full">
 
     <!-- Mobile Close Button -->
     <button onclick="toggleSidebar()" class="md:hidden absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
@@ -42,7 +42,7 @@
         <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Researcher - AI Engineer</p>
     </div>
 
-    <nav class="flex-1 overflow-y-auto space-y-1.5 pr-2">
+    <nav class="flex-1 overflow-y-auto min-h-0 space-y-1.5 pr-2">
         @php
             $menuItems = [
                 ['name' => 'Home', 'route' => 'home', 'icon' => '🏠'],
