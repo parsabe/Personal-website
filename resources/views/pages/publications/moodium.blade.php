@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moodium Paper - Parsa Besharat</title>
+    <title>Moodium - Parsa Besharat</title>
 
     <meta name="description" content="Moodium is an LLM-based culturally aware framework for multimodal emotion classification and prediction, fusing audio, visual, and textual data. Research by Parsa Besharat & Volker Göhler.">
     <meta name="author" content="Parsa Besharat">

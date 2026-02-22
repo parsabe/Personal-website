@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlackWall Paper - Parsa Besharat</title>
+    <title>BlackWall - Parsa Besharat</title>
 
     <meta name="description" content="BlackWall is a domain-aware and interpretable framework designed to identify, assess, and rank high-risk content across online platforms to prevent AI from going rogue. Research by Parsa Besharat.">
     <meta name="author" content="Parsa Besharat">

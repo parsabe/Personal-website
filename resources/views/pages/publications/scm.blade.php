@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Forecasting Equations with Scientific Machine Learning - Parsa Besharat</title>
+
+    <meta name="description" content="Research paper by Parsa Besharat on Financial Forecasting using Scientific Machine Learning (SciML) and SINDy algorithm to discover interpretable differential equations for market behavior.">
+    <meta name="author" content="Parsa Besharat">
+    <meta name="keywords" content="Financial Forecasting, Scientific Machine Learning, SciML, SINDy Algorithm, Time Series Analysis, Explainable AI, Cryptocurrency, Equity Datasets, Parsa Besharat, Research Paper">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Financial Forecasting Equations with Scientific Machine Learning - Parsa Besharat">
+    <meta property="og:description" content="Research paper by Parsa Besharat on Financial Forecasting using Scientific Machine Learning (SciML) and SINDy algorithm to discover interpretable differential equations for market behavior.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])

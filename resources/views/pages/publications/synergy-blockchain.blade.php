@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Synergy of Blockchain - Parsa Besharat</title>
+
+    <meta name="description" content="Research paper by Parsa Besharat exploring the symbiotic relationship between Blockchain and Artificial Intelligence (AI) and their potential to revolutionize industries.">
+    <meta name="author" content="Parsa Besharat">
+    <meta name="keywords" content="Blockchain, Artificial Intelligence, AI, Synergy, Data Management, Decentralized Intelligence, Smart Contracts, Innovation, Parsa Besharat, Research Paper">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="Exploring the Synergy of Blockchain and Artificial Intelligence - Parsa Besharat">
+    <meta property="og:description" content="Research paper by Parsa Besharat exploring the symbiotic relationship between Blockchain and Artificial Intelligence (AI) and their potential to revolutionize industries.">
+    <meta property="og:image" content="{{ asset('images/profile.jpg') }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
