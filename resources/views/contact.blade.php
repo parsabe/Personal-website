@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Parsa Besharat | AI Engineer & Researcher</title>
+    <title>Contact - Parsa Besharat</title>
 
     <meta name="description"
         content="Get in touch with Parsa Besharat for AI research collaborations, data science projects, or professional inquiries. Connect via Email, LinkedIn, or GitHub.">
