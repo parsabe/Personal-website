@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parsa Besharat - Researcher & AI Engineer</title>
+    <title>Parsa Besharat - AI Researcher</title>
 
     <meta name="description" content="Parsa Besharat is an Iranian Researcher and AI Engineer. He is currently pursuing his
     MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.">
@@ -103,7 +103,7 @@
 
                     <p
                         class="text-lg text-gray-800 dark:text-gray-200 leading-relaxed mb-10 font-medium drop-shadow-sm">
-                        I am an Iranian Researcher and AI Engineer, currently pursuing my
+                        I am an Iranian AI Researcher, currently pursuing my
                         MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.
                     </p>
 
