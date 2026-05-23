@@ -51,6 +51,8 @@
                 ['name' => 'Projects', 'route' => 'projects', 'icon' => '💼'],
                 ['name' => 'Publications', 'route' => 'publications', 'icon' => '📚'],
                 ['name' => 'My Playlist', 'route' => 'myplaylist', 'icon' => '🎵'],
+                ['name' => 'BlackWall', 'url' => 'https://blackwall.parsabe.com', 'icon' => '🛡️'],
+
                 ['name' => 'Search', 'route' => 'search', 'icon' => '🔍'],
                 ['name' => 'Favorite Books', 'route' => 'books', 'icon' => '📕'],
                 ['name' => 'VPN Server', 'route' => 'vpn-server', 'icon' => '☁️'],
