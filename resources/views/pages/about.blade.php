@@ -118,8 +118,8 @@
                                 <div class="space-y-8">
                                     <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
                                         <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
-                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">Head Research Assistant</h5>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Apr 2025 – Present · 10 mos · On-site</p>
+                                        <h5 class="font-semibold text-gray-800 dark:text-gray-200">Working Student AI Engineer</h5>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">May 2025 – Present · 1 Year · On-site</p>
                                         <div class="flex flex-wrap gap-2">
                                             @foreach(['Local LLMs', 'Agentic AI', 'Azure Data Factory', 'Azure Data Lake', 'Azure Databricks', 'Azure ML', 'Azure Data Warehouse', 'Microsoft Fabric'] as $skill)
                                                 <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
@@ -129,7 +129,7 @@
                                     <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-1 pl-6">
                                         <div class="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-gray-400 dark:bg-gray-500"></div>
                                         <h5 class="font-semibold text-gray-800 dark:text-gray-200">Working Student Data Scientist</h5>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Jan 2025 – Apr 2025 · 4 mos · Hybrid</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Jan 2025 – May 2025 · 5 mos · Hybrid</p>
                                         <div class="flex flex-wrap gap-2">
                                             @foreach(['Deep Learning', 'NI LabVIEW'] as $skill)
                                                 <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">{{ $skill }}</span>
