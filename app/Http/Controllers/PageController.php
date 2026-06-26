@@ -49,6 +49,10 @@ class PageController extends Controller
     {
         return view('pages.projects');
     }
+    public function vectra()
+    {
+        return view('pages.projects.vectra');
+    }
     public function BlackWall()
     {
         return view('pages.projects.blackwall');
@@ -101,7 +105,10 @@ class PageController extends Controller
     {
         return view('pages.publications');
     }
-
+    public function vectra_paper()
+    {
+        return view('pages.publications.vectra_paper');
+    }
     public function blackwall_paper()
     {
         return view('pages.publications.blackwall_paper');

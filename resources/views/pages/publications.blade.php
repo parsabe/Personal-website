@@ -86,6 +86,26 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
+                        <!-- Vectra -->
+                        <div
+                            class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
+                            <div
+                                class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden relative group">
+                                <img src="{{ asset('images/vectra.png') }}" alt="Vectra"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <h2 class="text-xl font-bold mb-1 text-gray-800 dark:text-gray-100">Vectra: The Quarantine Matrix, Constraining Neural Hallucinations in 3D Gaussian Environments</h2>
+                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">Jun 26, 2026</p>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-4">
+                                As spatial computing and generative artificial intelligence converge, the necessity for robust, secure, and highly optimized integration architectures becomes strictly paramount. The Vectra Spatial Computing Protocol bridges the gap between high-fidelity digital twins and localized generative AI pipelines.
+                            </p>
+                            <a href="{{ route('publications.vectra_paper') }}"
+                                class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
+                                Show Publication
+                            </a>
+                        </div>
+
+                        <!-- BlackWall -->
                         <div
                             class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                             <div

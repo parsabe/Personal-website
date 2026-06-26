@@ -90,6 +90,23 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
+                    <!-- Vectra -->
+                    <div
+                        class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
+                        <div class="h-48 w-full bg-gray-100 dark:bg-gray-700 rounded-xl mb-4 overflow-hidden">
+                            <img src="{{ asset('images/vectra.png') }}" alt="Vectra"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <h2 class="text-xl font-bold mb-2 text-gray-800 dark:text-gray-100">Vectra</h2>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow">
+                            An end-to-end spatial computing framework engineered to generate, extract, and simulate high-fidelity 3D objects directly from simple visual and textual data.
+                        </p>
+                        <a href="{{ route('projects.vectra') }}"
+                            class="inline-block text-center w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium transition-colors">
+                            Read more
+                        </a>
+                    </div>
+
                     <!-- BlackWall -->
                     <div
                         class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">

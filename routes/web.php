@@ -47,6 +47,7 @@ Route::controller(PageController::class)->group(function () {
 
     // --- Projects ---
     Route::get('/projects', 'projects')->name('projects');
+    Route::get('/projects/vectra', 'vectra')->name('projects.vectra');
     Route::get('/projects/blackwall', 'BlackWall')->name('projects.blackwall');
     Route::get('/projects/mlmatrix', 'Mlmatrix')->name('projects.mlmatrix');
     Route::get('/projects/scp', 'SCP')->name('projects.scp');
@@ -59,6 +60,7 @@ Route::controller(PageController::class)->group(function () {
 
     // --- Publications ---
     Route::get('/publications', 'publications')->name('publications');
+    Route::get('/publications/vectra-paper', 'vectra_paper')->name('publications.vectra_paper');
     Route::get('/publications/blackwall-paper', 'blackwall_paper')->name('publications.blackwall_paper');
     Route::get('/publications/moodium', 'moodium')->name('publications.moodium');
     Route::get('/publications/scm', 'scm')->name('publications.scm');

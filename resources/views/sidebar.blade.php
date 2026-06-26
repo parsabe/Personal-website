@@ -52,7 +52,7 @@
                 ['name' => 'Contact', 'route' => 'contact', 'icon' => '✉️'],
                 ['name' => 'Projects', 'route' => 'projects', 'icon' => '💼'],
                 ['name' => 'Publications', 'route' => 'publications', 'icon' => '📚'],
-                ['name' => 'BlackWall AI Chat (New)', 'url' => 'https://blackwall.parsabe.com', 'icon' => '🛡️'],
+                ['name' => 'VECTRA (New)', 'url' => 'https://vectra.parsabe.com', 'icon' => '👀'],
                 ['name' => 'My Playlist', 'route' => 'myplaylist', 'icon' => '🎵'],
                 ['name' => 'BlackWall', 'url' => 'https://blackwall.parsabe.com', 'icon' => '🛡️'],
 
@@ -81,7 +81,7 @@
 
             <a href="{{ $href }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 font-semibold text-gray-800 dark:text-gray-200 hover:shadow-sm hover:bg-white/40 dark:hover:bg-black/40 
-                        {{ $isActive ? 'bg-white/50 dark:bg-black/50 shadow-md border border-white/20 dark:border-white/10' : 'border border-transparent' }}">
+                            {{ $isActive ? 'bg-white/50 dark:bg-black/50 shadow-md border border-white/20 dark:border-white/10' : 'border border-transparent' }}">
 
                 <span class="text-lg">{{ $item['icon'] }}</span>
                 {{ $item['name'] }}

@@ -12,6 +12,12 @@ class ProjectSeeder extends Seeder
     {
         $projects = [
             [
+                'title' => 'Vectra',
+                'description' => 'An end-to-end spatial computing framework engineered to generate, extract, and simulate high-fidelity 3D objects directly from simple visual and textual data.',
+                'image' => 'images/vectra.png',
+                'route_name' => 'projects.vectra',
+            ],
+            [
                 'title' => 'BlackWall',
                 'description' => 'A domain-aware and interpretable framework designed to identify, assess, and rank high-risk content across online platforms.',
                 'image' => 'images/blackwall.png',
@@ -66,6 +72,12 @@ class ProjectSeeder extends Seeder
                 'route_name' => 'projects.sandika',
             ],
             // Publications
+            [
+                'title' => 'Vectra: The Quarantine Matrix, Constraining Neural Hallucinations in 3D Gaussian Environments',
+                'description' => 'As spatial computing and generative artificial intelligence converge, the necessity for robust, secure, and highly optimized integration architectures becomes strictly paramount. The Vectra Spatial Computing Protocol bridges the gap between high-fidelity digital twins and localized generative AI pipelines.',
+                'image' => 'images/vectra.png',
+                'route_name' => 'publications.vectra_paper',
+            ],
             [
                 'title' => 'BlackWall - Protect an AI from going rogue via an AI',
                 'description' => 'The increasing integration of social media and conversational AI into daily life has intensified concerns around the spread of harmful, illegal, and psychologically sensitive content.',
