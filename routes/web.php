@@ -85,4 +85,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// ==========================================
+// CS Certificates Download Portal
+// ==========================================
+Route::get('/cs-portal', [App\Http\Controllers\CsCertificateController::class, 'index'])->name('cs.certificates.index');
+Route::post('/cs-portal/search', [App\Http\Controllers\CsCertificateController::class, 'search'])->middleware('throttle:5,1')->name('cs.certificates.search');
+Route::post('/cs-portal/clear', [App\Http\Controllers\CsCertificateController::class, 'clear'])->name('cs.certificates.clear');
+Route::get('/cs-portal/download/certificate', [App\Http\Controllers\CsCertificateController::class, 'downloadCertificate'])->name('cs.certificates.download');
+Route::get('/cs-portal/download/images', [App\Http\Controllers\CsCertificateController::class, 'downloadImages'])->name('cs.certificates.download-images');
+
 require __DIR__ . '/auth.php';
+
