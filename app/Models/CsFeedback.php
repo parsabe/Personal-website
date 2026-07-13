@@ -13,6 +13,7 @@ class CsFeedback extends Model
 
     protected $fillable = [
         'cs_student_id',
+        'email',
         'ideas',
         'feedback',
         'questions',

@@ -6,15 +6,98 @@ use App\Models\CsFeedback;
 use App\Models\CsStudent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class CsFeedbackController extends Controller
 {
     /**
-     * Display the feedback form.
+     * Display the feedback form, depending on session state.
      */
     public function create()
     {
-        return view('cs.feedback');
+        $email = session('cs_feedback_email');
+        $scenario = session('cs_feedback_scenario');
+
+        if (!$email) {
+            return view('cs.feedback', ['state' => 'verify']);
+        }
+
+        if ($email === 'parsabe99@gmail.com' && is_null($scenario)) {
+            return view('cs.feedback', ['state' => 'test_selector', 'email' => $email]);
+        }
+
+        return view('cs.feedback', [
+            'state' => 'form',
+            'scenario' => $scenario,
+            'email' => $email
+        ]);
+    }
+
+    /**
+     * Verify the entered email address.
+     */
+    public function verifyEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|max:255',
+        ]);
+
+        $email = trim(Str::lower($request->input('email')));
+
+        // Store email in session
+        session(['cs_feedback_email' => $email]);
+
+        if ($email === 'parsabe99@gmail.com') {
+            // Force test scenario selector
+            session()->forget('cs_feedback_scenario');
+            return redirect()->route('cs.feedback.create');
+        }
+
+        // Check if student is in the database (Excel import table)
+        $student = CsStudent::whereRaw('LOWER(email) = ?', [$email])->first();
+
+        if ($student) {
+            // Scenario 2: Student showed up
+            session(['cs_feedback_scenario' => 2]);
+            session(['cs_feedback_student_id' => $student->id]);
+        } else {
+            // Scenario 1: Student did not show up
+            session(['cs_feedback_scenario' => 1]);
+        }
+
+        return redirect()->route('cs.feedback.create');
+    }
+
+    /**
+     * Set the scenario for testing (parsabe99@gmail.com only).
+     */
+    public function setTestScenario(Request $request)
+    {
+        $request->validate([
+            'scenario' => 'required|in:1,2',
+        ]);
+
+        if (session('cs_feedback_email') !== 'parsabe99@gmail.com') {
+            abort(403, 'Unauthorized');
+        }
+
+        session(['cs_feedback_scenario' => (int)$request->input('scenario')]);
+
+        return redirect()->route('cs.feedback.create');
+    }
+
+    /**
+     * Reset the feedback session.
+     */
+    public function resetSession()
+    {
+        session()->forget([
+            'cs_feedback_email',
+            'cs_feedback_scenario',
+            'cs_feedback_student_id'
+        ]);
+
+        return redirect()->route('cs.feedback.create');
     }
 
     /**
@@ -22,42 +105,69 @@ class CsFeedbackController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'first_name'         => 'required|string|max:255',
-            'last_name'          => 'required|string|max:255',
-            'email'              => 'required|email|max:255',
-            'ideas'              => 'required|string',
-            'feedback'           => 'required|string',
-            'questions'          => 'required|string',
-            'received_all_files' => 'required|in:yes,no',
-        ]);
+        $email = session('cs_feedback_email');
+        $scenario = session('cs_feedback_scenario');
 
-        $firstName = trim(Str::lower($request->input('first_name')));
-        $lastName  = trim(Str::lower($request->input('last_name')));
-        $email     = trim(Str::lower($request->input('email')));
-
-        // Find the student matching the name and email
-        $student = CsStudent::whereRaw('LOWER(first_name) = ?', [$firstName])
-            ->whereRaw('LOWER(last_name) = ?', [$lastName])
-            ->whereRaw('LOWER(email) = ?', [$email])
-            ->first();
-
-        if (!$student) {
-            return back()->withErrors([
-                'email' => 'We could not find a Campus Specialist matching the provided First Name, Last Name, and Email in our records. Please make sure to check for typos.'
-            ])->withInput();
+        if (!$email || is_null($scenario)) {
+            return redirect()->route('cs.feedback.create')
+                ->withErrors(['email' => 'Please enter your email to proceed.']);
         }
 
-        // Store the feedback entry
-        CsFeedback::create([
-            'cs_student_id'      => $student->id,
-            'ideas'              => $request->input('ideas'),
-            'feedback'           => $request->input('feedback'),
-            'questions'          => $request->input('questions'),
-            'received_all_files' => $request->input('received_all_files') === 'yes',
+        if ($scenario == 1) {
+            // Scenario 1 validation: only suggestions and expectations
+            $request->validate([
+                'ideas' => 'required|string',
+            ]);
+
+            CsFeedback::create([
+                'cs_student_id'      => null,
+                'email'              => $email,
+                'ideas'              => $request->input('ideas'),
+                'feedback'           => 'Scenario 1 (Did not show up)',
+                'questions'          => 'N/A',
+                'received_all_files' => false,
+            ]);
+        } else {
+            // Scenario 2 validation: all fields
+            $request->validate([
+                'ideas'              => 'required|string',
+                'feedback'           => 'required|string',
+                'questions'          => 'required|string',
+                'received_all_files' => 'required|in:yes,no',
+            ]);
+
+            $studentId = null;
+            if ($email === 'parsabe99@gmail.com') {
+                // Ensure a test student exists in the database
+                $student = CsStudent::firstOrCreate(
+                    ['email' => 'parsabe99@gmail.com'],
+                    ['first_name' => 'Parsa', 'last_name' => 'Besharat']
+                );
+                $studentId = $student->id;
+            } else {
+                $student = CsStudent::where('email', $email)->first();
+                $studentId = $student ? $student->id : null;
+            }
+
+            CsFeedback::create([
+                'cs_student_id'      => $studentId,
+                'email'              => $email,
+                'ideas'              => $request->input('ideas'),
+                'feedback'           => $request->input('feedback'),
+                'questions'          => $request->input('questions'),
+                'received_all_files' => $request->input('received_all_files') === 'yes',
+            ]);
+        }
+
+        // Clear feedback session on success
+        session()->forget([
+            'cs_feedback_email',
+            'cs_feedback_scenario',
+            'cs_feedback_student_id'
         ]);
 
-        return back()->with('success', 'Thank you! Your ideas, feedback, and questions have been recorded successfully.');
+        return redirect()->route('cs.feedback.create')
+            ->with('success', 'Thank you! Your feedback has been recorded successfully.');
     }
 
     /**

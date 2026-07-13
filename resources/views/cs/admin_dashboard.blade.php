@@ -91,15 +91,20 @@
                     <div class="space-y-6" id="feedback-list">
                         @forelse($feedbacks as $item)
                             <div class="feedback-card p-6 rounded-2xl bg-white/50 dark:bg-black/40 border border-white/30 dark:border-white/10 hover:border-orange-500/50 dark:hover:border-orange-400/50 shadow-md transition-all duration-300"
-                                data-searchable="{{ strtolower($item->student->first_name . ' ' . $item->student->last_name . ' ' . $item->student->email . ' ' . $item->ideas . ' ' . $item->feedback . ' ' . $item->questions) }}">
+                                data-searchable="{{ strtolower(($item->student ? ($item->student->first_name . ' ' . $item->student->last_name . ' ' . $item->student->email) : ('did not show up ' . $item->email)) . ' ' . $item->ideas . ' ' . $item->feedback . ' ' . $item->questions) }}">
                                 
                                 <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-gray-200 dark:border-white/10">
                                     <div>
-                                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">
-                                            {{ $item->student->first_name }} {{ $item->student->last_name }}
+                                        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                            {{ $item->student ? ($item->student->first_name . ' ' . $item->student->last_name) : 'Campus Specialist' }}
+                                            @if(!$item->student)
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                                                    Did Not Show Up
+                                                </span>
+                                            @endif
                                         </h3>
                                         <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5 font-medium">
-                                            {{ $item->student->email }}
+                                            {{ $item->student ? $item->student->email : $item->email }}
                                         </p>
                                     </div>
                                     <div class="flex items-center gap-3">
