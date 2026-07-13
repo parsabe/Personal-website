@@ -94,5 +94,25 @@ Route::post('/cs-portal/clear', [App\Http\Controllers\CsCertificateController::c
 Route::get('/cs-portal/download/certificate', [App\Http\Controllers\CsCertificateController::class, 'downloadCertificate'])->name('cs.certificates.download');
 Route::get('/cs-portal/download/images', [App\Http\Controllers\CsCertificateController::class, 'downloadImages'])->name('cs.certificates.download-images');
 
+// ==========================================
+// CS Feedback Portal
+// ==========================================
+Route::get('/cs-portal/feedback', [App\Http\Controllers\CsFeedbackController::class, 'create'])->name('cs.feedback.create');
+Route::post('/cs-portal/feedback', [App\Http\Controllers\CsFeedbackController::class, 'store'])->name('cs.feedback.store');
+
+// ==========================================
+// Admin Portal (/parsa) with 2FA Protection
+// ==========================================
+Route::get('/parsa/2fa', [App\Http\Controllers\AdminPortalController::class, 'show2faForm'])->name('parsa.2fa.show');
+Route::post('/parsa/2fa/verify', [App\Http\Controllers\AdminPortalController::class, 'verify2fa'])->name('parsa.2fa.verify');
+
+Route::middleware(['auth', 'admin.2fa'])->group(function () {
+    Route::get('/parsa', [App\Http\Controllers\AdminPortalController::class, 'dashboard'])->name('parsa.dashboard');
+    Route::post('/parsa/contact/{id}/reply', [App\Http\Controllers\AdminPortalController::class, 'replyContact'])->name('parsa.contact.reply');
+    Route::post('/parsa/contact/{id}/delete', [App\Http\Controllers\AdminPortalController::class, 'deleteContact'])->name('parsa.contact.delete');
+    Route::post('/parsa/feedback/{id}/reply', [App\Http\Controllers\AdminPortalController::class, 'replyFeedback'])->name('parsa.feedback.reply');
+    Route::post('/parsa/feedback/{id}/delete', [App\Http\Controllers\AdminPortalController::class, 'deleteFeedback'])->name('parsa.feedback.delete');
+});
+
 require __DIR__ . '/auth.php';
 

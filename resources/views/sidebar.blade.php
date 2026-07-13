@@ -62,11 +62,21 @@
                 ['name' => 'Club', 'route' => 'fun', 'icon' => '🎮'],
                 ['name' => 'Blog', 'route' => 'blog', 'icon' => '☕'],
 
+                // CS Portals
+                ['name' => 'CS Certificates', 'route' => 'cs.certificates.index', 'icon' => '🎓'],
+                ['name' => 'CS Feedback Form', 'route' => 'cs.feedback.create', 'icon' => '📝'],
+            ];
+
+            if (auth()->check() && auth()->user()->email === 'parsabe99@gmail.com') {
+                $menuItems[] = ['name' => 'Parsa Dashboard', 'route' => 'parsa.dashboard', 'icon' => '🔒'];
+            }
+
+            $menuItems = array_merge($menuItems, [
                 // External Subdomains using 'url' instead of 'route'
                 ['name' => 'Chat', 'url' => 'https://blue-pearl.parsabe.com', 'icon' => '💬'],
                 ['name' => 'Sandika', 'url' => 'https://sandika.parsabe.com', 'icon' => '🤖'],
                 ['name' => 'Nigma', 'url' => 'https://nigma.parsabe.com', 'icon' => '🧩'],
-            ];
+            ]);
         @endphp
 
         @foreach($menuItems as $item)
