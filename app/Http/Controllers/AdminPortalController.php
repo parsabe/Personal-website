@@ -111,6 +111,16 @@ class AdminPortalController extends Controller
     }
 
     /**
+     * Purge all contact messages.
+     */
+    public function purgeAllContacts()
+    {
+        Contact::truncate();
+
+        return back()->with('success', 'All contact messages purged successfully.');
+    }
+
+    /**
      * Delete feedback submission.
      */
     public function deleteFeedback($id)

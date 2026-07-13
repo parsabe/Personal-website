@@ -27,11 +27,14 @@
     <!-- Custom Cyberpunk Styles -->
     <style>
         body {
-            background-color: #020208;
+            background-color: #010206;
             background-image: 
-                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), 
-                linear-gradient(90deg, rgba(255, 0, 119, 0.03), rgba(0, 240, 255, 0.03), rgba(0, 255, 119, 0.01));
-            background-size: 100% 4px, 6px 100%;
+                linear-gradient(rgba(1, 2, 6, 0.85), rgba(1, 2, 6, 0.95)),
+                url('/images/cyberpunk_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             min-height: 100vh;
             position: relative;
         }

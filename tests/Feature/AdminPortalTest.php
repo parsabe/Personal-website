@@ -60,7 +60,7 @@ class AdminPortalTest extends TestCase
 
         $response = $this->actingAs($admin)->get(route('parsa.2fa.show'));
         $response->assertStatus(200);
-        $response->assertSee('Setup Two-Factor Authentication');
+        $response->assertSee('INITIALIZE_2FA');
         $this->assertTrue(session()->has('temp_2fa_secret'));
     }
 
@@ -109,7 +109,7 @@ class AdminPortalTest extends TestCase
         // 3. Admin dashboard should load successfully
         $dashboardResponse = $this->actingAs($admin)->get(route('parsa.dashboard'));
         $dashboardResponse->assertStatus(200);
-        $dashboardResponse->assertSee('CENTRAL CONTROL PORTAL');
+        $dashboardResponse->assertSee('CENTRAL_DATABASE_NODE');
     }
 
     /**
@@ -152,6 +152,27 @@ class AdminPortalTest extends TestCase
             return $mail->hasTo('john@test.com') && 
                    $mail->subjectLine === 'Response to your message - Parsa Besharat';
         });
+    }
+
+    /**
+     * Test purging all contacts.
+     */
+    public function test_admin_can_purge_all_contacts()
+    {
+        $admin = User::factory()->create(['email' => 'parsabe99@gmail.com', 'google2fa_secret' => 'SECRET']);
+        Contact::create(['name' => 'John', 'email' => 'john@test.com', 'message' => 'Hello 1']);
+        Contact::create(['name' => 'Jane', 'email' => 'jane@test.com', 'message' => 'Hello 2']);
+
+        // Verify database has 2 contacts
+        $this->assertDatabaseCount('contacts', 2);
+
+        // Perform purge
+        $response = $this->actingAs($admin)
+            ->withSession(['parsa_2fa_verified' => true])
+            ->post(route('parsa.contacts.purge-all'));
+
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseCount('contacts', 0);
     }
 
     // ==========================================
