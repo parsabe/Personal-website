@@ -101,7 +101,6 @@ Route::get('/cs-portal/feedback', [App\Http\Controllers\CsFeedbackController::cl
 Route::post('/cs-portal/feedback', [App\Http\Controllers\CsFeedbackController::class, 'store'])->name('cs.feedback.store');
 Route::post('/cs-portal/feedback/verify', [App\Http\Controllers\CsFeedbackController::class, 'verifyEmail'])->name('cs.feedback.verify');
 Route::post('/cs-portal/feedback/reset', [App\Http\Controllers\CsFeedbackController::class, 'resetSession'])->name('cs.feedback.reset');
-Route::post('/cs-portal/feedback/test-scenario', [App\Http\Controllers\CsFeedbackController::class, 'setTestScenario'])->name('cs.feedback.test-scenario');
 
 // ==========================================
 // Admin Portal (/parsa) with 2FA Protection

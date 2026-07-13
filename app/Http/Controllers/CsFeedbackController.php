@@ -22,10 +22,6 @@ class CsFeedbackController extends Controller
             return view('cs.feedback', ['state' => 'verify']);
         }
 
-        if ($email === 'parsabe99@gmail.com' && is_null($scenario)) {
-            return view('cs.feedback', ['state' => 'test_selector', 'email' => $email]);
-        }
-
         return view('cs.feedback', [
             'state' => 'form',
             'scenario' => $scenario,
@@ -47,11 +43,7 @@ class CsFeedbackController extends Controller
         // Store email in session
         session(['cs_feedback_email' => $email]);
 
-        if ($email === 'parsabe99@gmail.com') {
-            // Force test scenario selector
-            session()->forget('cs_feedback_scenario');
-            return redirect()->route('cs.feedback.create');
-        }
+
 
         // Check if student is in the database (Excel import table)
         $student = CsStudent::whereRaw('LOWER(email) = ?', [$email])->first();
@@ -68,23 +60,7 @@ class CsFeedbackController extends Controller
         return redirect()->route('cs.feedback.create');
     }
 
-    /**
-     * Set the scenario for testing (parsabe99@gmail.com only).
-     */
-    public function setTestScenario(Request $request)
-    {
-        $request->validate([
-            'scenario' => 'required|in:1,2',
-        ]);
 
-        if (session('cs_feedback_email') !== 'parsabe99@gmail.com') {
-            abort(403, 'Unauthorized');
-        }
-
-        session(['cs_feedback_scenario' => (int)$request->input('scenario')]);
-
-        return redirect()->route('cs.feedback.create');
-    }
 
     /**
      * Reset the feedback session.
@@ -105,7 +81,7 @@ class CsFeedbackController extends Controller
      */
     public function store(Request $request)
     {
-        $email = session('cs_feedback_email');
+        $email = trim(Str::lower(session('cs_feedback_email')));
         $scenario = session('cs_feedback_scenario');
 
         if (!$email || is_null($scenario)) {
@@ -136,18 +112,8 @@ class CsFeedbackController extends Controller
                 'received_all_files' => 'required|in:yes,no',
             ]);
 
-            $studentId = null;
-            if ($email === 'parsabe99@gmail.com') {
-                // Ensure a test student exists in the database
-                $student = CsStudent::firstOrCreate(
-                    ['email' => 'parsabe99@gmail.com'],
-                    ['first_name' => 'Parsa', 'last_name' => 'Besharat']
-                );
-                $studentId = $student->id;
-            } else {
-                $student = CsStudent::where('email', $email)->first();
-                $studentId = $student ? $student->id : null;
-            }
+            $student = CsStudent::whereRaw('LOWER(email) = ?', [$email])->first();
+            $studentId = $student ? $student->id : null;
 
             CsFeedback::create([
                 'cs_student_id'      => $studentId,

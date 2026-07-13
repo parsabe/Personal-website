@@ -277,34 +277,6 @@
                     </form>
                 </div>
 
-            <!-- State 2: Test Selector for parsabe99@gmail.com -->
-            @elseif ($state === 'test_selector')
-                <div class="parchment-card rounded-none p-8 sm:p-10 text-center">
-                    <h3 class="text-xl font-bold font-rye text-[#c8102e] mb-2">Howdy, Parsa!</h3>
-                    <p class="text-xs text-stone-700 mb-6 font-semibold italic">
-                        Logged in as <span class="underline">parsabe99@gmail.com</span>.<br>
-                        Select which scenario to examine:
-                    </p>
-                    
-                    <div class="space-y-4">
-                        <form action="{{ route('cs.feedback.test-scenario') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="scenario" value="1">
-                            <button type="submit" class="w-full flex justify-center py-3.5 px-4 border-2 border-[#3d2516] hover:bg-stone-800/10 rounded-none text-xs font-bold text-[#3d2516] transition-all font-rye uppercase">
-                                Scenario 1: Did Not Show Up
-                            </button>
-                        </form>
-
-                        <form action="{{ route('cs.feedback.test-scenario') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="scenario" value="2">
-                            <button type="submit" class="w-full flex justify-center py-3.5 px-4 western-btn rounded-none text-xs font-bold transition-all">
-                                Scenario 2: Showed Up
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
             <!-- State 3: Feedback Submission Form -->
             @elseif ($state === 'form')
                 <div class="parchment-card rounded-none p-8 sm:p-10" id="feedback-card">
@@ -415,52 +387,11 @@
                         </div>
                     </form>
                 </div>
-            @endif
 
+
+            @endif
         </div>
     </main>
-
-    <!-- Floating Antique Brass Audio Player -->
-    <div class="fixed bottom-6 right-6 z-50 brass-player rounded-full p-3 flex items-center space-x-3 shadow-2xl transition-all hover:scale-105" id="audio-player-container">
-        <div class="flex items-center space-x-2">
-            <!-- Play/Pause Button -->
-            <button id="audio-play-pause-btn" class="p-2 bg-[#3d2516] hover:bg-[#c8102e] text-[#ebdcb9] rounded-full transition-all focus:outline-none" title="Play / Pause">
-                <!-- Play Icon -->
-                <svg id="play-icon" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3.5v13L16 10z"/></svg>
-                <!-- Pause Icon -->
-                <svg id="pause-icon" class="w-3.5 h-3.5 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-            </button>
-            
-            <!-- Stop Button -->
-            <button id="audio-stop-btn" class="p-1.5 text-[#3d2516] hover:text-[#c8102e] rounded-lg transition-all focus:outline-none" title="Stop">
-                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M6 6h8v8H6z"/></svg>
-            </button>
-            
-            <!-- Repeat/Loop Button -->
-            <button id="audio-repeat-btn" class="p-1.5 text-[#3d2516] hover:text-[#c8102e] rounded-lg transition-all focus:outline-none relative" title="Toggle Loop">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.656 48.656 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3M4.5 12a48.374 48.374 0 00-.138 3.662 4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l-3 3m3-3l3 3"/></svg>
-                <span id="repeat-badge" class="absolute top-0.5 right-0.5 w-1 h-1 bg-[#c8102e] rounded-full hidden"></span>
-            </button>
-        </div>
-
-        <div class="flex flex-col pr-2 select-none border-l border-[#3d2516]/30 pl-2">
-            <span class="text-[9px] font-bold text-[#3d2516] uppercase tracking-wider">FONOGRAMA</span>
-            <div class="flex items-center space-x-1">
-                <span class="text-[8px] text-[#5c3b24] font-bold">haha.mp3</span>
-                <!-- Sound wave animation -->
-                <div id="wave-anim" class="sound-wave paused">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Hidden Audio Element -->
-        <audio id="bg-audio" src="/haha.mp3" preload="auto"></audio>
-    </div>
 
     <!-- Footer -->
     <footer class="w-full max-w-7xl mx-auto px-6 py-6 text-center text-stone-600 text-[10px] mt-auto z-10 border-t border-stone-900">
@@ -526,90 +457,7 @@
                 });
             }
 
-            // ==========================================
-            // Audio Player Controls & Autoplay Logic
-            // ==========================================
-            const audio = document.getElementById('bg-audio');
-            const playPauseBtn = document.getElementById('audio-play-pause-btn');
-            const stopBtn = document.getElementById('audio-stop-btn');
-            const repeatBtn = document.getElementById('audio-repeat-btn');
-            const repeatBadge = document.getElementById('repeat-badge');
-            const waveAnim = document.getElementById('wave-anim');
-            
-            const playIcon = document.getElementById('play-icon');
-            const pauseIcon = document.getElementById('pause-icon');
 
-            let isRepeat = false;
-
-            function setPlayingUI() {
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
-                waveAnim.classList.remove('paused');
-                waveAnim.classList.add('playing');
-            }
-
-            function setPausedUI() {
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
-                waveAnim.classList.add('paused');
-                waveAnim.classList.remove('playing');
-            }
-
-            playPauseBtn.addEventListener('click', () => {
-                if (audio.paused) {
-                    audio.play().then(setPlayingUI).catch(console.error);
-                } else {
-                    audio.pause();
-                    setPausedUI();
-                }
-            });
-
-            stopBtn.addEventListener('click', () => {
-                audio.pause();
-                audio.currentTime = 0;
-                setPausedUI();
-            });
-
-            repeatBtn.addEventListener('click', () => {
-                isRepeat = !isRepeat;
-                audio.loop = isRepeat;
-                if (isRepeat) {
-                    repeatBadge.classList.remove('hidden');
-                    repeatBtn.classList.add('text-[#c8102e]');
-                } else {
-                    repeatBadge.classList.add('hidden');
-                    repeatBtn.classList.remove('text-[#c8102e]');
-                }
-            });
-
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    const playPromise = audio.play();
-                    
-                    if (playPromise !== undefined) {
-                        playPromise.then(() => {
-                            setPlayingUI();
-                        }).catch(error => {
-                            console.log("Autoplay blocked. Waiting for interaction...");
-                            const startOnInteraction = () => {
-                                audio.play().then(() => {
-                                    setPlayingUI();
-                                    document.removeEventListener('click', startOnInteraction);
-                                    document.removeEventListener('keydown', startOnInteraction);
-                                }).catch(console.error);
-                            };
-                            document.addEventListener('click', startOnInteraction);
-                            document.addEventListener('keydown', startOnInteraction);
-                        });
-                    }
-                }, 1500);
-            });
-
-            audio.addEventListener('ended', () => {
-                if (!isRepeat) {
-                    setPausedUI();
-                }
-            });
         });
     </script>
 </body>
