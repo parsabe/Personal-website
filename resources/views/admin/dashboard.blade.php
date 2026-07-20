@@ -306,15 +306,15 @@
             <div x-show="tab === 'feedbacks'" class="space-y-6 tab-content-feedbacks">
                 @forelse($feedbacks as $item)
                     <div class="dashboard-card cyber-card-sub p-4 sm:p-6 rounded-2xl animate-fade-in"
-                        data-searchable="{{ strtolower($item->student->first_name . ' ' . $item->student->last_name . ' ' . $item->student->email . ' ' . $item->ideas . ' ' . $item->feedback . ' ' . $item->questions . ' ' . $item->reply) }}">
+                        data-searchable="{{ strtolower(($item->student ? ($item->student->first_name . ' ' . $item->student->last_name . ' ' . $item->student->email) : ('Non-Attendee ' . $item->email)) . ' ' . $item->ideas . ' ' . $item->feedback . ' ' . $item->questions . ' ' . $item->reply) }}">
                         
                         <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-white/5">
                             <div>
                                 <h3 class="text-lg font-bold text-white tracking-wide">
-                                    {{ $item->student->first_name }} {{ $item->student->last_name }}
+                                    {{ $item->student ? ($item->student->first_name . ' ' . $item->student->last_name) : 'Non-Attendee' }}
                                 </h3>
                                 <p class="text-xs font-mono text-slate-400 mt-0.5">
-                                    {{ $item->student->email }}
+                                    {{ $item->student ? $item->student->email : $item->email }}
                                 </p>
                             </div>
                             <div class="flex items-center gap-3 font-mono text-[10px]">
@@ -371,7 +371,7 @@
 
                         <!-- Actions Bar -->
                         <div class="flex flex-wrap justify-end gap-3 pt-3 border-t border-white/5">
-                            <button @click="activeReply = 'feedback'; replyId = '{{ $item->id }}'; replyName = '{{ $item->student->first_name }} {{ $item->student->last_name }}'; replyEmail = '{{ $item->student->email }}'"
+                            <button @click="activeReply = 'feedback'; replyId = '{{ $item->id }}'; replyName = '{{ $item->student ? ($item->student->first_name . ' ' . $item->student->last_name) : 'Non-Attendee' }}'; replyEmail = '{{ $item->student ? $item->student->email : $item->email }}'"
                                 class="cyber-btn-primary px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider">
                                 [✉] SEND_REPLY
                             </button>

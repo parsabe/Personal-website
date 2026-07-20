@@ -177,13 +177,20 @@ class AdminPortalController extends Controller
         $feedback = CsFeedback::with('student')->findOrFail($id);
         $replyText = $request->input('reply');
 
-        $body = "Dear " . $feedback->student->first_name . " " . $feedback->student->last_name . ",\n\n" .
+        $name = 'Campus Specialist';
+        $email = $feedback->email;
+        if ($feedback->student) {
+            $name = $feedback->student->first_name . " " . $feedback->student->last_name;
+            $email = $feedback->student->email;
+        }
+
+        $body = "Dear " . $name . ",\n\n" .
                 $replyText . "\n\n" .
                 "Best regards,\n" .
                 "Parsa Besharat";
 
         try {
-            Mail::to($feedback->student->email)->send(new \App\Mail\AdminReplyMail(
+            Mail::to($email)->send(new \App\Mail\AdminReplyMail(
                 'Response to your Campus Specialists Feedback',
                 $body
             ));

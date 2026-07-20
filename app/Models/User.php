@@ -46,4 +46,46 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $resetUrl = url(route('password.reset', [
+            'token' => $token,
+            'email' => $this->getEmailForPasswordReset(),
+        ], false));
+
+        $subject = 'Reset Password Notification - Parsa Besharat';
+        $userName = $this->name ?? 'User';
+
+        $htmlContent = view('emails.password-reset', [
+            'userName' => $userName,
+            'resetUrl' => $resetUrl,
+        ])->render();
+
+        // 1. Try sending via Laravel Mailer
+        try {
+            \Illuminate\Support\Facades\Mail::html($htmlContent, function ($message) use ($subject) {
+                $message->to($this->email)
+                        ->subject($subject)
+                        ->from('noreply@parsabe.com', 'Parsa Besharat');
+            });
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Laravel Password Reset Mailer failed: ' . $e->getMessage());
+        }
+
+        // 2. Native PHP mail fallback (HTML format)
+        $headers = "MIME-Version: 1.0\r\n" .
+                   "Content-Type: text/html; charset=UTF-8\r\n" .
+                   "From: Parsa Besharat <noreply@parsabe.com>\r\n" .
+                   "Reply-To: noreply@parsabe.com\r\n" .
+                   "X-Mailer: PHP/" . phpversion();
+        @mail($this->email, $subject, $htmlContent, $headers);
+    }
 }
+

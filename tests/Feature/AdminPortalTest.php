@@ -155,6 +155,71 @@ class AdminPortalTest extends TestCase
     }
 
     /**
+     * Test replying to attendee feedback.
+     */
+    public function test_admin_can_reply_feedback_for_attendee()
+    {
+        $admin = User::factory()->create(['email' => 'parsabe99@gmail.com', 'google2fa_secret' => 'SECRET']);
+        $student = CsStudent::create([
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'email' => 'jane@test.com',
+        ]);
+        $feedback = CsFeedback::create([
+            'cs_student_id' => $student->id,
+            'email' => 'jane@test.com',
+            'ideas' => 'Idea text',
+            'feedback' => 'Feedback text',
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->withSession(['parsa_2fa_verified' => true])
+            ->post(route('parsa.feedback.reply', $feedback->id), [
+                'reply' => 'Jane reply.',
+            ]);
+
+        $response->assertSessionHasNoErrors();
+        $feedback->refresh();
+        $this->assertEquals('Jane reply.', $feedback->reply);
+        $this->assertNotNull($feedback->replied_at);
+
+        Mail::assertSent(\App\Mail\AdminReplyMail::class, function ($mail) {
+            return $mail->hasTo('jane@test.com') && 
+                   $mail->subjectLine === 'Response to your Campus Specialists Feedback';
+        });
+    }
+
+    /**
+     * Test replying to non-attendee feedback.
+     */
+    public function test_admin_can_reply_feedback_for_non_attendee()
+    {
+        $admin = User::factory()->create(['email' => 'parsabe99@gmail.com', 'google2fa_secret' => 'SECRET']);
+        $feedback = CsFeedback::create([
+            'cs_student_id' => null,
+            'email' => 'non_attendee@test.com',
+            'ideas' => 'Idea text',
+            'feedback' => 'Feedback text',
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->withSession(['parsa_2fa_verified' => true])
+            ->post(route('parsa.feedback.reply', $feedback->id), [
+                'reply' => 'Non-attendee reply.',
+            ]);
+
+        $response->assertSessionHasNoErrors();
+        $feedback->refresh();
+        $this->assertEquals('Non-attendee reply.', $feedback->reply);
+        $this->assertNotNull($feedback->replied_at);
+
+        Mail::assertSent(\App\Mail\AdminReplyMail::class, function ($mail) {
+            return $mail->hasTo('non_attendee@test.com') && 
+                   $mail->subjectLine === 'Response to your Campus Specialists Feedback';
+        });
+    }
+
+    /**
      * Test purging all contacts.
      */
     public function test_admin_can_purge_all_contacts()
