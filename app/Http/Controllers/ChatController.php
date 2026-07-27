@@ -14,107 +14,63 @@ use Illuminate\Support\Str;
 class ChatController extends Controller
 {
     /**
-     * Render the main Online Chat Portal view.
+     * Render the main Chat Portal view.
      */
     public function index()
     {
-        $user = Auth::user();
         $authenticated = Auth::check();
+        $user = Auth::user();
 
-        return view('pages.chat.chat', compact('user', 'authenticated'));
+        return view('pages.chat.chat', compact('authenticated', 'user'));
     }
 
     /**
-     * Fetch delivered messages with sender avatars, full names, and reactions.
+     * Fetch all chat messages.
      */
-    public function fetchMessages(Request $request)
+    public function fetchMessages()
     {
-        if (!Auth::check()) {
-            return response()->json(['status' => 'unauthorized', 'messages' => []], 401);
-        }
-
-        // 1. Release due scheduled messages
-        ChatMessage::due()->update(['delivered_at' => now()]);
-
-        // 2. Query delivered messages with user & reactions
-        $messages = ChatMessage::delivered()
-            ->with(['user', 'reactions'])
-            ->orderBy('created_at', 'asc')
-            ->take(150)
-            ->get();
-
-        $currentUserId = Auth::id();
-
-        // 3. Transform messages
-        $formatted = $messages->map(function ($msg) use ($currentUserId) {
-            $senderUser = $msg->user;
-            $avatarUrl = $senderUser && $senderUser->avatar 
-                ? asset($senderUser->avatar) 
-                : asset('images/profile.jpg');
-
-            $fullName = $senderUser 
-                ? trim(($senderUser->first_name . ' ' . $senderUser->last_name)) ?: $senderUser->name 
-                : $msg->sender_name;
-
-            // Group reactions by emoji
-            $reactionGroups = [];
-            foreach ($msg->reactions as $reaction) {
-                $emoji = $reaction->emoji;
-                if (!isset($reactionGroups[$emoji])) {
-                    $reactionGroups[$emoji] = [
-                        'emoji' => $emoji,
-                        'count' => 0,
-                        'user_reacted' => false,
-                    ];
-                }
-                $reactionGroups[$emoji]['count']++;
-                if ($reaction->user_id === $currentUserId) {
-                    $reactionGroups[$emoji]['user_reacted'] = true;
-                }
-            }
+        $messages = ChatMessage::where(function ($q) {
+            $q->whereNull('scheduled_at')
+              ->orWhere('scheduled_at', '<=', now());
+        })
+        ->with(['user:id,name,first_name,last_name,username,avatar', 'reactions.user:id,name,first_name,last_name,username'])
+        ->orderBy('created_at', 'asc')
+        ->get()
+        ->map(function ($m) {
+            $reactionsGrouped = $m->reactions->groupBy('emoji')->map(function ($group) {
+                return [
+                    'emoji' => $group->first()->emoji,
+                    'count' => $group->count(),
+                    'users' => $group->pluck('user.name')->toArray(),
+                    'reacted_by_me' => Auth::check() ? $group->contains('user_id', Auth::id()) : false,
+                ];
+            })->values();
 
             return [
-                'id' => $msg->id,
-                'user_id' => $msg->user_id,
-                'sender_name' => $fullName,
-                'username' => $senderUser->username ?? $msg->username ?? Str::slug($fullName),
-                'avatar_url' => $avatarUrl,
-                'message' => $msg->message,
-                'type' => $msg->type,
-                'file_url' => $msg->file_path ? asset($msg->file_path) : null,
-                'file_name' => $msg->file_name,
-                'file_size' => $msg->formatted_file_size,
-                'mime_type' => $msg->mime_type,
-                'reactions' => array_values($reactionGroups),
-                'created_at' => $msg->created_at->format('H:i, M d'),
-                'is_me' => $currentUserId === $msg->user_id,
+                'id' => $m->id,
+                'user_id' => $m->user_id,
+                'sender_name' => $m->sender_name,
+                'username' => $m->username,
+                'message' => $m->message,
+                'type' => $m->type,
+                'file_path' => $m->file_path ? asset($m->file_path) : null,
+                'avatar_url' => $m->user && $m->user->avatar ? asset($m->user->avatar) : asset('images/profile.jpg'),
+                'created_at' => $m->created_at->format('H:i'),
+                'created_at_human' => $m->created_at->diffForHumans(),
+                'reactions' => $reactionsGrouped,
             ];
         });
 
-        // 4. Scheduled count
-        $scheduledCount = ChatMessage::where('user_id', $currentUserId)
-            ->whereNull('delivered_at')
-            ->whereNotNull('scheduled_at')
-            ->count();
-
-        return response()->json([
-            'status' => 'success',
-            'messages' => $formatted,
-            'scheduled_count' => $scheduledCount,
-        ]);
+        return response()->json(['status' => 'success', 'messages' => $messages]);
     }
 
     /**
-     * Fetch list of all registered users for contact sidebar.
+     * Fetch list of registered chat users.
      */
     public function fetchUsers()
     {
-        if (!Auth::check()) {
-            return response()->json(['users' => []], 401);
-        }
-
         $users = User::select('id', 'name', 'first_name', 'last_name', 'username', 'email', 'avatar', 'bio', 'social_links')
-            ->orderBy('name', 'asc')
+            ->orderBy('id', 'asc')
             ->get()
             ->map(function ($u) {
                 return [
@@ -133,7 +89,7 @@ class ChatController extends Controller
     }
 
     /**
-     * Send a standard text / gif / emoji message.
+     * Send a standard text / gif / emoji / file message.
      */
     public function sendMessage(Request $request)
     {
@@ -150,16 +106,16 @@ class ChatController extends Controller
 
         $user = Auth::user();
         $senderName = trim(($user->first_name . ' ' . $user->last_name)) ?: $user->name;
-        $isScheduled = $request->filled('scheduled_at') && strtotime($request->scheduled_at) > time();
+        $isScheduled = $request->filled('scheduled_at') && strtotime($request->input('scheduled_at')) > time();
 
         $msg = ChatMessage::create([
             'user_id' => $user->id,
             'sender_name' => $senderName,
             'username' => $user->username ?? Str::slug($user->name),
-            'message' => $request->message,
-            'type' => $request->type,
-            'file_path' => $request->file_url,
-            'scheduled_at' => $isScheduled ? $request->scheduled_at : null,
+            'message' => $request->input('message'),
+            'type' => $request->input('type'),
+            'file_path' => $request->input('file_url'),
+            'scheduled_at' => $isScheduled ? $request->input('scheduled_at') : null,
             'delivered_at' => $isScheduled ? null : now(),
         ]);
 
@@ -171,7 +127,7 @@ class ChatController extends Controller
     }
 
     /**
-     * Upload file attachment / voice / video note.
+     * Process file / photo / video / audio upload for chat (Up to 4GB).
      */
     public function uploadFile(Request $request)
     {
@@ -180,57 +136,40 @@ class ChatController extends Controller
         }
 
         $request->validate([
-            'file' => 'required|file',
-            'type' => 'required|in:image,file,voice,video',
-            'scheduled_at' => 'nullable|date',
+            'file' => 'required|file|max:4194304', // 4GB max
         ]);
 
         $file = $request->file('file');
-        $originalName = $file->getClientOriginalName();
-        $fileSize = $file->getSize();
-        $mimeType = $file->getClientMimeType();
-
-        $uploadDir = public_path('uploads/chat');
+        $uploadDir = public_path('uploads/chat_files');
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0755, true);
         }
 
-        $extension = $file->getClientOriginalExtension() ?: 'bin';
-        if ($request->type === 'voice' && empty($extension)) {
-            $extension = 'webm';
-        }
-
+        $extension = strtolower($file->getClientOriginalExtension());
         $filename = time() . '_' . Str::random(10) . '.' . $extension;
         $file->move($uploadDir, $filename);
 
-        $filePath = 'uploads/chat/' . $filename;
-        $user = Auth::user();
-        $senderName = trim(($user->first_name . ' ' . $user->last_name)) ?: $user->name;
-        $isScheduled = $request->filled('scheduled_at') && strtotime($request->scheduled_at) > time();
+        $filePath = 'uploads/chat_files/' . $filename;
 
-        $msg = ChatMessage::create([
-            'user_id' => $user->id,
-            'sender_name' => $senderName,
-            'username' => $user->username ?? Str::slug($user->name),
-            'message' => $request->input('message'),
-            'type' => $request->type,
-            'file_path' => $filePath,
-            'file_name' => $originalName,
-            'file_size' => $fileSize,
-            'mime_type' => $mimeType,
-            'scheduled_at' => $isScheduled ? $request->scheduled_at : null,
-            'delivered_at' => $isScheduled ? null : now(),
-        ]);
+        $type = 'file';
+        if (in_array($extension, ['jpg', 'jpeg', 'png', 'webp', 'gif'])) {
+            $type = 'image';
+        } elseif (in_array($extension, ['mp3', 'wav', 'ogg', 'm4a', 'webm'])) {
+            $type = 'voice';
+        } elseif (in_array($extension, ['mp4', 'mov', 'avi', 'mkv'])) {
+            $type = 'video';
+        }
 
         return response()->json([
             'status' => 'success',
-            'file_url' => asset($filePath),
-            'data' => $msg
+            'file_url' => $filePath,
+            'file_name' => $file->getClientOriginalName(),
+            'type' => $type,
         ]);
     }
 
     /**
-     * Toggle Telegram-style emoji reaction on a message.
+     * Toggle reaction on a message.
      */
     public function toggleReaction(Request $request)
     {
@@ -240,12 +179,12 @@ class ChatController extends Controller
 
         $request->validate([
             'chat_message_id' => 'required|exists:chat_messages,id',
-            'emoji' => 'required|string|max:16',
+            'emoji' => 'required|string',
         ]);
 
+        $messageId = $request->input('chat_message_id');
+        $emoji = $request->input('emoji');
         $userId = Auth::id();
-        $messageId = $request->chat_message_id;
-        $emoji = $request->emoji;
 
         $existing = ChatMessageReaction::where('chat_message_id', $messageId)
             ->where('user_id', $userId)
@@ -268,7 +207,7 @@ class ChatController extends Controller
     }
 
     /**
-     * Update user profile settings (avatar, first/last name, username, bio, social links).
+     * Update user profile settings.
      */
     public function updateProfile(Request $request)
     {
@@ -287,7 +226,7 @@ class ChatController extends Controller
             'social_github' => 'nullable|url',
             'social_twitter' => 'nullable|url',
             'social_website' => 'nullable|url',
-            'avatar' => 'nullable|image|max:10240', // 10MB max avatar
+            'avatar' => 'nullable|image|max:10240',
         ]);
 
         if ($request->hasFile('avatar')) {
@@ -301,10 +240,10 @@ class ChatController extends Controller
             $user->avatar = 'uploads/avatars/' . $filename;
         }
 
-        if ($request->filled('first_name')) $user->first_name = $request->first_name;
-        if ($request->filled('last_name')) $user->last_name = $request->last_name;
-        if ($request->filled('username')) $user->username = $request->username;
-        if ($request->filled('bio')) $user->bio = $request->bio;
+        if ($request->filled('first_name')) $user->first_name = $request->input('first_name');
+        if ($request->filled('last_name')) $user->last_name = $request->input('last_name');
+        if ($request->filled('username')) $user->username = $request->input('username');
+        if ($request->filled('bio')) $user->bio = $request->input('bio');
 
         $user->social_links = [
             'linkedin' => $request->input('social_linkedin'),
@@ -329,7 +268,7 @@ class ChatController extends Controller
     }
 
     /**
-     * Fetch active 24-hour stories.
+     * Fetch active 24-hour stories with Instagram Tools.
      */
     public function fetchStories()
     {
@@ -342,9 +281,14 @@ class ChatController extends Controller
                     'id' => $s->id,
                     'user_id' => $s->user_id,
                     'user_name' => trim(($s->user->first_name . ' ' . $s->user->last_name)) ?: $s->user->name,
+                    'username' => $s->user->username ?? Str::slug($s->user->name),
                     'avatar_url' => $s->user && $s->user->avatar ? asset($s->user->avatar) : asset('images/profile.jpg'),
                     'content' => $s->content,
                     'media_url' => $s->media_url ? asset($s->media_url) : null,
+                    'story_type' => $s->story_type ?? 'standard',
+                    'poll_options' => $s->poll_options ? json_decode($s->poll_options, true) : null,
+                    'mentions' => $s->mentions ? json_decode($s->mentions, true) : null,
+                    'sticker_data' => $s->sticker_data ? json_decode($s->sticker_data, true) : null,
                     'created_at' => $s->created_at->diffForHumans(),
                 ];
             });
@@ -353,7 +297,7 @@ class ChatController extends Controller
     }
 
     /**
-     * Create a new 24-hour status story.
+     * Create a new 24-hour status story with rich Instagram Tools (Polls, Mentions, Question stickers).
      */
     public function createStory(Request $request)
     {
@@ -363,7 +307,12 @@ class ChatController extends Controller
 
         $request->validate([
             'content' => 'nullable|string|max:1000',
-            'media' => 'nullable|file|max:20480',
+            'media' => 'nullable|file|max:512000',
+            'story_type' => 'nullable|string|in:standard,poll,question,countdown',
+            'poll_option_a' => 'nullable|string|max:100',
+            'poll_option_b' => 'nullable|string|max:100',
+            'mentions' => 'nullable|string|max:255',
+            'sticker_question' => 'nullable|string|max:255',
         ]);
 
         $mediaUrl = null;
@@ -378,13 +327,78 @@ class ChatController extends Controller
             $mediaUrl = 'uploads/stories/' . $filename;
         }
 
+        $storyType = $request->input('story_type', 'standard');
+        $pollOptions = null;
+        if ($storyType === 'poll' && $request->filled('poll_option_a') && $request->filled('poll_option_b')) {
+            $pollOptions = json_encode([
+                'option_a' => $request->input('poll_option_a'),
+                'option_b' => $request->input('poll_option_b'),
+                'votes_a' => 0,
+                'votes_b' => 0,
+                'voters' => [],
+            ]);
+        }
+
+        $mentions = null;
+        if ($request->filled('mentions')) {
+            $mentions = json_encode(array_map('trim', explode(',', $request->input('mentions'))));
+        }
+
+        $stickerData = null;
+        if ($request->filled('sticker_question')) {
+            $stickerData = json_encode(['question' => $request->input('sticker_question')]);
+        }
+
         $story = ChatStory::create([
             'user_id' => Auth::id(),
             'content' => $request->input('content'),
             'media_url' => $mediaUrl,
+            'story_type' => $storyType,
+            'poll_options' => $pollOptions,
+            'mentions' => $mentions,
+            'sticker_data' => $stickerData,
             'expires_at' => now()->addHours(24),
         ]);
 
-        return response()->json(['status' => 'success', 'message' => 'Story posted!', 'story' => $story]);
+        return response()->json(['status' => 'success', 'message' => 'Instagram Story posted with tools!', 'story' => $story]);
+    }
+
+    /**
+     * Vote on an Instagram story poll.
+     */
+    public function voteStoryPoll(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => 'unauthorized'], 401);
+        }
+
+        $request->validate([
+            'story_id' => 'required|exists:chat_stories,id',
+            'option' => 'required|in:a,b',
+        ]);
+
+        $story = ChatStory::find($request->input('story_id'));
+        if (!$story || !$story->poll_options) {
+            return response()->json(['status' => 'error', 'message' => 'Invalid story poll.'], 404);
+        }
+
+        $poll = json_decode($story->poll_options, true);
+        $userId = Auth::id();
+
+        if (in_array($userId, $poll['voters'] ?? [])) {
+            return response()->json(['status' => 'info', 'message' => 'You have already voted on this poll!']);
+        }
+
+        if ($request->input('option') === 'a') {
+            $poll['votes_a']++;
+        } else {
+            $poll['votes_b']++;
+        }
+        $poll['voters'][] = $userId;
+
+        $story->poll_options = json_encode($poll);
+        $story->save();
+
+        return response()->json(['status' => 'success', 'message' => 'Vote recorded!', 'poll' => $poll]);
     }
 }

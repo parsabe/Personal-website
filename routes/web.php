@@ -99,6 +99,7 @@ Route::post('/chat/react', [ChatController::class, 'toggleReaction'])->name('cha
 Route::post('/chat/profile', [ChatController::class, 'updateProfile'])->name('chat.profile');
 Route::get('/chat/stories', [ChatController::class, 'fetchStories'])->name('chat.stories');
 Route::post('/chat/stories', [ChatController::class, 'createStory'])->name('chat.stories.create');
+Route::post('/chat/stories/vote', [ChatController::class, 'voteStoryPoll'])->name('chat.stories.vote');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

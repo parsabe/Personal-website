@@ -41,6 +41,7 @@
 
         <!-- MAIN CHAT CONTENT AREA -->
         <main class="flex-1 flex flex-col overflow-hidden relative p-4 lg:p-6 justify-between bg-black/20">
+            @include('stories_bar')
 
             @if (!$authenticated)
                 <!-- AUTHENTICATION GATE (NO GUEST MODE) -->

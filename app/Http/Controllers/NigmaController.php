@@ -63,6 +63,7 @@ class NigmaController extends Controller
         }
 
         return view('pages.nigma', [
+            'authenticated' => Auth::check(),
             'puzzles' => $riddlesList,
             'totalSolved' => count($solvedIds),
         ]);

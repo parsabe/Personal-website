@@ -15,6 +15,7 @@ class SandikaController extends Controller
      */
     public function index()
     {
+        $authenticated = Auth::check();
         $user = Auth::user();
         $rank = null;
         if ($user) {
@@ -28,7 +29,7 @@ class SandikaController extends Controller
         $dictionary = DB::table('sandika_dictionary')->orderBy('created_at', 'desc')->take(15)->get();
         $gitInsights = DB::table('sandika_git_insights')->orderBy('created_at', 'desc')->take(10)->get();
 
-        return view('pages.sandika', compact('user', 'rank', 'stories', 'dictionary', 'gitInsights'));
+        return view('pages.sandika', compact('authenticated', 'user', 'rank', 'stories', 'dictionary', 'gitInsights'));
     }
 
     /**
