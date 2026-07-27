@@ -43,6 +43,9 @@ Route::controller(PageController::class)->group(function () {
 Route::get('/sandika', [App\Http\Controllers\SandikaController::class, 'index'])->name('sandika');
 Route::post('/sandika/voice-log', [App\Http\Controllers\SandikaController::class, 'analyzeVoiceLog'])->name('sandika.voice_log');
 Route::post('/sandika/file-upload', [App\Http\Controllers\SandikaController::class, 'processFile'])->name('sandika.file_upload');
+Route::post('/sandika/story', [App\Http\Controllers\SandikaController::class, 'postStory'])->name('sandika.story');
+Route::post('/sandika/dictionary', [App\Http\Controllers\SandikaController::class, 'addDictionaryWord'])->name('sandika.dictionary');
+Route::post('/sandika/git', [App\Http\Controllers\SandikaController::class, 'postGitInsight'])->name('sandika.git');
 
 // Nigma Riddler Portal Routes
 Route::get('/nigma', [App\Http\Controllers\NigmaController::class, 'index'])->name('nigma');

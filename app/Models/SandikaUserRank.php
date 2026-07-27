@@ -23,30 +23,41 @@ class SandikaUserRank extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Add Contribution Points (CP) and update Sandika Rank tier.
+     */
     public static function addXp($userId, $points)
     {
         $rank = self::firstOrCreate(
             ['user_id' => $userId],
-            ['xp' => 0, 'rank_title' => 'Novice Operative', 'level' => 1]
+            ['xp' => 0, 'rank_title' => 'Rookie', 'level' => 1]
         );
 
         $rank->xp += $points;
+        $cp = $rank->xp;
 
-        // Level calculation
-        $newLevel = floor($rank->xp / 100) + 1;
-        $rank->level = $newLevel;
-
-        // Rank titles
-        if ($rank->xp >= 1000) {
-            $rank->rank_title = 'Arkham Overseer';
-        } elseif ($rank->xp >= 500) {
-            $rank->rank_title = 'Mastermind Strategist';
-        } elseif ($rank->xp >= 250) {
-            $rank->rank_title = 'Commander Agent';
-        } elseif ($rank->xp >= 100) {
-            $rank->rank_title = 'Field Operative';
+        // Sandika Rank Tier Rules
+        if ($cp >= 2000) {
+            $rank->rank_title = 'Bossman 👑';
+            $rank->level = 7;
+        } elseif ($cp >= 4000) {
+            $rank->rank_title = 'Admiral ⚓';
+            $rank->level = 6;
+        } elseif ($cp >= 150) {
+            $rank->rank_title = 'Lieutenant 🎖️';
+            $rank->level = 5;
+        } elseif ($cp >= 100) {
+            $rank->rank_title = 'Sergeant 🎖️';
+            $rank->level = 4;
+        } elseif ($cp >= 50) {
+            $rank->rank_title = 'Captain ⚔️ (Verified)';
+            $rank->level = 3;
+        } elseif ($cp >= 20) {
+            $rank->rank_title = 'Soldier 🛡️';
+            $rank->level = 2;
         } else {
-            $rank->rank_title = 'Novice Operative';
+            $rank->rank_title = 'Rookie 🔰';
+            $rank->level = 1;
         }
 
         $rank->save();

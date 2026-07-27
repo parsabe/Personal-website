@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edward Nigma Cypher Portal - Parsa Besharat</title>
+    <title>Edward Nigma Cryptographic Portal - Parsa Besharat</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <script>window.tailwind = { config: { darkMode: 'class' } };</script>
@@ -43,58 +43,68 @@
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold tracking-tight text-emerald-400 nigma-glow-text font-mono flex items-center gap-2">
-                            EDWARD NIGMA CYPHER PORTAL
-                            <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">RIDDLER LOG ACTIVE</span>
+                            EDWARD NIGMA CRYPTOGRAPHIC PORTAL
+                            <span class="text-[10px] uppercase font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">20 RIDDLES ACTIVE</span>
                         </h1>
-                        <p class="text-xs text-emerald-600 dark:text-emerald-400/70 font-mono">Encrypted Transmissions, Cryptographic Puzzles & Riddles</p>
+                        <p class="text-xs text-emerald-400/80 font-mono">Encrypted Transmissions, Cryptographic Puzzles & Riddles (+15 CP in Sandika)</p>
                     </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span class="px-3 py-1.5 bg-black/60 border border-emerald-500/40 rounded-xl text-xs font-mono text-emerald-300">
+                        Solved: <strong class="text-emerald-400 font-bold">{{ $totalSolved ?? 0 }}</strong> / 20
+                    </span>
                 </div>
             </div>
 
-            <!-- RIDDLER DECODER CARD -->
+            <!-- ACTIVE RIDDLER DECODER CARD -->
             <div class="nigma-emerald-card p-6 rounded-3xl backdrop-blur-xl">
-                <h2 class="text-base font-bold text-emerald-400 font-mono mb-2 flex items-center gap-2">
-                    🔓 INCOMING TRANSMISSION DECODER
-                </h2>
-                <p class="text-xs text-gray-300 mb-4 font-mono">Solve the cryptic transmission below by decoding the cipher phrase.</p>
+                <input type="hidden" id="active-riddle-id" value="{{ $puzzles[0]->id ?? 1 }}">
 
-                @if(isset($puzzles[0]))
-                    <div class="p-4 bg-black/60 border border-emerald-500/40 rounded-2xl mb-4 font-mono">
-                        <div class="text-xs text-emerald-500 font-bold mb-1">[ {{ $puzzles[0]->title }} ]</div>
-                        <div class="text-sm text-emerald-200 italic mb-2">"{{ $puzzles[0]->riddle }}"</div>
-                        <div class="text-[11px] text-gray-400">Cipher Method: <span class="text-emerald-400 font-bold">{{ $puzzles[0]->cipher_type }}</span></div>
+                <h2 id="active-riddle-title" class="text-base font-bold text-emerald-400 font-mono mb-2 flex items-center gap-2">
+                    [ {{ $puzzles[0]->title ?? 'Riddle 1' }} ]
+                </h2>
+
+                <div class="p-4 bg-black/70 border border-emerald-500/40 rounded-2xl mb-4 font-mono">
+                    <div id="active-riddle-text" class="text-sm text-emerald-200 italic mb-2">
+                        "{{ $puzzles[0]->riddle ?? 'I have no voice, yet I speak to many...' }}"
                     </div>
-                @endif
+                    <div class="text-[11px] text-emerald-600 dark:text-emerald-400/70">
+                        Cipher Method: <span id="active-riddle-cipher" class="text-emerald-400 font-bold">{{ $puzzles[0]->cipher_type ?? 'Caesar Shift' }}</span>
+                    </div>
+                </div>
 
                 <div class="space-y-3">
-                    <input type="text" id="nigma-answer-input" placeholder="Type solution text..."
-                        class="w-full bg-black/50 border border-emerald-500/40 rounded-xl px-4 py-3 text-sm text-emerald-300 placeholder-emerald-700 font-mono focus:outline-none focus:border-emerald-400 shadow-inner">
+                    <input type="text" id="nigma-answer-input" placeholder="Type solution answer key (e.g. book, footsteps, silence)..."
+                        class="w-full bg-black/60 border border-emerald-500/40 rounded-xl px-4 py-3 text-sm text-emerald-300 placeholder-emerald-800 font-mono focus:outline-none focus:border-emerald-400 shadow-inner">
                     
                     <button id="btn-solve-riddle" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-black font-mono font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 active:scale-95 transition-all">
-                        SUBMIT CYPHER SOLUTION
+                        SUBMIT SOLUTION (+15 CP TO SANDIKA)
                     </button>
 
                     <div id="nigma-result" class="text-xs min-h-[20px]"></div>
                 </div>
             </div>
 
-            <!-- RECENT PUZZLE TRANSMISSIONS LIST -->
-            <div class="nigma-emerald-card p-6 rounded-3xl">
-                <h3 class="text-sm font-bold text-emerald-400 font-mono mb-4 flex items-center gap-2">
-                    📜 TRANSMISSION ARCHIVE
+            <!-- ALL 20 RIDDLES ARCHIVE LIST -->
+            <div class="nigma-emerald-card p-6 rounded-3xl space-y-4">
+                <h3 class="text-sm font-bold text-emerald-400 font-mono flex items-center justify-between">
+                    <span>📜 20 RIDDLER TRANSMISSION ARCHIVE (Click any riddle to solve)</span>
                 </h3>
-                <div class="space-y-3">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     @foreach($puzzles as $p)
-                        <div class="p-3 bg-black/40 border border-emerald-500/20 rounded-xl flex items-center justify-between font-mono text-xs">
-                            <div>
-                                <span class="text-emerald-300 font-bold">{{ $p->title }}</span>
+                        <div class="riddle-select-item p-3 bg-black/50 hover:bg-emerald-950/40 border border-emerald-500/30 cursor-pointer rounded-xl flex items-center justify-between font-mono text-xs transition-all group"
+                            data-id="{{ $p->id }}" data-title="{{ $p->title }}" data-text="{{ $p->riddle }}" data-cipher="{{ $p->cipher_type }}">
+                            <div class="truncate mr-2">
+                                <span class="text-emerald-300 group-hover:text-emerald-200 font-bold block truncate">{{ $p->title }}</span>
                                 <span class="text-[10px] text-emerald-600 block">{{ $p->cipher_type }}</span>
                             </div>
-                            <div>
+                            <div class="shrink-0">
                                 @if($p->is_solved)
                                     <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px]">SOLVED</span>
                                 @else
-                                    <span class="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px]">LOCKED</span>
+                                    <span class="px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px]">UNSOLVED</span>
                                 @endif
                             </div>
                         </div>

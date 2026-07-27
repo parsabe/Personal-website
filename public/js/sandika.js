@@ -1,76 +1,150 @@
 /**
- * Sandika Arkham Portal ESM Module
+ * Sandika Full Concept ESM Module
  */
 document.addEventListener('DOMContentLoaded', () => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    
+
+    // Tab Navigation Switcher
+    const tabButtons = document.querySelectorAll('.sandika-tab-btn');
+    const tabContents = document.querySelectorAll('.sandika-tab-content');
+
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-target');
+            
+            tabButtons.forEach(b => b.classList.remove('bg-indigo-600/40', 'border-indigo-400', 'text-white'));
+            tabButtons.forEach(b => b.classList.add('bg-black/30', 'border-white/10', 'text-gray-400'));
+            
+            btn.classList.remove('bg-black/30', 'border-white/10', 'text-gray-400');
+            btn.classList.add('bg-indigo-600/40', 'border-indigo-400', 'text-white');
+
+            tabContents.forEach(c => {
+                if (c.id === target) {
+                    c.classList.remove('hidden');
+                } else {
+                    c.classList.add('hidden');
+                }
+            });
+        });
+    });
+
     // Voice Log Analyzer
     const analyzeVoiceBtn = document.getElementById('btn-analyze-voice');
     const voiceStatus = document.getElementById('voice-status');
 
     if (analyzeVoiceBtn) {
         analyzeVoiceBtn.addEventListener('click', async () => {
-            voiceStatus.innerHTML = '<span class="text-amber-400 font-mono animate-pulse">⏳ Analyzing voice audio frequency wave...</span>';
+            voiceStatus.innerHTML = '<span class="text-amber-400 font-mono animate-pulse">⏳ Analyzing audio spectral frequency...</span>';
             analyzeVoiceBtn.disabled = true;
 
             try {
                 const response = await fetch('/sandika/voice-log', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken || ''
-                    }
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken || '' }
                 });
-
                 const data = await response.json();
-
                 if (response.ok) {
                     voiceStatus.innerHTML = `<span class="text-emerald-400 font-mono">✅ ${data.message}</span>`;
                     updateRankUI(data.rank);
                 } else {
-                    voiceStatus.innerHTML = `<span class="text-rose-400 font-mono">❌ Analysis failed. Please sign in to earn XP.</span>`;
+                    voiceStatus.innerHTML = `<span class="text-rose-400 font-mono">❌ Sign in required to gain CP.</span>`;
                 }
             } catch (err) {
-                voiceStatus.innerHTML = `<span class="text-rose-400 font-mono">❌ System connection error.</span>`;
+                voiceStatus.innerHTML = `<span class="text-rose-400 font-mono">❌ System error.</span>`;
             } finally {
                 analyzeVoiceBtn.disabled = false;
             }
         });
     }
 
-    // File Processing Dropzone
-    const fileInput = document.getElementById('sandika-file-input');
-    const fileStatus = document.getElementById('file-status');
+    // ROT13 Live Encoder/Decoder Tool
+    const rotInput = document.getElementById('rot13-input');
+    const rotOutput = document.getElementById('rot13-output');
+    const rotBtn = document.getElementById('btn-rot13-convert');
 
-    if (fileInput) {
-        fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+    if (rotBtn && rotInput && rotOutput) {
+        rotBtn.addEventListener('click', () => {
+            const input = rotInput.value;
+            rotOutput.value = input.replace(/[a-zA-Z]/g, function(c) {
+                return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+            });
+        });
+    }
 
-            const formData = new FormData();
-            formData.append('file', file);
-
-            fileStatus.innerHTML = `<span class="text-amber-400 font-mono animate-pulse">⏳ Ingesting ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)...</span>`;
+    // Story Form Submission
+    const storyForm = document.getElementById('form-post-story');
+    if (storyForm) {
+        storyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(storyForm);
 
             try {
-                const response = await fetch('/sandika/file-upload', {
+                const res = await fetch('/sandika/story', {
                     method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken || ''
-                    },
+                    headers: { 'X-CSRF-TOKEN': csrfToken || '' },
                     body: formData
                 });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    fileStatus.innerHTML = `<span class="text-emerald-400 font-mono">✅ ${data.message}</span>`;
-                    updateRankUI(data.rank);
+                const data = await res.json();
+                if (res.ok) {
+                    alert(data.message);
+                    location.reload();
                 } else {
-                    fileStatus.innerHTML = `<span class="text-rose-400 font-mono">❌ Ingestion failed.</span>`;
+                    alert(data.message || 'Error publishing story.');
                 }
-            } catch (err) {
-                fileStatus.innerHTML = `<span class="text-rose-400 font-mono">❌ Vault upload error.</span>`;
+            } catch (e) {
+                alert('Submission error.');
+            }
+        });
+    }
+
+    // Dictionary Form Submission
+    const dictForm = document.getElementById('form-add-dict');
+    if (dictForm) {
+        dictForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(dictForm);
+
+            try {
+                const res = await fetch('/sandika/dictionary', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': csrfToken || '' },
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert('Error adding dictionary entry.');
+                }
+            } catch (e) {
+                alert('Submission error.');
+            }
+        });
+    }
+
+    // Git Insight Submission
+    const gitForm = document.getElementById('form-post-git');
+    if (gitForm) {
+        gitForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(gitForm);
+
+            try {
+                const res = await fetch('/sandika/git', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': csrfToken || '' },
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert('Error logging git insight.');
+                }
+            } catch (e) {
+                alert('Submission error.');
             }
         });
     }
@@ -80,14 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const xpElem = document.getElementById('user-xp-val');
         const levelElem = document.getElementById('user-level-val');
         const titleElem = document.getElementById('user-title-val');
-        const progressBar = document.getElementById('xp-progress-bar');
-
         if (xpElem) xpElem.textContent = rank.xp;
         if (levelElem) levelElem.textContent = rank.level;
         if (titleElem) titleElem.textContent = rank.rank_title;
-        if (progressBar) {
-            const progress = (rank.xp % 100);
-            progressBar.style.width = `${progress}%`;
-        }
     }
 });

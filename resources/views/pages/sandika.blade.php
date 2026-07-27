@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sandika Arkham Portal - Parsa Besharat</title>
+    <title>Sandika Operational Hub - Parsa Besharat</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <script>window.tailwind = { config: { darkMode: 'class' } };</script>
@@ -43,20 +43,19 @@
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                            SANDIKA ARKHAM SYSTEM
-                            <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">v4.8 Active</span>
+                            𝐒 𝐀 𝐍 𝐃 𝐈 𝐊 𝐀
+                            <span class="text-[10px] uppercase font-mono px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">OPERATIONAL HUB</span>
                         </h1>
-                        <p class="text-xs text-gray-400">Tactical Agent Ranks, Audio Spectrum Log Analyzer & File Vault</p>
+                        <p class="text-xs text-gray-400">Contribution Points (CP), Agent Ranks, Cipher Vault & Lexicon Network</p>
                     </div>
                 </div>
             </div>
 
-            <!-- USER RANK & PROGRESS CARD -->
+            <!-- USER RANK & CP BADGE -->
             @php
-                $userLevel = is_object($rank) ? $rank->level : 1;
-                $userTitle = is_object($rank) ? $rank->rank_title : 'Novice Operative';
-                $userXp = is_object($rank) ? $rank->xp : 50;
-                $userFiles = is_object($rank) ? $rank->files_processed : 0;
+                $userLevel = is_object($rank) ? $rank->level : 3;
+                $userTitle = is_object($rank) ? $rank->rank_title : 'Captain ⚔️ (Verified)';
+                $userCp = is_object($rank) ? $rank->xp : 50;
             @endphp
             <div class="sandika-rank-badge p-6 rounded-3xl backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="flex items-center gap-4">
@@ -69,85 +68,218 @@
                         <h2 id="user-title-val" class="text-lg font-bold text-white tracking-wide">
                             {{ $userTitle }}
                         </h2>
-                        <p class="text-xs text-indigo-300">Current XP: <span id="user-xp-val" class="font-bold text-white">{{ $userXp }}</span> / Next Rank Tier</p>
+                        <p class="text-xs text-indigo-300">Contribution Points (CP): <span id="user-xp-val" class="font-bold text-white">{{ $userCp }} CP</span></p>
                     </div>
                 </div>
 
-                <!-- XP Bar -->
-                <div class="w-full md:w-64 space-y-1.5">
-                    <div class="flex justify-between text-[11px] font-mono text-gray-400">
-                        <span>XP Progress</span>
-                        <span>{{ $userXp % 100 }}%</span>
-                    </div>
-                    <div class="w-full h-3 bg-black/40 rounded-full overflow-hidden border border-white/10 p-0.5">
-                        <div id="xp-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500" style="width: {{ $userXp % 100 }}%;"></div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full text-xs font-semibold">
+                        {{ $userCp >= 50 ? '✅ Verified Agent' : '⏳ Verification Threshold (50 CP)' }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- CONCEPT TAB MENU BAR -->
+            <div class="flex flex-wrap gap-2 p-1.5 bg-black/40 border border-white/10 rounded-2xl">
+                <button class="sandika-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-indigo-600/40 border border-indigo-400 text-white" data-target="tab-rules">
+                    📜 Rules & Ranks
+                </button>
+                <button class="sandika-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-black/30 border border-white/10 text-gray-400" data-target="tab-stories">
+                    📖 Stories Hub
+                </button>
+                <button class="sandika-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-black/30 border border-white/10 text-gray-400" data-target="tab-dictionary">
+                    📚 Lexicon Dictionary
+                </button>
+                <button class="sandika-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-black/30 border border-white/10 text-gray-400" data-target="tab-git">
+                    💻 Git Insights
+                </button>
+                <button class="sandika-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-black/30 border border-white/10 text-gray-400" data-target="tab-tools">
+                    ⚙️ Tactical Tools & ROT13
+                </button>
+            </div>
+
+            <!-- TAB 1: RULES & RANKS -->
+            <div id="tab-rules" class="sandika-tab-content space-y-4">
+                <div class="arkham-terminal p-6 rounded-3xl space-y-4">
+                    <h2 class="text-sm font-bold text-indigo-400 font-mono">🔰 SANDIKA OPERATIONAL RULES & CP SYSTEM</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-gray-300 font-mono">
+                        <div class="p-4 bg-black/50 border border-white/10 rounded-2xl space-y-2">
+                            <h3 class="font-bold text-white text-sm">How to Earn CP (Contribution Points):</h3>
+                            <ul class="space-y-1.5 text-gray-400">
+                                <li>• <strong class="text-indigo-300">Nigma Riddles:</strong> +15 CP per riddle solved</li>
+                                <li>• <strong class="text-indigo-300">Dictionary Words (EN/DE):</strong> +10 CP per entry</li>
+                                <li>• <strong class="text-indigo-300">Stories (>1000 chars):</strong> +10-15 CP</li>
+                                <li>• <strong class="text-indigo-300">Git Insights:</strong> +15 CP (GitHub verified) / +5 CP</li>
+                                <li>• <strong class="text-indigo-300">Voice Audio Logs:</strong> +45 CP</li>
+                            </ul>
+                        </div>
+
+                        <div class="p-4 bg-black/50 border border-white/10 rounded-2xl space-y-2">
+                            <h3 class="font-bold text-white text-sm">Agent Rank Hierarchy:</h3>
+                            <ul class="space-y-1 text-gray-400">
+                                <li>• Rookie: 0 - 19 CP</li>
+                                <li>• Soldier: 20 - 49 CP</li>
+                                <li>• <strong class="text-emerald-400">Captain (Verified Threshold): 50 - 99 CP</strong></li>
+                                <li>• Sergeant: 100 - 149 CP</li>
+                                <li>• Lieutenant: 150 - 399 CP</li>
+                                <li>• Admiral: 400 - 1999 CP</li>
+                                <li>• Bossman: 2000+ CP</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- TACTICAL TOOLS GRID -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <!-- Voice Log Audio Spectrum Analyzer -->
-                <div class="arkham-terminal p-6 rounded-3xl flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-2">
-                                🎙️ Voice Transmission Analyzer
-                            </h3>
-                            <span class="text-[10px] font-mono text-emerald-400">SYSTEM READY</span>
-                        </div>
-                        <p class="text-xs text-gray-400 mb-4">Run real-time audio spectral analysis on incoming voice notes to extract hidden tactical metadata.</p>
-                        
-                        <!-- Animated Spectrum Bars -->
-                        <div class="h-16 bg-black/50 border border-indigo-500/30 rounded-xl p-3 flex items-center justify-center gap-1 mb-4">
-                            <div class="w-1.5 bg-indigo-500 rounded-full waveform-bar h-1/2"></div>
-                            <div class="w-1.5 bg-purple-500 rounded-full waveform-bar h-3/4"></div>
-                            <div class="w-1.5 bg-indigo-400 rounded-full waveform-bar h-full"></div>
-                            <div class="w-1.5 bg-pink-500 rounded-full waveform-bar h-2/3"></div>
-                            <div class="w-1.5 bg-indigo-500 rounded-full waveform-bar h-5/6"></div>
-                            <div class="w-1.5 bg-purple-400 rounded-full waveform-bar h-1/3"></div>
-                        </div>
-
-                        <div id="voice-status" class="text-xs mb-3 min-h-[20px]"></div>
+            <!-- TAB 2: STORIES HUB -->
+            <div id="tab-stories" class="sandika-tab-content hidden space-y-4">
+                <div class="arkham-terminal p-6 rounded-3xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-bold text-purple-400 font-mono">📖 STORIES & INTELLIGENCE REPORTS</h2>
+                        <button onclick="document.getElementById('modal-story').classList.remove('hidden')" class="px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold shadow-lg hover:bg-purple-500">
+                            + POST STORY (+10 CP)
+                        </button>
                     </div>
 
-                    <button id="btn-analyze-voice" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold text-xs rounded-xl shadow-lg hover:opacity-90 active:scale-95 transition-all">
-                        RUN VOICE ANALYSIS (+45 XP)
-                    </button>
-                </div>
-
-                <!-- Secure File Storage Vault -->
-                <div class="arkham-terminal p-6 rounded-3xl flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-bold text-purple-400 uppercase tracking-wider flex items-center gap-2">
-                                📁 Arkham Encrypted File Vault
-                            </h3>
-                            <span class="text-[10px] font-mono text-indigo-400">UP TO 4GB</span>
-                        </div>
-                        <p class="text-xs text-gray-400 mb-4">Upload and process tactical files, documents, or media into the Sandika Arkham repository.</p>
-
-                        <!-- File Dropzone -->
-                        <label for="sandika-file-input" class="cursor-pointer border-2 border-dashed border-purple-500/30 hover:border-purple-400 bg-black/40 rounded-xl p-6 flex flex-col items-center justify-center transition-all mb-3 group">
-                            <span class="text-3xl mb-1 group-hover:scale-110 transition-transform">📤</span>
-                            <span class="text-xs font-semibold text-purple-300">Click to Select File</span>
-                            <span class="text-[10px] text-gray-500">Supports images, audio, video, docs</span>
-                        </label>
-                        <input type="file" id="sandika-file-input" class="hidden">
-
-                        <div id="file-status" class="text-xs mb-3 min-h-[20px]"></div>
-                    </div>
-
-                    <div class="text-[10px] text-gray-500 font-mono text-center border-t border-white/5 pt-2">
-                        Processed Files: <span class="text-white">{{ $userFiles }}</span>
+                    <div class="space-y-3">
+                        @forelse($stories as $s)
+                            <div class="p-4 bg-black/40 border border-white/10 rounded-2xl text-xs space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-bold text-white text-sm">{{ $s->title }}</h3>
+                                    <span class="text-[10px] font-mono text-purple-400">+{{ $s->cp_awarded }} CP</span>
+                                </div>
+                                <p class="text-gray-300 leading-relaxed">{{ $s->content }}</p>
+                            </div>
+                        @empty
+                            <div class="text-center p-6 text-xs text-gray-500 font-mono">No stories posted yet.</div>
+                        @endforelse
                     </div>
                 </div>
+            </div>
 
+            <!-- TAB 3: DICTIONARY -->
+            <div id="tab-dictionary" class="sandika-tab-content hidden space-y-4">
+                <div class="arkham-terminal p-6 rounded-3xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-bold text-indigo-400 font-mono">📚 LEXICON DICTIONARY (ENGLISH & GERMAN)</h2>
+                        <button onclick="document.getElementById('modal-dict').classList.remove('hidden')" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-lg hover:bg-indigo-500">
+                            + ADD WORD (+10 CP)
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        @forelse($dictionary as $d)
+                            <div class="p-3 bg-black/40 border border-white/10 rounded-xl text-xs">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-bold text-indigo-300">{{ $d->word }}</span>
+                                    <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400">{{ $d->language }}</span>
+                                </div>
+                                <p class="text-gray-400 text-[11px]">{{ $d->definition }}</p>
+                            </div>
+                        @empty
+                            <div class="col-span-2 text-center p-6 text-xs text-gray-500 font-mono">Lexicon empty. Submit vocabulary to earn CP!</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: GIT INSIGHTS -->
+            <div id="tab-git" class="sandika-tab-content hidden space-y-4">
+                <div class="arkham-terminal p-6 rounded-3xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-sm font-bold text-emerald-400 font-mono">💻 REPOSITORY GIT INSIGHTS</h2>
+                        <button onclick="document.getElementById('modal-git').classList.remove('hidden')" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-lg hover:bg-emerald-500">
+                            + POST GIT INSIGHT (+15 CP)
+                        </button>
+                    </div>
+
+                    <div class="space-y-3">
+                        @forelse($gitInsights as $g)
+                            <div class="p-4 bg-black/40 border border-white/10 rounded-2xl text-xs space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <a href="{{ $g->repo_url }}" target="_blank" class="font-bold text-emerald-400 hover:underline">{{ $g->repo_url }}</a>
+                                    <span class="text-[10px] font-mono text-emerald-400">+{{ $g->cp_awarded }} CP</span>
+                                </div>
+                                <p class="text-gray-300">{{ $g->description }}</p>
+                            </div>
+                        @empty
+                            <div class="text-center p-6 text-xs text-gray-500 font-mono">No git insights logged.</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: TACTICAL TOOLS & ROT13 -->
+            <div id="tab-tools" class="sandika-tab-content hidden space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- ROT13 Encoder/Decoder -->
+                    <div class="arkham-terminal p-6 rounded-3xl space-y-3">
+                        <h3 class="text-xs font-bold text-indigo-400 font-mono">🔒 ROT13 ENCODER / DECODER</h3>
+                        <textarea id="rot13-input" rows="3" placeholder="Enter text to encrypt/decrypt..." class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-xs text-white placeholder-gray-600 focus:outline-none"></textarea>
+                        <button id="btn-rot13-convert" class="w-full py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold">CONVERT TEXT</button>
+                        <textarea id="rot13-output" rows="3" readonly placeholder="Output ciphertext..." class="w-full bg-black/60 border border-white/10 rounded-xl p-3 text-xs text-emerald-400 focus:outline-none font-mono"></textarea>
+                    </div>
+
+                    <!-- Voice Log & File Storage -->
+                    <div class="arkham-terminal p-6 rounded-3xl space-y-3">
+                        <h3 class="text-xs font-bold text-purple-400 font-mono">🎙️ VOICE LOG & FILE VAULT</h3>
+                        <div id="voice-status" class="text-xs text-gray-400 min-h-[20px]"></div>
+                        <button id="btn-analyze-voice" class="w-full py-2.5 bg-purple-600 text-white rounded-xl text-xs font-bold">ANALYZE VOICE LOG (+45 CP)</button>
+                    </div>
+                </div>
             </div>
 
         </main>
 
+    </div>
+
+    <!-- POST STORY MODAL -->
+    <div id="modal-story" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-lg bg-gray-900 border border-white/20 p-6 rounded-3xl space-y-4">
+            <h3 class="text-base font-bold text-white font-mono">Post Sandika Story</h3>
+            <form id="form-post-story" class="space-y-3">
+                <input type="text" name="title" required placeholder="Story Title..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white">
+                <textarea name="content" required rows="5" placeholder="Write story (Over 1000 chars earns +15 CP)..." class="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-xs text-white"></textarea>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="document.getElementById('modal-story').classList.add('hidden')" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-xl text-xs">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold">Post Story</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADD DICTIONARY MODAL -->
+    <div id="modal-dict" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-lg bg-gray-900 border border-white/20 p-6 rounded-3xl space-y-4">
+            <h3 class="text-base font-bold text-white font-mono">Add Word to Lexicon</h3>
+            <form id="form-add-dict" class="space-y-3">
+                <select name="language" class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white">
+                    <option value="en">English (EN)</option>
+                    <option value="de">German (DE)</option>
+                </select>
+                <input type="text" name="word" required placeholder="Vocabulary Word..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white">
+                <textarea name="definition" required rows="3" placeholder="Definition..." class="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-xs text-white"></textarea>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="document.getElementById('modal-dict').classList.add('hidden')" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-xl text-xs">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold">Add Word (+10 CP)</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- POST GIT MODAL -->
+    <div id="modal-git" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="w-full max-w-lg bg-gray-900 border border-white/20 p-6 rounded-3xl space-y-4">
+            <h3 class="text-base font-bold text-white font-mono">Post Git Repository Insight</h3>
+            <form id="form-post-git" class="space-y-3">
+                <input type="url" name="repo_url" required placeholder="https://github.com/username/repo..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white">
+                <textarea name="description" required rows="3" placeholder="Description of repository insight..." class="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-xs text-white"></textarea>
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="document.getElementById('modal-git').classList.add('hidden')" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-xl text-xs">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold">Post Insight (+15 CP)</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- External Sandika ESM Script -->
