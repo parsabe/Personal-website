@@ -163,27 +163,8 @@
 
     </div>
 
-    <!-- Client-Side Real-Time Filter Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('search-input');
-            const cards = document.querySelectorAll('.feedback-card');
-
-            if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    const query = e.target.value.toLowerCase().trim();
-                    cards.forEach(card => {
-                        const searchContent = card.getAttribute('data-searchable') || '';
-                        if (searchContent.includes(query)) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            }
-        });
-    </script>
+    <!-- External ESM Javascript Module -->
+    <script type="module" src="{{ asset('js/cs-admin.js') }}"></script>
 </body>
 
 </html>

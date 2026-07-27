@@ -19,9 +19,7 @@
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        window.tailwind = { config: { darkMode: 'class' } };
-    </script>
+    <script type="module" src="{{ asset('js/tailwind-config.js') }}"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -30,13 +28,7 @@
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-E441FBGYXG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-E441FBGYXG');
-</script>
+<script type="module" src="{{ asset('js/gtag.js') }}"></script>
 
 <body
     class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10 min-h-screen relative overflow-x-hidden">

@@ -14,18 +14,7 @@
 
     <!-- Tailwind & AlpineJS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                        mono: ['Orbitron', 'monospace'],
-                    },
-                },
-            },
-        }
-    </script>
+    <script type="module" src="{{ asset('js/tailwind-config.js') }}"></script>
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
@@ -521,28 +510,8 @@
         </div>
     </div>
 
-    <!-- Client-Side Real-Time Filter Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('dashboard-search');
-            
-            if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    const query = e.target.value.toLowerCase().trim();
-                    const cards = document.querySelectorAll('.dashboard-card');
-                    
-                    cards.forEach(card => {
-                        const content = card.getAttribute('data-searchable') || '';
-                        if (content.includes(query)) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            }
-        });
-    </script>
+    <!-- External ESM Javascript Module -->
+    <script type="module" src="{{ asset('js/admin-dashboard.js') }}"></script>
 </body>
 
 </html>

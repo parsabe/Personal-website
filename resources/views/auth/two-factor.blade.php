@@ -7,9 +7,7 @@
     <title>Two-Factor Verification - Parsa Besharat</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        window.tailwind = { config: { darkMode: 'class' } };
-    </script>
+    <script type="module" src="{{ asset('js/tailwind-config.js') }}"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
@@ -35,11 +33,11 @@
             </div>
         @endif
 
-        @if ($errors->has('code'))
+        @error('code')
             <div class="mb-4 p-3 bg-rose-950/80 border border-rose-500/40 rounded-xl text-xs text-rose-300">
-                {{ $errors->first('code') }}
+                {{ $message }}
             </div>
-        @endif
+        @enderror
 
         <form method="POST" action="{{ route('2fa.verify') }}" class="space-y-4 text-xs">
             @csrf

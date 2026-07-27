@@ -1,0 +1,6 @@
+@media (max-width: 767px) {
+    aside#sidebar ~ * {
+        padding-top: 6rem !important;
+        justify-content: flex-start !important;
+    }
+}

@@ -1,17 +1,5 @@
-<style>
-    @media (max-width: 767px) {
+<link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
 
-        /* * Target whatever container comes AFTER your sidebar in the DOM.
-         * The !important flag ensures it overrides any existing Tailwind utility classes 
-         * that might be stubbornly holding the content at the top.
-         */
-        aside#sidebar~* {
-            padding-top: 6rem !important;
-            justify-content: flex-start !important;
-            /* NEW: Forces content to start at the top */
-        }
-    }
-</style>
 <!-- Mobile Toggle Button -->
 <button id="sidebar-toggle" onclick="toggleSidebar()"
     class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-gray-800 dark:text-white shadow-lg transition-transform hover:scale-105 active:scale-95">
@@ -80,11 +68,8 @@
 
         @foreach($menuItems as $item)
             @php
-                // Determine if this is an external URL or a local route
                 $isExternal = isset($item['url']);
                 $href = $isExternal ? $item['url'] : route($item['route']);
-
-                // Active state only applies to local routes
                 $isActive = !$isExternal && request()->routeIs($item['route']);
             @endphp
 
@@ -102,17 +87,5 @@
     </div>
 </aside>
 
-<script>
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-
-        if (sidebar.classList.contains('-translate-x-full')) {
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-        } else {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        }
-    }
-</script>
+<!-- Separate ESM JavaScript Module -->
+<script type="module" src="{{ asset('js/sidebar.js') }}"></script>
