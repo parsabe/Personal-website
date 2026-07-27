@@ -61,8 +61,8 @@
 
             $menuItems = array_merge($menuItems, [
                 ['name' => 'Chat Portal', 'route' => 'chat', 'icon' => '💬'],
-                ['name' => 'Sandika', 'url' => 'https://sandika.parsabe.com', 'icon' => '🤖'],
-                ['name' => 'Nigma', 'url' => 'https://nigma.parsabe.com', 'icon' => '🧩'],
+                ['name' => 'Sandika', 'route' => 'sandika', 'icon' => '🤖'],
+                ['name' => 'Nigma', 'route' => 'nigma', 'icon' => '🧩'],
             ]);
         @endphp
 

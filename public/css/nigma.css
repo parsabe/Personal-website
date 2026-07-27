@@ -1,0 +1,14 @@
+/* Nigma Riddler Emerald Matrix Console Stylesheet */
+.nigma-emerald-card {
+    background: rgba(6, 28, 18, 0.85);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+}
+
+.nigma-glow-text {
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+}
+
+.matrix-bg {
+    background: linear-gradient(180deg, rgba(6, 28, 18, 0.9) 0%, rgba(2, 15, 9, 0.95) 100%);
+}

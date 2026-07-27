@@ -37,9 +37,20 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/vpn', 'VPN_server')->name('vpn-server');
     Route::get('/fun', 'fun')->name('fun');
     Route::get('/support', 'support')->name('support');
-    Route::get('/nigma', 'nigma')->name('nigma');
     Route::get('/books', 'books')->name('books');
-    Route::get('/sandika', 'sandika')->name('sandika');
+
+// Sandika Portal Routes
+Route::get('/sandika', [App\Http\Controllers\SandikaController::class, 'index'])->name('sandika');
+Route::post('/sandika/voice-log', [App\Http\Controllers\SandikaController::class, 'analyzeVoiceLog'])->name('sandika.voice_log');
+Route::post('/sandika/file-upload', [App\Http\Controllers\SandikaController::class, 'processFile'])->name('sandika.file_upload');
+
+// Nigma Riddler Portal Routes
+Route::get('/nigma', [App\Http\Controllers\NigmaController::class, 'index'])->name('nigma');
+Route::post('/nigma/solve', [App\Http\Controllers\NigmaController::class, 'solve'])->name('nigma.solve');
+
+// Rich Text Blog Routes
+Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog');
+Route::post('/blog', [App\Http\Controllers\BlogController::class, 'store'])->name('blog.store');
 
     Route::get('/search', [App\Http\Controllers\SearchController::class, 'index'])->name('search');
 

@@ -1,0 +1,42 @@
+/* Rich Text Blog Stylesheet */
+.blog-card {
+    background: rgba(17, 24, 39, 0.75);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rich-editor-toolbar button {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 12px;
+    color: #e2e8f0;
+    transition: all 0.2s;
+}
+
+.rich-editor-toolbar button:hover {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.4);
+    color: #ffffff;
+}
+
+.blog-content p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+}
+
+.blog-content h2, .blog-content h3 {
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #f8fafc;
+}
+
+.blog-content code {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: #ec4899;
+}
