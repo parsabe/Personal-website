@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController; // <--- 1. Import the Class
 
 use App\Http\Controllers\ContactController; // <-- Don't forget to import this!
+use App\Http\Controllers\ChatController;
 
 use Spatie\Sitemap\SitemapGenerator;
 
@@ -37,11 +38,8 @@ Route::controller(PageController::class)->group(function () {
     Route::get('/fun', 'fun')->name('fun');
     Route::get('/support', 'support')->name('support');
     Route::get('/nigma', 'nigma')->name('nigma');
-    Route::get('/chat', 'chat')->name('chat');
     Route::get('/books', 'books')->name('books');
-    Route::get('/chat', 'chat')->name('chat');
     Route::get('/sandika', 'sandika')->name('sandika');
-
 
     Route::get('/search', [App\Http\Controllers\SearchController::class, 'index'])->name('search');
 
@@ -74,6 +72,14 @@ Route::controller(PageController::class)->group(function () {
     // --- Blogs ---
     Route::get('/blog', 'blog')->name('blog');
 });
+
+// ==========================================
+// Online Chat Portal Routes
+// ==========================================
+Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+Route::get('/chat/messages', [ChatController::class, 'fetchMessages'])->name('chat.messages');
+Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+Route::post('/chat/upload', [ChatController::class, 'uploadFile'])->name('chat.upload');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

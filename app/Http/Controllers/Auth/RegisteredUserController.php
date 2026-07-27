@@ -43,8 +43,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        session(['2fa_user_id' => $user->id]);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('2fa.show'));
     }
 }

@@ -9,7 +9,10 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\TwoFactorAuthController;
+
+Route::get('2fa-verify', [TwoFactorAuthController::class, 'show'])->name('2fa.show');
+Route::post('2fa-verify', [TwoFactorAuthController::class, 'verify'])->name('2fa.verify');
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])

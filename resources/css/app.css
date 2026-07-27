@@ -36,13 +36,13 @@ body::after {
 
 /* Light Mode Background Image (Visible by default) */
 body::before {
-    background-image: url("/images/light.png");
+    background-image: url("/images/light.jpg");
     opacity: 1; 
 }
 
 /* Dark Mode Background Image (Hidden by default) */
 body::after {
-    background-image: url("/images/dark.png");
+    background-image: url("/images/dark.jpg");
     opacity: 0; 
 }
 

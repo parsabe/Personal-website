@@ -72,8 +72,7 @@
             }
 
             $menuItems = array_merge($menuItems, [
-                // External Subdomains using 'url' instead of 'route'
-                ['name' => 'Chat', 'url' => 'https://blue-pearl.parsabe.com', 'icon' => '💬'],
+                ['name' => 'Chat Portal', 'route' => 'chat', 'icon' => '💬'],
                 ['name' => 'Sandika', 'url' => 'https://sandika.parsabe.com', 'icon' => '🤖'],
                 ['name' => 'Nigma', 'url' => 'https://nigma.parsabe.com', 'icon' => '🧩'],
             ]);

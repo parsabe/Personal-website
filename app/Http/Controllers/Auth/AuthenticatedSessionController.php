@@ -26,9 +26,13 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        $user = Auth::user();
+        Auth::logout();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $request->session()->regenerate();
+        session(['2fa_user_id' => $user->id]);
+
+        return redirect()->route('2fa.show');
     }
 
     /**
