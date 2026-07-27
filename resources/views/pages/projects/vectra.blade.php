@@ -28,8 +28,8 @@
     <meta name="twitter:description" content="Vectra is an end-to-end spatial computing framework engineered to generate, extract, and simulate high-fidelity 3D objects directly from simple visual and textual data.">
     <meta name="twitter:image" content="{{ asset('images/vectra.png') }}">
 
+    <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="{{ asset('js/tailwind-config.js') }}"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

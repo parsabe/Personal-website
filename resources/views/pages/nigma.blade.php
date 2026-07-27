@@ -7,8 +7,8 @@
     <title>Edward Nigma Cypher Portal - Parsa Besharat</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="{{ asset('js/tailwind-config.js') }}"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">

@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     
+    <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="{{ asset('js/tailwind-config.js') }}"></script>
     
     <!-- Custom Cyberpunk Styles -->
     <style>

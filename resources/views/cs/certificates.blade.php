@@ -10,8 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
+    <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="{{ asset('js/tailwind-config.js') }}"></script>
     
     <!-- Custom Premium Styles -->
     <link rel="stylesheet" href="{{ asset('css/cs-certificates.css') }}">

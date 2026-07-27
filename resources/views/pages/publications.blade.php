@@ -28,8 +28,8 @@
     <meta name="twitter:description" content="Read research papers and publications by Parsa Besharat on AI, Machine Learning, Blockchain, and Data Science. Featuring BlackWall, Moodium, and more.">
     <meta name="twitter:image" content="{{ asset('images/profile.jpg') }}">
 
+    <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="{{ asset('js/tailwind-config.js') }}"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

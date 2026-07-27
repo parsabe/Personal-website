@@ -35,8 +35,8 @@
     <meta name="twitter:image" content="{{ asset('images/profile.jpg') }}">
 
 
+    <script>window.tailwind = { config: { darkMode: 'class' } };</script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" src="{{ asset('js/tailwind-config.js') }}"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

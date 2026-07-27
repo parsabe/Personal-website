@@ -12,8 +12,8 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script type="module" src="{{ asset('js/tailwind-config.js') }}"></script>
+        <script>window.tailwind = { config: { darkMode: 'class' } };</script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
