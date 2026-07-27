@@ -22,6 +22,12 @@ class User extends Authenticatable
         'email',
         'password',
         'google2fa_secret',
+        'username',
+        'first_name',
+        'last_name',
+        'avatar',
+        'bio',
+        'social_links',
     ];
 
     /**
@@ -44,6 +50,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'social_links' => 'array',
         ];
     }
 

@@ -78,8 +78,13 @@ Route::controller(PageController::class)->group(function () {
 // ==========================================
 Route::get('/chat', [ChatController::class, 'index'])->name('chat');
 Route::get('/chat/messages', [ChatController::class, 'fetchMessages'])->name('chat.messages');
+Route::get('/chat/users', [ChatController::class, 'fetchUsers'])->name('chat.users');
 Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
 Route::post('/chat/upload', [ChatController::class, 'uploadFile'])->name('chat.upload');
+Route::post('/chat/react', [ChatController::class, 'toggleReaction'])->name('chat.react');
+Route::post('/chat/profile', [ChatController::class, 'updateProfile'])->name('chat.profile');
+Route::get('/chat/stories', [ChatController::class, 'fetchStories'])->name('chat.stories');
+Route::post('/chat/stories', [ChatController::class, 'createStory'])->name('chat.stories.create');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

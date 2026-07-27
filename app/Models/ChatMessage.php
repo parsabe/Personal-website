@@ -35,6 +35,11 @@ class ChatMessage extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function reactions()
+    {
+        return $this->hasMany(ChatMessageReaction::class, 'chat_message_id');
+    }
+
     public function scopeDelivered($query)
     {
         return $query->whereNotNull('delivered_at');
