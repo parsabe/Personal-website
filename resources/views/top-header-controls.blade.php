@@ -1,7 +1,7 @@
-<!-- TOP-RIGHT HEADER CONTROLS (LOGIN, SIGN UP & MACOS DOTS) -->
+<!-- TOP-RIGHT HEADER CONTROLS (LOGIN, SIGN UP, THEME TOGGLE & MACOS DOTS) -->
 <div class="absolute top-4 right-6 flex items-center gap-2.5 z-50">
     @auth
-        <span class="text-[11px] font-semibold text-gray-300 hidden sm:inline-flex items-center gap-1">
+        <span class="text-[11px] font-semibold text-gray-700 dark:text-gray-300 hidden sm:inline-flex items-center gap-1">
             👤 {{ Auth::user()->name }}
         </span>
         <form method="POST" action="{{ route('logout') }}" class="inline">
@@ -18,6 +18,11 @@
             ✨ <span>Sign Up</span>
         </a>
     @endauth
+
+    <button id="theme-toggle" class="p-1.5 rounded-full ios-glass transition hover:scale-110" title="Toggle Light / Dark Theme">
+        <span id="theme-icon-light" class="hidden text-xs">☀️</span>
+        <span id="theme-icon-dark" class="hidden text-xs">🌙</span>
+    </button>
 
     <div class="flex gap-1.5 items-center pl-1">
         <div class="mac-dot-red w-3 h-3 rounded-full bg-[#ff5f56] shadow-sm border border-[#e0443e] cursor-pointer hover:opacity-80 transition transform hover:scale-110" title="Close Window"></div>

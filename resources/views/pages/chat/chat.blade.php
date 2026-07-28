@@ -133,6 +133,10 @@
                         <button onclick="toggleProfileModal()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold flex items-center space-x-1 transition transform hover:scale-105 active:scale-95">
                             👤 <span>My Profile</span>
                         </button>
+                        <button id="theme-toggle" class="p-2 rounded-full ios-glass transition hover:scale-110" title="Toggle Theme">
+                            <span id="theme-icon-light" class="hidden text-xs">☀️</span>
+                            <span id="theme-icon-dark" class="hidden text-xs">🌙</span>
+                        </button>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
                             <button type="submit" class="px-3 py-1.5 rounded-full bg-rose-950/80 hover:bg-rose-900 text-rose-300 text-xs font-semibold border border-rose-500/30 transition transform hover:scale-105 active:scale-95">
@@ -412,53 +416,6 @@
             <p id="callStatus" class="text-xs text-emerald-400 my-2 animate-pulse">Connecting Peer-to-Peer...</p>
             <div class="flex items-center justify-center space-x-4 mt-6">
                 <button onclick="endAudioCall()" class="p-3 bg-rose-600 rounded-full text-white font-bold transform hover:scale-110 transition">📵</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- RICH EMOJI PICKER MODAL -->
-    <div id="richEmojiPickerModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-900/95 border border-white/20 p-5 rounded-3xl w-full max-w-md shadow-2xl space-y-3 animate-scale-up backdrop-blur-xl">
-            <div class="flex items-center justify-between pb-2 border-b border-white/10">
-                <h3 class="text-sm font-bold text-white flex items-center gap-2">😊 Rich Emoji Suite</h3>
-                <button onclick="toggleEmojiPicker()" class="text-gray-400 hover:text-white text-xs font-bold p-1">✕</button>
-            </div>
-            
-            <input type="text" id="emojiSearchInput" onkeyup="filterEmojiGrid()" placeholder="🔍 Search 150+ emojis..." 
-                class="w-full bg-black/50 border border-white/15 rounded-xl px-3.5 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-500">
-            
-            <div id="emojiGrid" class="grid grid-cols-8 gap-2 p-2 max-h-56 overflow-y-auto chat-scroll bg-black/40 rounded-2xl border border-white/10 text-xl text-center">
-                <!-- JS injects emojis -->
-            </div>
-        </div>
-    </div>
-
-    <!-- GIPHY GIF SUITE MODAL -->
-    <div id="giphyPickerModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-900/95 border border-white/20 p-5 rounded-3xl w-full max-w-lg shadow-2xl space-y-3 animate-scale-up backdrop-blur-xl">
-            <div class="flex items-center justify-between pb-2 border-b border-white/10">
-                <h3 class="text-sm font-bold text-white flex items-center gap-2">🎬 Giphy GIF Suite</h3>
-                <button onclick="toggleGifPicker()" class="text-gray-400 hover:text-white text-xs font-bold p-1">✕</button>
-            </div>
-
-            <div class="flex items-center space-x-2">
-                <input type="text" id="giphySearchInput" onkeydown="if(event.key==='Enter'){searchGifs();}" placeholder="🔍 Search Giphy GIFs..." 
-                    class="flex-1 bg-black/50 border border-white/15 rounded-xl px-3.5 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-purple-500">
-                <button onclick="searchGifs()" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl transition">Search</button>
-            </div>
-
-            <!-- GIF Category Pills -->
-            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 text-[11px]">
-                <button onclick="searchGifs('cyberpunk')" class="px-2.5 py-1 rounded-full bg-purple-600/30 text-purple-300 border border-purple-500/40 shrink-0 hover:bg-purple-600 hover:text-white transition">🤖 Cyberpunk</button>
-                <button onclick="searchGifs('reaction')" class="px-2.5 py-1 rounded-full bg-blue-600/30 text-blue-300 border border-blue-500/40 shrink-0 hover:bg-blue-600 hover:text-white transition">🔥 Reaction</button>
-                <button onclick="searchGifs('mindblown')" class="px-2.5 py-1 rounded-full bg-amber-600/30 text-amber-300 border border-amber-500/40 shrink-0 hover:bg-amber-600 hover:text-white transition">🤯 Mindblown</button>
-                <button onclick="searchGifs('laugh')" class="px-2.5 py-1 rounded-full bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 shrink-0 hover:bg-emerald-600 hover:text-white transition">😂 Laugh</button>
-                <button onclick="searchGifs('party')" class="px-2.5 py-1 rounded-full bg-pink-600/30 text-pink-300 border border-pink-500/40 shrink-0 hover:bg-pink-600 hover:text-white transition">🎉 Party</button>
-                <button onclick="searchGifs('batman')" class="px-2.5 py-1 rounded-full bg-gray-700/50 text-gray-300 border border-gray-600 shrink-0 hover:bg-gray-700 hover:text-white transition">🦇 Batman</button>
-            </div>
-
-            <div id="giphyResultsGrid" class="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto chat-scroll p-1 bg-black/40 rounded-2xl border border-white/10">
-                <!-- JS injects GIFs -->
             </div>
         </div>
     </div>
