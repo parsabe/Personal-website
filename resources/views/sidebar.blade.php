@@ -39,12 +39,16 @@
                     ['name' => 'Home', 'route' => 'home', 'icon' => '🏠'],
                     ['name' => 'About', 'route' => 'about', 'icon' => '👤'],
                     ['name' => 'Contact', 'route' => 'contact', 'icon' => '✉️'],
+                    ['name' => 'Projects', 'route' => 'projects', 'icon' => '💼'],
                     ['name' => 'Publications', 'route' => 'publications', 'icon' => '📚'],
                     ['name' => 'My Playlist', 'route' => 'myplaylist', 'icon' => '🎵'],
                     ['name' => 'Favorite Books', 'route' => 'books', 'icon' => '📕'],
+                    ['name' => 'Search', 'route' => 'search', 'icon' => '🔍'],
                 ],
-                'SERVICES & PORTALS' => [
-                    ['name' => 'Projects', 'route' => 'projects', 'icon' => '💼'],
+            ];
+
+            if (auth()->check()) {
+                $sections['SERVICES & PORTALS'] = [
                     ['name' => 'VECTRA (New)', 'url' => 'https://vectra.parsabe.com', 'icon' => '👀'],
                     ['name' => 'BlackWall AI', 'route' => 'projects.blackwall', 'icon' => '🛡️'],
                     ['name' => 'Chat Portal', 'route' => 'chat', 'icon' => '💬'],
@@ -55,19 +59,13 @@
                     ['name' => 'VPN Server', 'route' => 'vpn-server', 'icon' => '☁️'],
                     ['name' => 'Club', 'route' => 'fun', 'icon' => '🎮'],
                     ['name' => 'Blog', 'route' => 'blog', 'icon' => '☕'],
-                    ['name' => 'Search', 'route' => 'search', 'icon' => '🔍'],
-                ],
-            ];
+                ];
 
-            $accountItems = [];
-            if (auth()->check()) {
+                $accountItems = [];
                 $accountItems[] = ['name' => 'Profile Settings', 'route' => 'chat', 'icon' => '⚙️', 'query' => 'action=profile'];
-            }
-            if (auth()->check() && auth()->user()->email === 'parsabe99@gmail.com') {
-                $accountItems[] = ['name' => 'Parsa Dashboard', 'route' => 'parsa.dashboard', 'icon' => '🔒'];
-            }
-
-            if (!empty($accountItems)) {
+                if (auth()->user()->email === 'parsabe99@gmail.com') {
+                    $accountItems[] = ['name' => 'Parsa Dashboard', 'route' => 'parsa.dashboard', 'icon' => '🔒'];
+                }
                 $sections['ACCOUNT & CONTROL'] = $accountItems;
             }
         @endphp
@@ -94,6 +92,24 @@
                 @endforeach
             </div>
         @endforeach
+
+        @guest
+            <div class="space-y-1 pt-1">
+                <div class="px-3 pt-2 pb-1 text-[10px] uppercase tracking-wider font-mono font-bold text-gray-400">
+                    SERVICES & PORTALS
+                </div>
+                <a href="{{ route('login') }}" class="flex items-center justify-between p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 transition group">
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-base">🔒</span>
+                        <div>
+                            <p class="text-xs font-bold">Services Locked</p>
+                            <p class="text-[10px] text-amber-200/70">Login / Sign Up to see services</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform">➔</span>
+                </a>
+            </div>
+        @endguest
     </nav>
     <div class="mt-4 text-[11px] text-center text-gray-500 dark:text-gray-400 font-medium">
         &copy; 2026 Parsa Besharat

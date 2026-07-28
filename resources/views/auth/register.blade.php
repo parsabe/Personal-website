@@ -1,19 +1,19 @@
 <x-guest-layout>
     <div class="mb-6">
-        <span class="inline-flex items-center gap-2 px-3 py-1 ios-glass text-orange-600 dark:text-orange-400 rounded-full text-xs font-bold mb-3">
+        <span class="inline-flex items-center gap-2 px-3 py-1 ios-glass text-orange-400 border border-orange-500/30 rounded-full text-xs font-bold mb-3">
             ✨ CREATE ACCOUNT
         </span>
-        <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+        <h1 class="text-3xl font-extrabold tracking-tight text-white drop-shadow-md">
             Register Account
         </h1>
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+        <p class="mt-2 text-sm text-gray-300 leading-relaxed font-medium">
             Create an account to access special member features and tools.
         </p>
     </div>
 
     <!-- Error Alert -->
     @if ($errors->any())
-        <div class="mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-sm font-medium">
+        <div class="mb-6 p-4 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-sm font-medium">
             <div class="flex items-center gap-2 mb-1 font-bold">
                 <span>⚠️</span> Registration Error:
             </div>
@@ -30,7 +30,7 @@
 
         <!-- Name -->
         <div>
-            <label for="name" class="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
+            <label for="name" class="block text-xs font-bold uppercase tracking-wider text-gray-200 mb-2">
                 Full Name
             </label>
             <input id="name" 
@@ -41,12 +41,12 @@
                    autofocus 
                    autocomplete="name"
                    placeholder="Your Name"
-                   class="w-full px-4 py-3 rounded-2xl bg-white/50 dark:bg-black/40 border border-white/30 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all font-medium">
+                   class="w-full px-4 py-3 rounded-2xl bg-black/60 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 transition-all font-medium">
         </div>
 
         <!-- Email Address -->
         <div>
-            <label for="email" class="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
+            <label for="email" class="block text-xs font-bold uppercase tracking-wider text-gray-200 mb-2">
                 Email Address
             </label>
             <input id="email" 
@@ -56,12 +56,12 @@
                    required 
                    autocomplete="username"
                    placeholder="yourname@example.com"
-                   class="w-full px-4 py-3 rounded-2xl bg-white/50 dark:bg-black/40 border border-white/30 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all font-medium">
+                   class="w-full px-4 py-3 rounded-2xl bg-black/60 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 transition-all font-medium">
         </div>
 
         <!-- Password -->
         <div>
-            <label for="password" class="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
+            <label for="password" class="block text-xs font-bold uppercase tracking-wider text-gray-200 mb-2">
                 Password
             </label>
             <input id="password" 
@@ -70,12 +70,12 @@
                    required 
                    autocomplete="new-password"
                    placeholder="••••••••"
-                   class="w-full px-4 py-3 rounded-2xl bg-white/50 dark:bg-black/40 border border-white/30 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all font-medium">
+                   class="w-full px-4 py-3 rounded-2xl bg-black/60 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 transition-all font-medium">
         </div>
 
         <!-- Confirm Password -->
         <div>
-            <label for="password_confirmation" class="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
+            <label for="password_confirmation" class="block text-xs font-bold uppercase tracking-wider text-gray-200 mb-2">
                 Confirm Password
             </label>
             <input id="password_confirmation" 
@@ -84,19 +84,19 @@
                    required 
                    autocomplete="new-password"
                    placeholder="••••••••"
-                   class="w-full px-4 py-3 rounded-2xl bg-white/50 dark:bg-black/40 border border-white/30 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all font-medium">
+                   class="w-full px-4 py-3 rounded-2xl bg-black/60 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/50 transition-all font-medium">
         </div>
 
         <div class="pt-2">
             <button type="submit" 
-                    class="w-full py-3.5 bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition transform border border-white/20 text-sm">
+                    class="w-full py-3.5 bg-gradient-to-r from-orange-500 via-rose-600 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white font-bold rounded-2xl shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition transform border border-white/20 text-sm">
                 Create Account
             </button>
         </div>
 
         <div class="text-center pt-3 border-t border-white/10">
-            <span class="text-xs text-gray-600 dark:text-gray-400">Already registered? </span>
-            <a href="{{ route('login') }}" class="text-xs font-bold text-orange-600 dark:text-orange-400 hover:underline">
+            <span class="text-xs text-gray-300">Already registered? </span>
+            <a href="{{ route('login') }}" class="text-xs font-bold text-orange-400 hover:text-orange-300 hover:underline">
                 Log In
             </a>
         </div>
