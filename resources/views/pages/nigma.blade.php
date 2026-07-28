@@ -20,20 +20,13 @@
     <!-- MAIN FLOATING WINDOW CONTAINER (MATCHES HOMEPAGE & CHAT EXACTLY) -->
     <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[88vh] z-10 transition-all duration-700 shadow-2xl border border-emerald-500/20">
 
-        <!-- Top Right Window Controls -->
-        <div class="absolute top-5 right-6 flex items-center gap-4 z-40">
-            <div class="flex gap-2">
-                <div class="w-3.5 h-3.5 rounded-full bg-[#ff5f56] shadow-sm border border-[#e0443e]"></div>
-                <div class="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] shadow-sm border border-[#dea123]"></div>
-                <div class="w-3.5 h-3.5 rounded-full bg-[#27c93f] shadow-sm border border-[#1aab29]"></div>
-            </div>
-        </div>
+        @include('top-header-controls')
 
         <!-- SIDEBAR INTEGRATED INSIDE CONTAINER -->
         @include('sidebar')
 
         <!-- MAIN NIGMA PORTAL CONTENT -->
-        <main class="flex-1 flex flex-col overflow-y-auto relative p-6 lg:p-8 matrix-bg gap-6">
+        <main class="flex-1 flex flex-col overflow-y-auto relative p-6 pt-12 lg:p-8 lg:pt-14 matrix-bg gap-6">
             
             <!-- INSTAGRAM STORIES BAR -->
             @include('stories_bar')

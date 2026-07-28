@@ -61,7 +61,8 @@ Route::post('/blog', [App\Http\Controllers\BlogController::class, 'store'])->nam
     // --- Projects ---
     Route::get('/projects', 'projects')->name('projects');
     Route::get('/projects/vectra', 'vectra')->name('projects.vectra');
-    Route::get('/projects/blackwall', 'BlackWall')->name('projects.blackwall');
+    Route::get('/projects/blackwall', [App\Http\Controllers\BlackwallAiController::class, 'index'])->name('projects.blackwall');
+    Route::post('/projects/blackwall/chat', [App\Http\Controllers\BlackwallAiController::class, 'sendMessage'])->name('projects.blackwall.chat');
     Route::get('/projects/mlmatrix', 'Mlmatrix')->name('projects.mlmatrix');
     Route::get('/projects/scp', 'SCP')->name('projects.scp');
     Route::get('/projects/ceasartoolkit', 'CeasarToolkit')->name('projects.ceasartoolkit');

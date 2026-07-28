@@ -105,17 +105,23 @@
 
                 <!-- Header Controls Bar (Telegram Style) -->
                 <header class="flex items-center justify-between px-4 py-2.5 bg-black/40 border border-white/10 rounded-2xl shrink-0 mb-3 animate-fade-in backdrop-blur-md">
-                    <div id="activeContactHeader" class="flex items-center space-x-3">
-                        <div class="relative">
-                            <img id="activeContactAvatar" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" class="w-10 h-10 rounded-full border border-white/20 object-cover shadow-md">
-                            <span id="activeContactDot" class="absolute bottom-0 right-0 w-3 h-3 bg-amber-500 rounded-full border-2 border-gray-900"></span>
-                        </div>
-                        <div>
-                            <h1 class="text-sm font-bold text-white flex items-center gap-1.5">
-                                <span id="activeContactName">Select a Member</span>
-                                <span id="activeContactUsername" class="text-xs font-normal text-gray-400">(@members)</span>
-                            </h1>
-                            <p id="activeContactStatus" class="text-[11px] text-amber-400 font-medium">Click a member from the list to start messaging</p>
+                    <div class="flex items-center space-x-3">
+                        <button id="btnBackToUsers" onclick="backToUserDirectory()" class="hidden px-3 py-1.5 rounded-full bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-semibold flex items-center space-x-1 shadow-md transition transform hover:scale-105 active:scale-95">
+                            <span>← Back</span>
+                        </button>
+                        
+                        <div id="activeContactHeader" class="flex items-center space-x-3">
+                            <div class="relative">
+                                <img id="activeContactAvatar" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" class="w-10 h-10 rounded-full border border-white/20 object-cover shadow-md">
+                                <span id="activeContactDot" class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse"></span>
+                            </div>
+                            <div>
+                                <h1 class="text-sm font-bold text-white flex items-center gap-1.5">
+                                    <span id="activeContactName">Members Directory</span>
+                                    <span id="activeContactUsername" class="text-xs font-normal text-gray-400">(@all)</span>
+                                </h1>
+                                <p id="activeContactStatus" class="text-[11px] text-indigo-400 font-medium">Select a user below to start chatting</p>
+                            </div>
                         </div>
                     </div>
 
@@ -124,11 +130,8 @@
                         <button onclick="startAudioCall()" class="px-3 py-1.5 rounded-full bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-semibold flex items-center space-x-1 shadow-md transition transform hover:scale-105 active:scale-95">
                             📞 <span>Call</span>
                         </button>
-                        <button onclick="toggleContactsSidebar()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold flex items-center space-x-1 transition transform hover:scale-105 active:scale-95">
-                            👥 <span>Members</span>
-                        </button>
                         <button onclick="toggleProfileModal()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold flex items-center space-x-1 transition transform hover:scale-105 active:scale-95">
-                            👤 <span>Profile</span>
+                            👤 <span>My Profile</span>
                         </button>
                         <button id="theme-toggle" class="p-2 rounded-full ios-glass transition hover:scale-110" title="Toggle Theme">
                             <span id="theme-icon-light" class="hidden text-xs">☀️</span>
@@ -143,27 +146,34 @@
                     </div>
                 </header>
 
-                <!-- MAIN CHAT BODY (MESSAGES + CONTACTS DRAWER) -->
-                <div id="chatBoxContainer" class="flex-1 flex overflow-hidden relative rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md">
+                <!-- MAIN CHAT BODY CONTAINER -->
+                <div id="chatBoxContainer" class="flex-1 flex flex-col overflow-hidden relative rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md">
                     
-                    <!-- Message Stream Area -->
-                    <div class="flex-1 flex flex-col overflow-hidden">
-                        
-                        <div id="messageStream" class="flex-1 p-4 overflow-y-auto space-y-3 chat-scroll relative">
-                            <div id="selectUserOverlay" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm p-6 text-center">
-                                <div class="w-16 h-16 mb-3 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-2xl text-blue-400 animate-pulse">
-                                    💬
-                                </div>
-                                <h3 class="text-base font-bold text-white mb-1">No Conversation Selected</h3>
-                                <p class="text-xs text-gray-400 max-w-xs mb-4">Please select a member from the <strong>Members 👥</strong> button or the <strong>bottom macOS Dock</strong> to start chatting.</p>
-                                <button onclick="toggleContactsSidebar()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-lg transition">
-                                    Open Members List
-                                </button>
+                    <!-- VIEW 1: USER DIRECTORY DIRECT SCREEN (DEFAULT) -->
+                    <div id="userDirectoryScreen" class="flex-1 flex flex-col p-4 overflow-y-auto chat-scroll space-y-4">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-3 border-b border-white/10">
+                            <div>
+                                <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                                    <span>👥 MEMBERS DIRECTORY & ACTIVE CHATS</span>
+                                </h2>
+                                <p class="text-xs text-gray-400">Click any user to initiate a direct chat session</p>
                             </div>
+                            <input type="text" id="searchUsersInput" onkeyup="filterUsersDirectory()" placeholder="🔍 Search members..." 
+                                class="w-full sm:w-64 bg-black/50 border border-white/15 rounded-xl px-3.5 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-blue-500">
+                        </div>
 
+                        <div id="mainUsersGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            <!-- JS dynamically injects member cards -->
+                        </div>
+                    </div>
+
+                    <!-- VIEW 2: ACTIVE DIRECT CHAT SCREEN (HIDDEN UNTIL USER CLICKED) -->
+                    <div id="activeChatScreen" class="hidden flex-1 flex flex-col overflow-hidden">
+                        
+                        <div id="messageStream" class="flex-1 p-4 overflow-y-auto space-y-3 chat-scroll">
                             <div id="loadingIndicator" class="text-center py-12 text-gray-400 text-xs flex items-center justify-center space-x-2">
                                 <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                <span>Loading messages...</span>
+                                <span>Loading conversation...</span>
                             </div>
                         </div>
 
@@ -190,7 +200,7 @@
                             </div>
                         </div>
 
-                        <!-- Input Bar (Disabled until contact selection) -->
+                        <!-- Input Bar -->
                         <div class="p-3 bg-black/40 border-t border-white/10 flex flex-col space-y-2 shrink-0">
                             <div class="flex items-center justify-between px-1 text-xs">
                                 <div class="flex items-center space-x-2">
@@ -212,28 +222,17 @@
                             </div>
 
                             <div class="flex items-center space-x-2">
-                                <textarea id="chatInput" rows="1" disabled placeholder="Select a member from the list to start chatting..."
+                                <textarea id="chatInput" rows="1" placeholder="Type a message..."
                                     onkeydown="handleKeyPress(event)"
-                                    class="flex-1 bg-white/5 border border-white/15 rounded-2xl px-4 py-2.5 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-blue-500 resize-none chat-scroll transition duration-200 opacity-50 cursor-not-allowed"></textarea>
+                                    class="flex-1 bg-white/5 border border-white/15 rounded-2xl px-4 py-2.5 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-blue-500 resize-none chat-scroll transition duration-200"></textarea>
                                 
-                                <button id="sendMsgBtn" disabled onclick="dispatchMessage()" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl text-xs shadow-lg flex items-center space-x-1.5 transition transform opacity-50 cursor-not-allowed">
+                                <button id="sendMsgBtn" onclick="dispatchMessage()" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl text-xs shadow-lg flex items-center space-x-1.5 transition transform active:scale-95 hover:scale-105">
                                     <span>Send</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                     </svg>
                                 </button>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Contacts Drawer Sidebar -->
-                    <div id="contactsSidebar" class="hidden w-64 bg-black/80 border-l border-white/10 p-3 flex-col overflow-y-auto chat-scroll absolute right-0 top-0 bottom-0 z-30 backdrop-blur-xl animate-fade-in">
-                        <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
-                            <h3 class="text-xs font-bold text-white">👥 Members & Contacts</h3>
-                            <button onclick="toggleContactsSidebar()" class="text-gray-400 hover:text-white text-xs">✕</button>
-                        </div>
-                        <div id="usersListContainer" class="space-y-2">
-                            <!-- JS injects contacts -->
                         </div>
                     </div>
 

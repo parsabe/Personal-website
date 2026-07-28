@@ -32,57 +32,70 @@
         <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Researcher - AI Engineer</p>
     </div>
 
-    <nav class="flex-1 overflow-y-auto min-h-0 space-y-1.5 pr-2">
+    <nav class="flex-1 overflow-y-auto min-h-0 space-y-4 pr-2 sidebar-scroll">
         @php
-            $menuItems = [
-                ['name' => 'Home', 'route' => 'home', 'icon' => '🏠'],
-                ['name' => 'About', 'route' => 'about', 'icon' => '👤'],
-                ['name' => 'Contact', 'route' => 'contact', 'icon' => '✉️'],
-                ['name' => 'Projects', 'route' => 'projects', 'icon' => '💼'],
-                ['name' => 'Publications', 'route' => 'publications', 'icon' => '📚'],
-                ['name' => 'VECTRA (New)', 'url' => 'https://vectra.parsabe.com', 'icon' => '👀'],
-                ['name' => 'My Playlist', 'route' => 'myplaylist', 'icon' => '🎵'],
-                ['name' => 'BlackWall', 'url' => 'https://blackwall.parsabe.com', 'icon' => '🛡️'],
-
-                ['name' => 'Search', 'route' => 'search', 'icon' => '🔍'],
-                ['name' => 'Favorite Books', 'route' => 'books', 'icon' => '📕'],
-                ['name' => 'VPN Server', 'route' => 'vpn-server', 'icon' => '☁️'],
-                ['name' => 'Club', 'route' => 'fun', 'icon' => '🎮'],
-                ['name' => 'Blog', 'route' => 'blog', 'icon' => '☕'],
-
-                // CS Portals
-                ['name' => 'CS Certificates', 'route' => 'cs.certificates.index', 'icon' => '🎓'],
-                ['name' => 'CS Feedback Form', 'route' => 'cs.feedback.create', 'icon' => '📝'],
+            $sections = [
+                'MAIN & PERSONAL' => [
+                    ['name' => 'Home', 'route' => 'home', 'icon' => '🏠'],
+                    ['name' => 'About', 'route' => 'about', 'icon' => '👤'],
+                    ['name' => 'Contact', 'route' => 'contact', 'icon' => '✉️'],
+                    ['name' => 'Publications', 'route' => 'publications', 'icon' => '📚'],
+                    ['name' => 'My Playlist', 'route' => 'myplaylist', 'icon' => '🎵'],
+                    ['name' => 'Favorite Books', 'route' => 'books', 'icon' => '📕'],
+                ],
+                'SERVICES & PORTALS' => [
+                    ['name' => 'Projects', 'route' => 'projects', 'icon' => '💼'],
+                    ['name' => 'VECTRA (New)', 'url' => 'https://vectra.parsabe.com', 'icon' => '👀'],
+                    ['name' => 'BlackWall AI', 'route' => 'projects.blackwall', 'icon' => '🛡️'],
+                    ['name' => 'Chat Portal', 'route' => 'chat', 'icon' => '💬'],
+                    ['name' => 'Sandika', 'route' => 'sandika', 'icon' => '⚔️'],
+                    ['name' => 'Nigma', 'route' => 'nigma', 'icon' => '🧩'],
+                    ['name' => 'CS Certificates', 'route' => 'cs.certificates.index', 'icon' => '🎓'],
+                    ['name' => 'CS Feedback Form', 'route' => 'cs.feedback.create', 'icon' => '📝'],
+                    ['name' => 'VPN Server', 'route' => 'vpn-server', 'icon' => '☁️'],
+                    ['name' => 'Club', 'route' => 'fun', 'icon' => '🎮'],
+                    ['name' => 'Blog', 'route' => 'blog', 'icon' => '☕'],
+                    ['name' => 'Search', 'route' => 'search', 'icon' => '🔍'],
+                ],
             ];
 
+            $accountItems = [];
+            if (auth()->check()) {
+                $accountItems[] = ['name' => 'Profile Settings', 'route' => 'chat', 'icon' => '⚙️', 'query' => 'action=profile'];
+            }
             if (auth()->check() && auth()->user()->email === 'parsabe99@gmail.com') {
-                $menuItems[] = ['name' => 'Parsa Dashboard', 'route' => 'parsa.dashboard', 'icon' => '🔒'];
+                $accountItems[] = ['name' => 'Parsa Dashboard', 'route' => 'parsa.dashboard', 'icon' => '🔒'];
             }
 
-            $menuItems = array_merge($menuItems, [
-                ['name' => 'Chat Portal', 'route' => 'chat', 'icon' => '💬'],
-                ['name' => 'Sandika', 'route' => 'sandika', 'icon' => '🤖'],
-                ['name' => 'Nigma', 'route' => 'nigma', 'icon' => '🧩'],
-            ]);
+            if (!empty($accountItems)) {
+                $sections['ACCOUNT & CONTROL'] = $accountItems;
+            }
         @endphp
 
-        @foreach($menuItems as $item)
-            @php
-                $isExternal = isset($item['url']);
-                $href = $isExternal ? $item['url'] : route($item['route']);
-                $isActive = !$isExternal && request()->routeIs($item['route']);
-            @endphp
+        @foreach($sections as $category => $items)
+            <div class="space-y-1">
+                <div class="px-3 pt-2 pb-1 text-[10px] uppercase tracking-wider font-mono font-bold text-gray-500 dark:text-gray-400">
+                    {{ $category }}
+                </div>
+                @foreach($items as $item)
+                    @php
+                        $isExternal = isset($item['url']);
+                        $href = $isExternal ? $item['url'] : (isset($item['query']) ? route($item['route']) . '?' . $item['query'] : route($item['route']));
+                        $isActive = !$isExternal && request()->routeIs($item['route']) && (!isset($item['query']) || request()->getQueryString() === $item['query']);
+                    @endphp
 
-            <a href="{{ $href }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 font-semibold text-gray-800 dark:text-gray-200 hover:shadow-sm hover:bg-white/40 dark:hover:bg-black/40 
-                            {{ $isActive ? 'bg-white/50 dark:bg-black/50 shadow-md border border-white/20 dark:border-white/10' : 'border border-transparent' }}">
+                    <a href="{{ $href }}"
+                        class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all duration-300 font-semibold text-xs text-gray-800 dark:text-gray-200 hover:shadow-sm hover:bg-white/40 dark:hover:bg-black/40 
+                                    {{ $isActive ? 'bg-white/50 dark:bg-black/50 shadow-md border border-white/20 dark:border-white/10 text-indigo-600 dark:text-indigo-400 font-bold' : 'border border-transparent' }}">
 
-                <span class="text-lg">{{ $item['icon'] }}</span>
-                {{ $item['name'] }}
-            </a>
+                        <span class="text-base">{{ $item['icon'] }}</span>
+                        {{ $item['name'] }}
+                    </a>
+                @endforeach
+            </div>
         @endforeach
     </nav>
-    <div class="mt-6 text-xs text-center text-gray-500 dark:text-gray-400 font-medium">
+    <div class="mt-4 text-[11px] text-center text-gray-500 dark:text-gray-400 font-medium">
         &copy; 2026 Parsa Besharat
     </div>
 </aside>

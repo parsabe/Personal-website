@@ -1,6 +1,26 @@
 /**
  * Rich Text Blog Editor ESM Module
  */
+
+export function openWriteBlogModal() {
+    const modal = document.getElementById('write-blog-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        const editor = document.getElementById('rich-editor-area');
+        if (editor) editor.focus();
+    }
+}
+
+export function closeWriteBlogModal() {
+    const modal = document.getElementById('write-blog-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
+window.openWriteBlogModal = openWriteBlogModal;
+window.closeWriteBlogModal = closeWriteBlogModal;
+
 document.addEventListener('DOMContentLoaded', () => {
     const editor = document.getElementById('rich-editor-area');
     const hiddenContent = document.getElementById('blog-content-input');

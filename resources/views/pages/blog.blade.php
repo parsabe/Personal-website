@@ -20,20 +20,13 @@
     <!-- MAIN FLOATING WINDOW CONTAINER (MATCHES HOMEPAGE & CHAT EXACTLY) -->
     <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[88vh] z-10 transition-all duration-700 shadow-2xl border border-white/10">
 
-        <!-- Top Right Window Controls -->
-        <div class="absolute top-5 right-6 flex items-center gap-4 z-40">
-            <div class="flex gap-2">
-                <div class="w-3.5 h-3.5 rounded-full bg-[#ff5f56] shadow-sm border border-[#e0443e]"></div>
-                <div class="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] shadow-sm border border-[#dea123]"></div>
-                <div class="w-3.5 h-3.5 rounded-full bg-[#27c93f] shadow-sm border border-[#1aab29]"></div>
-            </div>
-        </div>
+        @include('top-header-controls')
 
         <!-- SIDEBAR INTEGRATED INSIDE CONTAINER -->
         @include('sidebar')
 
         <!-- MAIN BLOG CONTENT AREA -->
-        <main class="flex-1 flex flex-col overflow-y-auto relative p-6 lg:p-8 bg-black/30 gap-6">
+        <main class="flex-1 flex flex-col overflow-y-auto relative p-6 pt-12 lg:p-8 lg:pt-14 bg-black/30 gap-6">
             
             <!-- Header Title -->
             <div class="flex items-center justify-between border-b border-white/10 pb-4">
@@ -50,59 +43,12 @@
                 </div>
             </div>
 
-            <!-- RICH TEXT POST PUBLISHER FORM -->
-            @auth
-                <div class="blog-card p-6 rounded-3xl backdrop-blur-xl space-y-4">
-                    <h2 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                        📝 Publish New Article
-                    </h2>
-
-                    <form id="blog-form" action="{{ route('blog.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-                        @csrf
-                        <div>
-                            <input type="text" name="title" required placeholder="Article Title..."
-                                class="w-full bg-black/40 border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500">
-                        </div>
-
-                        <!-- Rich Text Editor Toolbar -->
-                        <div class="rich-editor-toolbar flex flex-wrap gap-1.5 p-2 bg-black/50 border border-white/10 rounded-xl">
-                            <button type="button" class="rich-tool-btn" data-cmd="bold"><b>B</b></button>
-                            <button type="button" class="rich-tool-btn" data-cmd="italic"><i>I</i></button>
-                            <button type="button" class="rich-tool-btn" data-cmd="underline"><u>U</u></button>
-                            <button type="button" class="rich-tool-btn" data-cmd="formatBlock" data-val="h2">H2</button>
-                            <button type="button" class="rich-tool-btn" data-cmd="formatBlock" data-val="h3">H3</button>
-                            <button type="button" class="rich-tool-btn" data-cmd="insertUnorderedList">• Bullet List</button>
-                            <button type="button" class="rich-tool-btn" data-cmd="createLink">🔗 Link</button>
-                        </div>
-
-                        <!-- Content Editable Area -->
-                        <div id="rich-editor-area" contenteditable="true"
-                            class="w-full min-h-[140px] bg-black/40 border border-white/15 rounded-xl p-4 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 overflow-y-auto">
-                            Write your rich text article here...
-                        </div>
-                        <input type="hidden" name="content" id="blog-content-input">
-
-                        <div class="flex items-center justify-between pt-2">
-                            <input type="file" name="cover_image" class="text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600/30 file:text-indigo-300 hover:file:bg-indigo-600/50">
-                            <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold text-xs rounded-xl shadow-lg hover:opacity-90 active:scale-95 transition-all">
-                                PUBLISH ARTICLE
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            @else
-                <div class="p-4 bg-indigo-950/40 border border-indigo-500/30 rounded-2xl text-xs text-indigo-300 flex items-center justify-between">
-                    <span>Sign in to publish your rich text blog posts and technical research.</span>
-                    <a href="{{ route('login') }}" class="px-4 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Sign In</a>
-                </div>
-            @endauth
-
-            <!-- PUBLISHED ARTICLES LIST -->
+            <!-- 1. PRIMARY PUBLISHED ARTICLES LIST -->
             <div class="space-y-6">
                 @forelse($posts as $post)
-                    <article class="blog-card p-6 rounded-3xl flex flex-col md:flex-row gap-6 items-start">
+                    <article class="blog-card p-6 rounded-3xl flex flex-col md:flex-row gap-6 items-start transition hover:border-indigo-500/40">
                         @if($post->cover_image)
-                            <img src="{{ $post->cover_image }}" alt="{{ $post->title }}" class="w-full md:w-48 h-32 object-cover rounded-2xl border border-white/10">
+                            <img src="{{ $post->cover_image }}" alt="{{ $post->title }}" class="w-full md:w-48 h-32 object-cover rounded-2xl border border-white/10 shadow-md">
                         @endif
                         <div class="flex-1 space-y-2">
                             <div class="flex items-center gap-3">
@@ -118,8 +64,11 @@
                         </div>
                     </article>
                 @empty
-                    <div class="blog-card p-8 rounded-3xl text-center text-gray-400 text-xs">
-                        No articles published yet. Be the first to share research insights!
+                    <div class="blog-card p-12 rounded-3xl text-center text-gray-400 text-xs font-mono space-y-3">
+                        <p>No articles published yet. Be the first to share research insights!</p>
+                        <button onclick="openWriteBlogModal()" class="px-5 py-2.5 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-lg">
+                            ✏️ Write First Article
+                        </button>
                     </div>
                 @endforelse
             </div>
@@ -127,6 +76,85 @@
         </main>
 
     </div>
+
+    <!-- 2. FLOATING BOTTOM-RIGHT WRITE A BLOG BUTTON -->
+    <button onclick="openWriteBlogModal()" title="Write a New Blog Article"
+        class="fixed bottom-8 right-8 z-40 px-6 py-3.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold text-xs rounded-full shadow-[0_10px_35px_rgba(99,102,241,0.6)] border border-white/20 flex items-center gap-2 transition transform hover:scale-110 active:scale-95 animate-pulse">
+        <span class="text-base">✏️</span>
+        <span>Write a Blog</span>
+    </button>
+
+    <!-- 3. RICH TEXT WRITER MODAL SUITE (PLACED OUTSIDE MAIN CONTAINER FOR FULLSCREEN BACKDROP) -->
+    <div id="write-blog-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+        <div class="bg-gray-900/95 border border-white/20 p-6 rounded-3xl w-full max-w-2xl shadow-2xl space-y-4 animate-scale-up backdrop-blur-xl">
+            <div class="flex items-center justify-between pb-3 border-b border-white/10">
+                <h2 class="text-base font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    📝 Publish New Article
+                </h2>
+                <button onclick="closeWriteBlogModal()" class="text-gray-400 hover:text-white text-xs font-bold p-1">✕ Close</button>
+            </div>
+
+            @auth
+                <form id="blog-form" action="{{ route('blog.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Article Title</label>
+                        <input type="text" name="title" required placeholder="Enter article title..."
+                            class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500">
+                    </div>
+
+                    <!-- Rich Text Editor Toolbar -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-medium text-gray-400">Formatting Tools</label>
+                        <div class="rich-editor-toolbar flex flex-wrap gap-1.5 p-2 bg-black/60 border border-white/10 rounded-xl">
+                            <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold" data-cmd="bold"><b>B</b></button>
+                            <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs italic" data-cmd="italic"><i>I</i></button>
+                            <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs underline" data-cmd="underline"><u>U</u></button>
+                            <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-mono" data-cmd="formatBlock" data-val="h2">H2</button>
+                            <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-mono" data-cmd="formatBlock" data-val="h3">H3</button>
+                            <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs" data-cmd="insertUnorderedList">• Bullet List</button>
+                            <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs" data-cmd="createLink">🔗 Link</button>
+                        </div>
+                    </div>
+
+                    <!-- Content Editable Area -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-medium text-gray-400">Article Content</label>
+                        <div id="rich-editor-area" contenteditable="true"
+                            class="w-full min-h-[160px] max-h-[280px] bg-black/50 border border-white/15 rounded-xl p-4 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 overflow-y-auto">
+                            Write your rich text article content here...
+                        </div>
+                    </div>
+                    <input type="hidden" name="content" id="blog-content-input">
+
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-white/10">
+                        <div>
+                            <label class="block text-[11px] font-medium text-gray-400 mb-1">Cover Image (Optional)</label>
+                            <input type="file" name="cover_image" class="text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600/30 file:text-indigo-300 hover:file:bg-indigo-600/50">
+                        </div>
+                        <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-xs rounded-xl shadow-lg hover:opacity-90 active:scale-95 transition-all">
+                            PUBLISH ARTICLE
+                        </button>
+                    </div>
+                </form>
+            @else
+                <div class="py-8 text-center space-y-4">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-2xl text-indigo-400 animate-pulse">
+                        🔑
+                    </div>
+                    <h3 class="text-base font-bold text-white">Sign In to Publish Articles</h3>
+                    <p class="text-xs text-gray-400 max-w-sm mx-auto">Please log in to access the rich text editor suite and publish your research articles.</p>
+                    <a href="{{ route('login') }}" class="inline-block px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg transition">
+                        Sign In Now
+                    </a>
+                </div>
+            @endauth
+        </div>
+    </div>
+
+    <!-- Taskbar & Mac Window Controls -->
+    @include('taskbar')
+    <script src="{{ asset('js/mac-window-controls.js') }}"></script>
 
     <!-- External Blog ESM Script -->
     <script type="module" src="{{ asset('js/blog.js') }}"></script>

@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Select Recipient User Function
+// Select Recipient User Function (Switches to Direct Chat Screen)
 export function selectChatUser(userIdOrObj) {
     let userObj = typeof userIdOrObj === 'object' ? userIdOrObj : allUsersList.find(u => u.id == userIdOrObj);
     if (!userObj && typeof userIdOrObj === 'number') {
@@ -40,22 +40,20 @@ export function selectChatUser(userIdOrObj) {
 
     selectedRecipient = userObj;
 
-    // Hide selection overlay
-    const overlay = document.getElementById('selectUserOverlay');
-    if (overlay) overlay.classList.add('hidden');
+    // Switch view to Active Chat Screen
+    const directoryScreen = document.getElementById('userDirectoryScreen');
+    const chatScreen = document.getElementById('activeChatScreen');
+    const backBtn = document.getElementById('btnBackToUsers');
 
-    // Enable chat input & send button
+    if (directoryScreen) directoryScreen.classList.add('hidden');
+    if (chatScreen) chatScreen.classList.remove('hidden');
+    if (backBtn) backBtn.classList.remove('hidden');
+
+    // Focus input
     const chatInput = document.getElementById('chatInput');
-    const sendBtn = document.getElementById('sendMsgBtn');
     if (chatInput) {
-        chatInput.disabled = false;
         chatInput.placeholder = `Message ${userObj.name}...`;
-        chatInput.classList.remove('opacity-50', 'cursor-not-allowed');
         chatInput.focus();
-    }
-    if (sendBtn) {
-        sendBtn.disabled = false;
-        sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
     }
 
     // Update Header UI
@@ -75,6 +73,28 @@ export function selectChatUser(userIdOrObj) {
     if (window.restoreMacWindow) window.restoreMacWindow();
 
     fetchMessages();
+}
+
+// Back to User Directory List Screen
+export function backToUserDirectory() {
+    selectedRecipient = null;
+
+    const directoryScreen = document.getElementById('userDirectoryScreen');
+    const chatScreen = document.getElementById('activeChatScreen');
+    const backBtn = document.getElementById('btnBackToUsers');
+
+    if (chatScreen) chatScreen.classList.add('hidden');
+    if (directoryScreen) directoryScreen.classList.remove('hidden');
+    if (backBtn) backBtn.classList.add('hidden');
+
+    // Reset Header UI
+    const nameElem = document.getElementById('activeContactName');
+    const userElem = document.getElementById('activeContactUsername');
+    const statusElem = document.getElementById('activeContactStatus');
+
+    if (nameElem) nameElem.textContent = 'Members Directory';
+    if (userElem) userElem.textContent = '(@all)';
+    if (statusElem) statusElem.textContent = 'Select a user below to start chatting';
 }
 
 // Fetch Messages & Notifications
@@ -200,7 +220,7 @@ export async function toggleReaction(msgId, emoji) {
     }
 }
 
-// Fetch Users List & Render macOS Chat Dock
+// Fetch Users List & Render Main Directory & macOS Chat Dock
 export async function fetchUsers() {
     try {
         const response = await fetch('/chat/users');
@@ -208,27 +228,56 @@ export async function fetchUsers() {
         if (data.status === 'success') {
             allUsersList = data.users.filter(u => !u.is_me);
 
-            const container = document.getElementById('usersListContainer');
-            if (container) {
-                container.innerHTML = allUsersList.map(u => `
-                    <div onclick="window.selectChatUser(${u.id})" class="user-row-${u.id} flex items-center space-x-2.5 p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600/30 hover:border-blue-400/40 cursor-pointer transition transform hover:scale-[1.02]">
-                        <div class="relative shrink-0">
-                            <img src="${u.avatar_url}" class="w-9 h-9 rounded-full border border-white/20 object-cover shadow-sm">
-                            <span class="unread-badge-${u.id} hidden absolute -top-1 -right-1 w-4 h-4 bg-rose-600 text-white rounded-full text-[9px] font-bold flex items-center justify-center border border-gray-900 animate-pulse">🔴</span>
-                        </div>
-                        <div class="overflow-hidden flex-1">
-                            <p class="font-semibold text-xs text-white truncate">${escapeHtml(u.name)}</p>
-                            <p class="text-[10px] text-gray-400 truncate">@ ${escapeHtml(u.username)}</p>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
+            renderUsersGrid(allUsersList);
             renderMacChatDock(allUsersList);
         }
     } catch (err) {
         console.error(err);
     }
+}
+
+// Render Users Grid on Main Directory Screen
+export function renderUsersGrid(users) {
+    const grid = document.getElementById('mainUsersGrid');
+    if (!grid) return;
+
+    if (users.length === 0) {
+        grid.innerHTML = '<div class="col-span-full text-center py-10 text-xs text-gray-400 font-mono">No members found.</div>';
+        return;
+    }
+
+    grid.innerHTML = users.map(u => `
+        <div onclick="window.selectChatUser(${u.id})" class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-blue-600/20 hover:border-blue-400/50 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl group space-y-3">
+            <div class="flex items-center space-x-3">
+                <div class="relative shrink-0">
+                    <img src="${u.avatar_url}" class="w-12 h-12 rounded-full border-2 border-white/20 object-cover shadow-md group-hover:scale-105 transition-transform">
+                    <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse"></span>
+                    <span class="unread-badge-${u.id} hidden absolute -top-1 -right-1 w-5 h-5 bg-rose-600 text-white rounded-full text-[10px] font-bold flex items-center justify-center border border-gray-900 animate-bounce">🔴</span>
+                </div>
+                <div class="overflow-hidden flex-1">
+                    <h3 class="font-bold text-sm text-white truncate group-hover:text-blue-400 transition-colors">${escapeHtml(u.name)}</h3>
+                    <p class="text-xs text-gray-400 truncate">@${escapeHtml(u.username)}</p>
+                </div>
+            </div>
+
+            <p class="text-xs text-gray-300 line-clamp-2 min-h-[32px]">${escapeHtml(u.bio || 'Member')}</p>
+
+            <button class="w-full py-2 bg-blue-600/40 border border-blue-400/40 text-blue-300 font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-md">
+                <span>💬 Start Direct Chat</span>
+            </button>
+        </div>
+    `).join('');
+}
+
+// Live Search Filter for Users Directory
+export function filterUsersDirectory() {
+    const query = (document.getElementById('searchUsersInput')?.value || '').toLowerCase().trim();
+    if (!query) {
+        renderUsersGrid(allUsersList);
+        return;
+    }
+    const filtered = allUsersList.filter(u => u.name.toLowerCase().includes(query) || u.username.toLowerCase().includes(query));
+    renderUsersGrid(filtered);
 }
 
 // Render Users in macOS Dock Bar at Bottom
@@ -599,6 +648,8 @@ export function escapeHtml(t) {
 // Global Namespace Export for HTML Inline Attributes
 window.chatPortal = {
     selectChatUser,
+    backToUserDirectory,
+    filterUsersDirectory,
     fetchMessages,
     renderMessageBubble,
     toggleReaction,
