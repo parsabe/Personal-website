@@ -15,32 +15,89 @@ let videoChunks = [];
 let videoStream = null;
 let lastMessageCount = 0;
 
+let selectedRecipient = null;
+let allUsersList = [];
+
 // Initialize on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
     const isAuth = document.body.dataset.authenticated === 'true';
     if (isAuth) {
-        fetchMessages();
         fetchUsers();
-        fetchStories();
+        fetchMessages();
         setInterval(() => {
             fetchMessages();
-            fetchStories();
-        }, 2000);
+        }, 2500);
     }
 });
+
+// Select Recipient User Function
+export function selectChatUser(userIdOrObj) {
+    let userObj = typeof userIdOrObj === 'object' ? userIdOrObj : allUsersList.find(u => u.id == userIdOrObj);
+    if (!userObj && typeof userIdOrObj === 'number') {
+        userObj = { id: userIdOrObj, name: `User #${userIdOrObj}`, username: `user${userIdOrObj}`, avatar_url: '/images/profile.jpg' };
+    }
+    if (!userObj) return;
+
+    selectedRecipient = userObj;
+
+    // Hide selection overlay
+    const overlay = document.getElementById('selectUserOverlay');
+    if (overlay) overlay.classList.add('hidden');
+
+    // Enable chat input & send button
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendMsgBtn');
+    if (chatInput) {
+        chatInput.disabled = false;
+        chatInput.placeholder = `Message ${userObj.name}...`;
+        chatInput.classList.remove('opacity-50', 'cursor-not-allowed');
+        chatInput.focus();
+    }
+    if (sendBtn) {
+        sendBtn.disabled = false;
+        sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
+
+    // Update Header UI
+    const nameElem = document.getElementById('activeContactName');
+    const userElem = document.getElementById('activeContactUsername');
+    const avatarElem = document.getElementById('activeContactAvatar');
+    const statusElem = document.getElementById('activeContactStatus');
+    const dotElem = document.getElementById('activeContactDot');
+
+    if (nameElem) nameElem.textContent = userObj.name;
+    if (userElem) userElem.textContent = `@${userObj.username || 'user'}`;
+    if (avatarElem) avatarElem.src = userObj.avatar_url || '/images/profile.jpg';
+    if (statusElem) statusElem.innerHTML = '<span class="text-emerald-400">Online &bull; Direct Message</span>';
+    if (dotElem) dotElem.className = 'absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse';
+
+    // Restore window if minimized
+    if (window.restoreMacWindow) window.restoreMacWindow();
+
+    fetchMessages();
+}
 
 // Fetch Messages & Notifications
 export async function fetchMessages() {
     try {
-        const response = await fetch('/chat/messages');
+        const url = selectedRecipient ? `/chat/messages?recipient_id=${selectedRecipient.id}` : '/chat/messages';
+        const response = await fetch(url);
         const data = await response.json();
 
         if (data.status === 'success') {
             const stream = document.getElementById('messageStream');
             if (!stream) return;
 
+            // Remove loading indicator if present
+            const loader = document.getElementById('loadingIndicator');
+            if (loader) loader.remove();
+
+            if (!selectedRecipient) {
+                return; // Wait for user selection
+            }
+
             if (data.messages.length === 0) {
-                stream.innerHTML = '<div class="text-center py-12 text-gray-400 text-xs animate-fade-in">No messages yet. Be the first to start chatting!</div>';
+                stream.innerHTML = `<div class="text-center py-16 text-gray-400 text-xs animate-fade-in font-mono">No messages yet with ${escapeHtml(selectedRecipient.name)}. Start chatting below!</div>`;
             } else {
                 stream.innerHTML = data.messages.map(msg => renderMessageBubble(msg)).join('');
 
@@ -48,11 +105,13 @@ export async function fetchMessages() {
                     const newestMsg = data.messages[data.messages.length - 1];
                     if (!newestMsg.is_me) {
                         playNotificationSound();
-                        showToastNotification(newestMsg);
                     }
                 }
                 lastMessageCount = data.messages.length;
             }
+
+            // Update unread badges across Dock & Members list
+            updateUnreadBadges(data.unread_counts || {});
         }
     } catch (err) {
         console.error(err);
@@ -141,17 +200,22 @@ export async function toggleReaction(msgId, emoji) {
     }
 }
 
-// Fetch Users List
+// Fetch Users List & Render macOS Chat Dock
 export async function fetchUsers() {
     try {
         const response = await fetch('/chat/users');
         const data = await response.json();
         if (data.status === 'success') {
+            allUsersList = data.users.filter(u => !u.is_me);
+
             const container = document.getElementById('usersListContainer');
             if (container) {
-                container.innerHTML = data.users.map(u => `
-                    <div class="flex items-center space-x-2.5 p-2 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition transform hover:scale-[1.02]">
-                        <img src="${u.avatar_url}" class="w-8 h-8 rounded-full border border-white/20 object-cover">
+                container.innerHTML = allUsersList.map(u => `
+                    <div onclick="window.selectChatUser(${u.id})" class="user-row-${u.id} flex items-center space-x-2.5 p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600/30 hover:border-blue-400/40 cursor-pointer transition transform hover:scale-[1.02]">
+                        <div class="relative shrink-0">
+                            <img src="${u.avatar_url}" class="w-9 h-9 rounded-full border border-white/20 object-cover shadow-sm">
+                            <span class="unread-badge-${u.id} hidden absolute -top-1 -right-1 w-4 h-4 bg-rose-600 text-white rounded-full text-[9px] font-bold flex items-center justify-center border border-gray-900 animate-pulse">🔴</span>
+                        </div>
                         <div class="overflow-hidden flex-1">
                             <p class="font-semibold text-xs text-white truncate">${escapeHtml(u.name)}</p>
                             <p class="text-[10px] text-gray-400 truncate">@ ${escapeHtml(u.username)}</p>
@@ -159,10 +223,57 @@ export async function fetchUsers() {
                     </div>
                 `).join('');
             }
+
+            renderMacChatDock(allUsersList);
         }
     } catch (err) {
         console.error(err);
     }
+}
+
+// Render Users in macOS Dock Bar at Bottom
+export function renderMacChatDock(users) {
+    const dockContainer = document.getElementById('mac-chat-users-dock');
+    if (!dockContainer) return;
+
+    dockContainer.innerHTML = users.map(u => `
+        <button onclick="window.selectChatUser(${u.id})" title="Chat with ${escapeHtml(u.name)}" 
+           class="taskbar-user-item p-1.5 rounded-2xl hover:bg-white/15 transition-all group relative flex items-center justify-center">
+            <div class="relative">
+                <img src="${u.avatar_url}" class="w-8 h-8 rounded-full border border-white/20 object-cover group-hover:scale-125 transition-transform shadow-md">
+                <span class="dock-unread-badge-${u.id} hidden absolute -top-1 -right-1 w-3.5 h-3.5 bg-rose-600 rounded-full border border-gray-900 animate-bounce"></span>
+            </div>
+            <span class="absolute -top-9 px-2.5 py-1 bg-black/90 text-[10px] font-bold text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl border border-white/15">
+                ${escapeHtml(u.name)}
+            </span>
+        </button>
+    `).join('');
+}
+
+// Update Unread Badges in UI
+export function updateUnreadBadges(counts) {
+    allUsersList.forEach(u => {
+        const count = counts[u.id] || 0;
+        const listBadge = document.querySelector(`.unread-badge-${u.id}`);
+        const dockBadge = document.querySelector(`.dock-unread-badge-${u.id}`);
+
+        if (listBadge) {
+            if (count > 0) {
+                listBadge.textContent = count;
+                listBadge.classList.remove('hidden');
+            } else {
+                listBadge.classList.add('hidden');
+            }
+        }
+
+        if (dockBadge) {
+            if (count > 0) {
+                dockBadge.classList.remove('hidden');
+            } else {
+                dockBadge.classList.add('hidden');
+            }
+        }
+    });
 }
 
 // Fetch Stories
@@ -191,11 +302,16 @@ export async function fetchStories() {
 // Send Text Message
 export async function dispatchMessage() {
     const input = document.getElementById('chatInput');
-    if (!input) return;
+    if (!input || !selectedRecipient) return;
     const text = input.value.trim();
     if (!text && !selectedScheduledTime) return;
 
-    const payload = { message: text, type: 'text', scheduled_at: selectedScheduledTime };
+    const payload = { 
+        message: text, 
+        type: 'text', 
+        recipient_id: selectedRecipient.id,
+        scheduled_at: selectedScheduledTime 
+    };
     input.value = '';
     clearSchedule();
 
@@ -482,6 +598,7 @@ export function escapeHtml(t) {
 
 // Global Namespace Export for HTML Inline Attributes
 window.chatPortal = {
+    selectChatUser,
     fetchMessages,
     renderMessageBubble,
     toggleReaction,

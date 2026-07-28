@@ -25,18 +25,32 @@ class ChatController extends Controller
     }
 
     /**
-     * Fetch all chat messages.
+     * Fetch all chat messages or messages for specific recipient.
      */
-    public function fetchMessages()
+    public function fetchMessages(Request $request)
     {
-        $messages = ChatMessage::where(function ($q) {
+        $recipientId = $request->query('recipient_id');
+        $myId = Auth::id();
+
+        $query = ChatMessage::where(function ($q) {
             $q->whereNull('scheduled_at')
               ->orWhere('scheduled_at', '<=', now());
-        })
-        ->with(['user:id,name,first_name,last_name,username,avatar', 'reactions.user:id,name,first_name,last_name,username'])
+        });
+
+        if ($recipientId && $myId) {
+            $query->where(function ($q) use ($myId, $recipientId) {
+                $q->where(function ($sub) use ($myId, $recipientId) {
+                    $sub->where('user_id', $myId)->where('recipient_id', $recipientId);
+                })->orWhere(function ($sub) use ($myId, $recipientId) {
+                    $sub->where('user_id', $recipientId)->where('recipient_id', $myId);
+                })->orWhereNull('recipient_id');
+            });
+        }
+
+        $messages = $query->with(['user:id,name,first_name,last_name,username,avatar', 'reactions.user:id,name,first_name,last_name,username'])
         ->orderBy('created_at', 'asc')
         ->get()
-        ->map(function ($m) {
+        ->map(function ($m) use ($myId) {
             $reactionsGrouped = $m->reactions->groupBy('emoji')->map(function ($group) {
                 return [
                     'emoji' => $group->first()->emoji,
@@ -49,6 +63,7 @@ class ChatController extends Controller
             return [
                 'id' => $m->id,
                 'user_id' => $m->user_id,
+                'recipient_id' => $m->recipient_id,
                 'sender_name' => $m->sender_name,
                 'username' => $m->username,
                 'message' => $m->message,
@@ -58,10 +73,27 @@ class ChatController extends Controller
                 'created_at' => $m->created_at->format('H:i'),
                 'created_at_human' => $m->created_at->diffForHumans(),
                 'reactions' => $reactionsGrouped,
+                'is_me' => $myId ? ($m->user_id === $myId) : false,
             ];
         });
 
-        return response()->json(['status' => 'success', 'messages' => $messages]);
+        // Unread message counts per user
+        $unreadCounts = [];
+        if ($myId) {
+            try {
+                $counts = ChatMessage::select('user_id', DB::raw('count(*) as total'))
+                    ->where('recipient_id', $myId)
+                    ->whereNull('delivered_at')
+                    ->groupBy('user_id')
+                    ->pluck('total', 'user_id')
+                    ->toArray();
+                $unreadCounts = $counts;
+            } catch (\Exception $e) {
+                $unreadCounts = [];
+            }
+        }
+
+        return response()->json(['status' => 'success', 'messages' => $messages, 'unread_counts' => $unreadCounts]);
     }
 
     /**
@@ -100,6 +132,7 @@ class ChatController extends Controller
         $request->validate([
             'message' => 'nullable|string|max:5000',
             'type' => 'required|in:text,image,gif,file,voice,video',
+            'recipient_id' => 'nullable|exists:users,id',
             'scheduled_at' => 'nullable|date',
             'file_url' => 'nullable|string',
         ]);
@@ -108,8 +141,9 @@ class ChatController extends Controller
         $senderName = trim(($user->first_name . ' ' . $user->last_name)) ?: $user->name;
         $isScheduled = $request->filled('scheduled_at') && strtotime($request->input('scheduled_at')) > time();
 
-        $msg = ChatMessage::create([
+        $msgData = [
             'user_id' => $user->id,
+            'recipient_id' => $request->input('recipient_id'),
             'sender_name' => $senderName,
             'username' => $user->username ?? Str::slug($user->name),
             'message' => $request->input('message'),
@@ -117,7 +151,9 @@ class ChatController extends Controller
             'file_path' => $request->input('file_url'),
             'scheduled_at' => $isScheduled ? $request->input('scheduled_at') : null,
             'delivered_at' => $isScheduled ? null : now(),
-        ]);
+        ];
+
+        $msg = ChatMessage::create($msgData);
 
         return response()->json([
             'status' => 'success',

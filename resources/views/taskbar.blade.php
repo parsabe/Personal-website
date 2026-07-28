@@ -28,6 +28,11 @@
         @endif
     </a>
 
+    <!-- Dynamic macOS Chat Contacts Dock Container -->
+    <div id="mac-chat-users-dock" class="flex items-center gap-1.5">
+        <!-- JS renders chat member avatars & red unread badges -->
+    </div>
+
     <!-- Sandika Concept Item -->
     <a href="/sandika" title="Sandika Hub & Arkham Spirits" 
        class="taskbar-item p-2.5 rounded-2xl hover:bg-white/10 transition-all group relative flex items-center justify-center {{ Str::startsWith($currentRoute, 'sandika') ? 'bg-white/15 ring-2 ring-amber-400' : '' }}">

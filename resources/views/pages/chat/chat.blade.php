@@ -41,7 +41,6 @@
 
         <!-- MAIN CHAT CONTENT AREA -->
         <main class="flex-1 flex flex-col overflow-hidden relative p-4 lg:p-6 justify-between bg-black/20">
-            @include('stories_bar')
 
             @if (!$authenticated)
                 <!-- AUTHENTICATION GATE (NO GUEST MODE) -->
@@ -104,23 +103,23 @@
             @else
                 <!-- AUTHENTICATED CHAT PORTAL CONTENT -->
 
-                <!-- Header Controls Bar -->
-                <header class="flex items-center justify-between px-4 py-2.5 bg-black/30 border-b border-white/10 rounded-2xl shrink-0 mb-3 animate-fade-in">
-                    <div class="flex items-center space-x-3">
+                <!-- Header Controls Bar (Telegram Style) -->
+                <header class="flex items-center justify-between px-4 py-2.5 bg-black/40 border border-white/10 rounded-2xl shrink-0 mb-3 animate-fade-in backdrop-blur-md">
+                    <div id="activeContactHeader" class="flex items-center space-x-3">
                         <div class="relative">
-                            <img src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" class="w-10 h-10 rounded-full border border-white/20 object-cover shadow-md">
-                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse"></span>
+                            <img id="activeContactAvatar" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" class="w-10 h-10 rounded-full border border-white/20 object-cover shadow-md">
+                            <span id="activeContactDot" class="absolute bottom-0 right-0 w-3 h-3 bg-amber-500 rounded-full border-2 border-gray-900"></span>
                         </div>
                         <div>
                             <h1 class="text-sm font-bold text-white flex items-center gap-1.5">
-                                <span>{{ trim($user->first_name . ' ' . $user->last_name) ?: $user->name }}</span>
-                                @if($user->username)<span class="text-xs font-normal text-gray-400">(@ {{ $user->username }})</span>@endif
+                                <span id="activeContactName">Select a Member</span>
+                                <span id="activeContactUsername" class="text-xs font-normal text-gray-400">(@members)</span>
                             </h1>
-                            <p class="text-[11px] text-emerald-400 font-medium">Online &bull; Portal Active</p>
+                            <p id="activeContactStatus" class="text-[11px] text-amber-400 font-medium">Click a member from the list to start messaging</p>
                         </div>
                     </div>
 
-                    <!-- Neatly Grouped Action Buttons -->
+                    <!-- Telegram Style Action Buttons -->
                     <div class="flex items-center space-x-2">
                         <button onclick="startAudioCall()" class="px-3 py-1.5 rounded-full bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-semibold flex items-center space-x-1 shadow-md transition transform hover:scale-105 active:scale-95">
                             📞 <span>Call</span>
@@ -131,8 +130,9 @@
                         <button onclick="toggleProfileModal()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold flex items-center space-x-1 transition transform hover:scale-105 active:scale-95">
                             👤 <span>Profile</span>
                         </button>
-                        <button onclick="toggleSettingsModal()" class="px-3 py-1.5 rounded-full bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold flex items-center space-x-1 border border-white/10 transition transform hover:scale-105 active:scale-95">
-                            ⚙️ <span>Themes & FX</span>
+                        <button id="theme-toggle" class="p-2 rounded-full ios-glass transition hover:scale-110" title="Toggle Theme">
+                            <span id="theme-icon-light" class="hidden text-xs">☀️</span>
+                            <span id="theme-icon-dark" class="hidden text-xs">🌙</span>
                         </button>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
@@ -143,26 +143,24 @@
                     </div>
                 </header>
 
-                <!-- 24-HOUR STORIES BAR (TELEGRAM STYLE) -->
-                <div class="px-3 py-2 bg-black/20 border border-white/10 rounded-2xl mb-3 flex items-center space-x-3 overflow-x-auto chat-scroll shrink-0 animate-fade-in">
-                    <button onclick="toggleAddStoryModal()" class="flex flex-col items-center space-y-1 shrink-0 group">
-                        <div class="w-10 h-10 rounded-full border-2 border-dashed border-blue-500 flex items-center justify-center bg-blue-600/20 group-hover:scale-110 transition duration-200">
-                            <span class="text-base font-bold text-blue-400">+</span>
-                        </div>
-                        <span class="text-[10px] text-gray-300 font-medium">Add Story</span>
-                    </button>
-                    <div id="storiesContainer" class="flex items-center space-x-3 shrink-0">
-                        <!-- JS injects active user stories -->
-                    </div>
-                </div>
-
                 <!-- MAIN CHAT BODY (MESSAGES + CONTACTS DRAWER) -->
                 <div id="chatBoxContainer" class="flex-1 flex overflow-hidden relative rounded-2xl border border-white/10 bg-black/30 backdrop-blur-md">
                     
                     <!-- Message Stream Area -->
                     <div class="flex-1 flex flex-col overflow-hidden">
                         
-                        <div id="messageStream" class="flex-1 p-4 overflow-y-auto space-y-3 chat-scroll">
+                        <div id="messageStream" class="flex-1 p-4 overflow-y-auto space-y-3 chat-scroll relative">
+                            <div id="selectUserOverlay" class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm p-6 text-center">
+                                <div class="w-16 h-16 mb-3 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-2xl text-blue-400 animate-pulse">
+                                    💬
+                                </div>
+                                <h3 class="text-base font-bold text-white mb-1">No Conversation Selected</h3>
+                                <p class="text-xs text-gray-400 max-w-xs mb-4">Please select a member from the <strong>Members 👥</strong> button or the <strong>bottom macOS Dock</strong> to start chatting.</p>
+                                <button onclick="toggleContactsSidebar()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-lg transition">
+                                    Open Members List
+                                </button>
+                            </div>
+
                             <div id="loadingIndicator" class="text-center py-12 text-gray-400 text-xs flex items-center justify-center space-x-2">
                                 <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                 <span>Loading messages...</span>
@@ -192,7 +190,7 @@
                             </div>
                         </div>
 
-                        <!-- Input Bar -->
+                        <!-- Input Bar (Disabled until contact selection) -->
                         <div class="p-3 bg-black/40 border-t border-white/10 flex flex-col space-y-2 shrink-0">
                             <div class="flex items-center justify-between px-1 text-xs">
                                 <div class="flex items-center space-x-2">
@@ -214,11 +212,11 @@
                             </div>
 
                             <div class="flex items-center space-x-2">
-                                <textarea id="chatInput" rows="1" placeholder="Type a message..."
+                                <textarea id="chatInput" rows="1" disabled placeholder="Select a member from the list to start chatting..."
                                     onkeydown="handleKeyPress(event)"
-                                    class="flex-1 bg-white/5 border border-white/15 rounded-2xl px-4 py-2.5 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-blue-500 resize-none chat-scroll transition duration-200"></textarea>
+                                    class="flex-1 bg-white/5 border border-white/15 rounded-2xl px-4 py-2.5 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-blue-500 resize-none chat-scroll transition duration-200 opacity-50 cursor-not-allowed"></textarea>
                                 
-                                <button onclick="dispatchMessage()" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl text-xs shadow-lg flex items-center space-x-1.5 transition transform active:scale-95 hover:scale-105">
+                                <button id="sendMsgBtn" disabled onclick="dispatchMessage()" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl text-xs shadow-lg flex items-center space-x-1.5 transition transform opacity-50 cursor-not-allowed">
                                     <span>Send</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
