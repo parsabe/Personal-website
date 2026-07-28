@@ -114,6 +114,9 @@
                             <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-mono" data-cmd="formatBlock" data-val="h3">H3</button>
                             <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs" data-cmd="insertUnorderedList">• Bullet List</button>
                             <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs" data-cmd="createLink">🔗 Link</button>
+                            <button type="button" id="btnInsertVideo" onclick="window.promptVideoInsert()" class="px-3 py-1 bg-indigo-600/60 hover:bg-indigo-600 text-white rounded-lg text-xs font-bold flex items-center gap-1 transition">
+                                🎥 <span>Insert Video / YouTube</span>
+                            </button>
                         </div>
                     </div>
 

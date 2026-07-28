@@ -582,6 +582,78 @@ export function changeTheme(t) {
     if (t !== 'sapphire') el.classList.add(`theme-${t}`);
 }
 
+const ALL_EMOJIS = [
+    '😊','😂','😃','😄','😅','😆','😉','😋','😎','😍','😘','🥰','😗','😙','😚','🙂','🤗','🤩','🤔','🤨','😐','😑','😶','🙄','😏','😣','😥','😮','🤐','😯','😪','😫','🥱','😴','😌','😛','😜','😝','🤤','😒','😓','😔','😕','🙃','🤑','😲','☹️','🙁','😖','😞','😟','😤','😢','😭','😦','😧','📁','🤯','😬','😰','😱','🥵','🥶','😳','🤪','😵','🥴','😠','😡','🤬','😷','🤒','🤕','🤢','🤮','🤧','😇','🥳','🥺','🤠','🤡','🤥','🤫','🤭','🧐','🤓','😈','👿','👹','👺','💀','☠️','👻','👽','👾','🤖','💩','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊','🔥','💥','✨','🌟','💫','⭐','⚡','🎉','🎊','🏆','👑','💎','🚀','🛸','💬','❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💯','👍','👎','👏','🙌','🤝','👊','✊','✌️','🤘','🤟','🤙','💪'
+];
+
+export function toggleEmojiPicker() {
+    const modal = document.getElementById('richEmojiPickerModal');
+    if (modal) {
+        modal.classList.toggle('hidden');
+        if (!modal.classList.contains('hidden')) {
+            renderEmojiGrid(ALL_EMOJIS);
+        }
+    }
+}
+
+export function renderEmojiGrid(emojis) {
+    const grid = document.getElementById('emojiGrid');
+    if (!grid) return;
+    grid.innerHTML = emojis.map(e => `
+        <button onclick="window.addEmoji('${e}')" class="p-1.5 hover:bg-white/15 rounded-xl transition transform hover:scale-125">${e}</button>
+    `).join('');
+}
+
+export function filterEmojiGrid() {
+    const query = (document.getElementById('emojiSearchInput')?.value || '').toLowerCase();
+    if (!query) {
+        renderEmojiGrid(ALL_EMOJIS);
+        return;
+    }
+    // Filter emojis or render full set
+    renderEmojiGrid(ALL_EMOJIS);
+}
+
+export function toggleGifPicker() {
+    const modal = document.getElementById('giphyPickerModal');
+    if (modal) {
+        modal.classList.toggle('hidden');
+        if (!modal.classList.contains('hidden')) {
+            searchGifs('cyberpunk');
+        }
+    }
+}
+
+export async function searchGifs(query = '') {
+    const inputVal = document.getElementById('giphySearchInput')?.value || '';
+    const q = query || inputVal || 'cyberpunk';
+    const grid = document.getElementById('giphyResultsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = '<div class="col-span-3 text-center py-8 text-xs text-purple-400 font-mono animate-pulse">⏳ Loading Giphy GIFs...</div>';
+
+    try {
+        const apiKey = 'dc6zaTOxFJmzC'; // Giphy public beta key
+        const response = await fetch(`https://api.giphy.com/v1/gifs/search?q=${encodeURIComponent(q)}&limit=18&api_key=${apiKey}`);
+        const data = await response.json();
+
+        if (data.data && data.data.length > 0) {
+            grid.innerHTML = data.data.map(g => {
+                const gifUrl = g.images.fixed_height.url;
+                return `
+                    <div onclick="window.sendGif('${gifUrl}')" class="cursor-pointer overflow-hidden rounded-xl border border-white/10 hover:border-purple-400 transition transform hover:scale-105 group relative aspect-square bg-black/60">
+                        <img src="${gifUrl}" alt="${escapeHtml(g.title)}" class="w-full h-full object-cover">
+                    </div>
+                `;
+            }).join('');
+        } else {
+            grid.innerHTML = '<div class="col-span-3 text-center py-8 text-xs text-gray-400 font-mono">No GIFs found for query.</div>';
+        }
+    } catch (err) {
+        grid.innerHTML = '<div class="col-span-3 text-center py-8 text-xs text-rose-400 font-mono">Failed to load GIFs.</div>';
+    }
+}
+
 export function addEmoji(e) { 
     const input = document.getElementById('chatInput');
     if (input) input.value += e; 
@@ -590,10 +662,11 @@ export function addEmoji(e) {
 
 export async function sendGif(url) {
     toggleGifPicker();
+    const recipientId = selectedRecipient ? selectedRecipient.id : null;
     await fetch('/chat/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': getCsrfToken() },
-        body: JSON.stringify({ type: 'gif', file_url: url })
+        body: JSON.stringify({ type: 'gif', file_url: url, recipient_id: recipientId })
     });
     fetchMessages();
 }
@@ -676,6 +749,8 @@ window.chatPortal = {
     toggleSettingsModal,
     toggleEmojiPicker,
     toggleGifPicker,
+    filterEmojiGrid,
+    searchGifs,
     toggleScheduleModal,
     startAudioCall,
     endAudioCall,
