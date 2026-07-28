@@ -197,6 +197,11 @@ class PageController extends Controller
 
     public function blog()
     {
-        return view('pages.blog');
+        $posts = \App\Models\BlogPost::with('author')
+            ->where('is_published', true)
+            ->orderBy('published_at', 'desc')
+            ->get();
+
+        return view('pages.blog', compact('posts'));
     }
 }

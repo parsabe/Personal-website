@@ -83,9 +83,6 @@ Route::post('/blog', [App\Http\Controllers\BlogController::class, 'store'])->nam
     Route::get('/publications/php-vuls', 'php_vuls')->name('publications.php_vuls');
     Route::get('/publications/crm', 'crm')->name('publications.crm');
     Route::get('/publications/qca', 'qca')->name('publications.qca');
-
-    // --- Blogs ---
-    Route::get('/blog', 'blog')->name('blog');
 });
 
 // ==========================================
