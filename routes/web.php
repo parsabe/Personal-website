@@ -46,6 +46,7 @@ Route::post('/sandika/file-upload', [App\Http\Controllers\SandikaController::cla
 Route::post('/sandika/story', [App\Http\Controllers\SandikaController::class, 'postStory'])->name('sandika.story');
 Route::post('/sandika/dictionary', [App\Http\Controllers\SandikaController::class, 'addDictionaryWord'])->name('sandika.dictionary');
 Route::post('/sandika/git', [App\Http\Controllers\SandikaController::class, 'postGitInsight'])->name('sandika.git');
+Route::post('/sandika/arkham', [App\Http\Controllers\SandikaController::class, 'solveArkhamSpirit'])->name('sandika.arkham');
 
 // Nigma Riddler Portal Routes
 Route::get('/nigma', [App\Http\Controllers\NigmaController::class, 'index'])->name('nigma');

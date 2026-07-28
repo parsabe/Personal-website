@@ -24,7 +24,7 @@ class Admin2faMiddleware
         }
 
         // 3. Ensure 2FA verification has been completed for this session
-        if (session('parsa_2fa_verified') !== true) {
+        if (session('parsa_2fa_verified') !== true && session('2fa_verified') !== true) {
             // If the route is already parsa.2fa.show or parsa.2fa.verify, allow to prevent infinite redirect loop
             if ($request->routeIs('parsa.2fa.show') || $request->routeIs('parsa.2fa.verify')) {
                 return $next($request);

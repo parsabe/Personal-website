@@ -51,7 +51,7 @@
         }
         .brand-subtitle {
             font-size: 12px;
-            color: #94a3b8;
+            color: #cbd5e1;
             margin-top: 4px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -95,7 +95,7 @@
             padding: 16px;
             margin-top: 24px;
             font-size: 13px;
-            color: #94a3b8;
+            color: #cbd5e1;
             line-height: 1.5;
         }
         .fallback-link {
@@ -113,7 +113,7 @@
             color: #64748b;
         }
         .footer a {
-            color: #94a3b8;
+            color: #cbd5e1;
             text-decoration: none;
         }
     </style>

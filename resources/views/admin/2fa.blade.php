@@ -152,7 +152,7 @@
                 <h1 class="text-3xl font-black font-mono tracking-widest text-white uppercase text-glow-cyan">
                     {{ $isSetup ? 'INITIALIZE_2FA' : 'CHALLENGE_REQUIRED' }}
                 </h1>
-                <p class="mt-2 text-xs font-mono text-slate-400 uppercase tracking-widest">
+                <p class="mt-2 text-xs font-mono text-slate-300 uppercase tracking-widest">
                     {{ $isSetup ? 'ACCESSING ADMIN NODE SECURITY SETUP' : 'SYSTEM LOCKDOWN ACTIVE // DECRYPT CREDENTIALS' }}
                 </p>
             </div>
@@ -201,7 +201,7 @@
                 <form action="{{ route('parsa.2fa.verify') }}" method="POST" class="space-y-6">
                     @csrf
                     <div>
-                        <label for="code" class="block text-xs font-mono font-bold uppercase tracking-widest text-slate-400 mb-2">
+                        <label for="code" class="block text-xs font-mono font-bold uppercase tracking-widest text-slate-300 mb-2">
                             Enter 6-Digit Authenticator Token
                         </label>
                         <input id="code" name="code" type="text" required autofocus maxlength="6" pattern="[0-9]*" inputmode="numeric"

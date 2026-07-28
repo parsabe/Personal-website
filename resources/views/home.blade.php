@@ -113,6 +113,9 @@
 
     </div>
 
+    <!-- Taskbar & Mac Window Controls -->
+    @include('taskbar')
+    <script src="{{ asset('js/mac-window-controls.js') }}"></script>
 </body>
 
 </html>

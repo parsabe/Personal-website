@@ -27,10 +27,28 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $user = Auth::user();
+
+        // Determine intended URL before logging out temporary session
+        $intendedUrl = null;
+        if ($request->filled('redirect')) {
+            $intendedUrl = $request->input('redirect');
+        } elseif (session()->has('url.intended')) {
+            $intendedUrl = session()->get('url.intended');
+        } else {
+            $prev = url()->previous();
+            if ($prev && !\Illuminate\Support\Str::contains($prev, ['/login', '/auth/two-factor', '/register', '/parsa/2fa'])) {
+                $intendedUrl = $prev;
+            }
+        }
+
         Auth::logout();
 
         $request->session()->regenerate();
         session(['2fa_user_id' => $user->id]);
+
+        if ($intendedUrl) {
+            session(['url.intended' => $intendedUrl]);
+        }
 
         return redirect()->route('2fa.show');
     }

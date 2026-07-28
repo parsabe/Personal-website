@@ -71,12 +71,14 @@ class TwoFactorAuthController extends Controller
 
                 session()->forget('temp_2fa_secret');
                 session()->forget('2fa_user_id');
-                session(['2fa_verified' => true]);
+                session(['2fa_verified' => true, 'parsa_2fa_verified' => true]);
 
                 Auth::login($user);
 
+                $redirectUrl = session()->get('url.intended', route('dashboard', absolute: false));
+
                 if ($request->wantsJson()) {
-                    return response()->json(['status' => 'success', 'message' => '2FA verified & setup complete!']);
+                    return response()->json(['status' => 'success', 'message' => '2FA verified & setup complete!', 'redirect' => $redirectUrl]);
                 }
 
                 return redirect()->intended(route('dashboard', absolute: false));
@@ -85,12 +87,14 @@ class TwoFactorAuthController extends Controller
             // Verifying existing 2FA code
             if ($this->verifyKey($user->google2fa_secret, $code)) {
                 session()->forget('2fa_user_id');
-                session(['2fa_verified' => true]);
+                session(['2fa_verified' => true, 'parsa_2fa_verified' => true]);
 
                 Auth::login($user);
 
+                $redirectUrl = session()->get('url.intended', route('dashboard', absolute: false));
+
                 if ($request->wantsJson()) {
-                    return response()->json(['status' => 'success', 'message' => '2FA authentication successful!']);
+                    return response()->json(['status' => 'success', 'message' => '2FA authentication successful!', 'redirect' => $redirectUrl]);
                 }
 
                 return redirect()->intended(route('dashboard', absolute: false));

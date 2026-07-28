@@ -1,12 +1,12 @@
 <!-- INSTAGRAM STORIES BAR (TOP OF CONTAINER) -->
-<div class="w-full bg-black/40 border-b border-white/10 px-6 py-3 flex items-center gap-4 overflow-x-auto scrollbar-none z-30 shrink-0">
+<div class="w-full bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl px-5 py-2.5 flex items-center gap-4 overflow-x-auto scrollbar-none z-30 shrink-0 mb-3 pr-36 shadow-lg">
     
     <!-- Add Story Circle -->
     @auth
         <div onclick="document.getElementById('modal-instagram-story').classList.remove('hidden')" class="flex flex-col items-center cursor-pointer group shrink-0">
-            <div class="w-14 h-14 rounded-full border-2 border-dashed border-indigo-500 flex items-center justify-center bg-indigo-600/20 group-hover:scale-105 transition-transform relative">
-                <span class="text-xl text-indigo-400 font-bold">+</span>
-                <span class="absolute bottom-0 right-0 w-4 h-4 bg-indigo-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center border border-black">+</span>
+            <div class="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 group-hover:scale-105 transition-transform relative shadow-md">
+                <img src="{{ Auth::user()->avatar ? asset(Auth::user()->avatar) : asset('images/profile.jpg') }}" class="w-full h-full rounded-full object-cover border border-black">
+                <span class="absolute bottom-0 right-0 w-4 h-4 bg-indigo-600 text-white text-[11px] font-bold rounded-full flex items-center justify-center border border-black shadow-md">+</span>
             </div>
             <span class="text-[10px] text-indigo-300 mt-1 font-semibold">Your Story</span>
         </div>
@@ -14,10 +14,10 @@
 
     <!-- Dynamic Stories List -->
     <div id="instagram-stories-bar-list" class="flex items-center gap-4 shrink-0">
-        <div class="text-xs text-gray-500 font-mono flex items-center gap-2">
+        <div class="text-xs text-gray-300 font-medium flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 shadow-inner">
             <span>📷 No active stories.</span>
             @auth
-                <span class="text-indigo-400 cursor-pointer underline" onclick="document.getElementById('modal-instagram-story').classList.remove('hidden')">Tap + to share!</span>
+                <span class="text-indigo-400 font-semibold cursor-pointer hover:underline" onclick="document.getElementById('modal-instagram-story').classList.remove('hidden')">Tap + to share!</span>
             @endauth
         </div>
     </div>

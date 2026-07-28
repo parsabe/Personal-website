@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     circle.onclick = () => openStoryViewer(s);
 
                     circle.innerHTML = `
-                        <div class="w-14 h-14 rounded-full p-[2px] bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 shadow-md group-hover:scale-105 transition-transform">
-                            <img src="${s.avatar_url}" class="w-full h-full rounded-full object-cover border-2 border-black">
+                        <div class="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 shadow-md group-hover:scale-105 transition-transform">
+                            <img src="${s.avatar_url}" class="w-full h-full rounded-full object-cover border border-black">
                         </div>
                         <span class="text-[10px] text-gray-300 mt-1 font-medium truncate max-w-[60px]">${s.username}</span>
                     `;
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } else {
                 storiesBarList.innerHTML = `
-                    <div class="text-xs text-gray-400 font-mono flex items-center gap-2">
+                    <div class="text-xs text-gray-300 font-medium flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 shadow-inner">
                         <span>📷 No active stories.</span>
                     </div>
                 `;

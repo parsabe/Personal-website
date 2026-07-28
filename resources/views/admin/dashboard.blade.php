@@ -37,7 +37,7 @@
                         PARSABE EXECUTIVE CORE
                         <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">OPERATIONAL</span>
                     </h1>
-                    <p class="text-xs text-slate-400">System Governance, Contact Submissions & Feedback Hub</p>
+                    <p class="text-xs text-slate-300">System Governance, Contact Submissions & Feedback Hub</p>
                 </div>
             </div>
 
@@ -55,7 +55,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div class="exec-card p-5 rounded-2xl flex items-center justify-between">
                 <div>
-                    <span class="text-xs text-slate-400 block font-medium">Contact Inquiries</span>
+                    <span class="text-xs text-slate-300 block font-medium">Contact Inquiries</span>
                     <span class="text-2xl font-bold text-white mt-1 block">{{ $contacts->count() }}</span>
                 </div>
                 <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">
@@ -65,7 +65,7 @@
 
             <div class="exec-card p-5 rounded-2xl flex items-center justify-between">
                 <div>
-                    <span class="text-xs text-slate-400 block font-medium">CS Feedbacks</span>
+                    <span class="text-xs text-slate-300 block font-medium">CS Feedbacks</span>
                     <span class="text-2xl font-bold text-white mt-1 block">{{ $feedbacks->count() }}</span>
                 </div>
                 <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg">
@@ -75,7 +75,7 @@
 
             <div class="exec-card p-5 rounded-2xl flex items-center justify-between">
                 <div>
-                    <span class="text-xs text-slate-400 block font-medium">2FA Security</span>
+                    <span class="text-xs text-slate-300 block font-medium">2FA Security</span>
                     <span class="text-xs font-bold text-emerald-400 mt-1 block">VERIFIED ACTIVE</span>
                 </div>
                 <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">
@@ -85,7 +85,7 @@
 
             <div class="exec-card p-5 rounded-2xl flex items-center justify-between">
                 <div>
-                    <span class="text-xs text-slate-400 block font-medium">Ollama AI Backend</span>
+                    <span class="text-xs text-slate-300 block font-medium">Ollama AI Backend</span>
                     <span class="text-xs font-bold text-indigo-400 mt-1 block">LOCAL QWEN 2.5</span>
                 </div>
                 <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg">
@@ -127,7 +127,7 @@
                                 <td class="p-3 font-semibold text-white">{{ $c->name }}</td>
                                 <td class="p-3 text-slate-300 font-mono">{{ $c->email }}</td>
                                 <td class="p-3 text-slate-300 max-w-xs truncate">{{ $c->message }}</td>
-                                <td class="p-3 text-slate-400">{{ $c->created_at->format('M d, H:i') }}</td>
+                                <td class="p-3 text-slate-300">{{ $c->created_at->format('M d, H:i') }}</td>
                                 <td class="p-3 text-right">
                                     <form action="{{ route('parsa.contact.delete', $c->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete message?');">
                                         @csrf
@@ -172,7 +172,7 @@
                                 <td class="p-3 font-semibold text-white">{{ $f->student->name ?? 'Student' }}</td>
                                 <td class="p-3 text-amber-400 font-bold">★ {{ $f->rating ?? 5 }}/5</td>
                                 <td class="p-3 text-slate-300 max-w-xs truncate">{{ $f->comment }}</td>
-                                <td class="p-3 text-slate-400">{{ $f->created_at->format('M d, H:i') }}</td>
+                                <td class="p-3 text-slate-300">{{ $f->created_at->format('M d, H:i') }}</td>
                                 <td class="p-3 text-right">
                                     <form action="{{ route('parsa.feedback.delete', $f->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete feedback?');">
                                         @csrf

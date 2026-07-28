@@ -22,9 +22,9 @@
     <header class="w-full max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
         <a href="/" class="flex items-center space-x-2 text-xl font-bold tracking-tight text-white hover:opacity-90 transition-opacity">
             <span class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">PARSABE</span>
-            <span class="text-slate-400 font-medium text-sm">/ CS Portal</span>
+            <span class="text-slate-300 font-medium text-sm">/ CS Portal</span>
         </a>
-        <a href="/" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">
+        <a href="/" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">
             ← Back to main site
         </a>
     </header>
@@ -45,7 +45,7 @@
                 <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                     CS Career Fair
                 </h1>
-                <p class="mt-2 text-sm text-slate-400">
+                <p class="mt-2 text-sm text-slate-300">
                     Retrieve and download your official participation certificates
                 </p>
             </div>
@@ -114,7 +114,7 @@
                             <h2 class="mt-3 text-xl font-bold text-white">
                                 {{ $student->first_name }} {{ $student->last_name }}
                             </h2>
-                            <p class="text-sm text-slate-400 mt-1">
+                            <p class="text-sm text-slate-300 mt-1">
                                 {{ $student->email }}
                             </p>
                         </div>
@@ -129,7 +129,7 @@
                                         </svg>
                                     </div>
                                     <div class="ml-4 flex-grow text-left">
-                                        <h3 class="text-sm font-semibold text-slate-400">
+                                        <h3 class="text-sm font-semibold text-slate-300">
                                             Certificate Downloaded
                                         </h3>
                                         <p class="text-xs text-slate-600 mt-0.5">
@@ -168,7 +168,7 @@
                                         </svg>
                                     </div>
                                     <div class="ml-4 flex-grow text-left">
-                                        <h3 class="text-sm font-semibold text-slate-400">
+                                        <h3 class="text-sm font-semibold text-slate-300">
                                             Images Archive Downloaded
                                         </h3>
                                         <p class="text-xs text-slate-600 mt-0.5">

@@ -55,6 +55,7 @@
 
                         <form id="gateLoginForm" method="POST" action="{{ route('login') }}" class="space-y-3.5 text-left text-xs">
                             @csrf
+                            <input type="hidden" name="redirect" value="{{ url()->current() }}">
                             <div>
                                 <label class="block text-gray-400 mb-1 font-medium">Email Address</label>
                                 <input type="email" name="email" required class="w-full bg-black/50 border border-white/15 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-indigo-500">
@@ -150,6 +151,9 @@
                     </button>
                     <button class="sandika-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-black/30 border border-white/10 text-gray-400" data-target="tab-git">
                         💻 Git Insights
+                    </button>
+                    <button class="sandika-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-black/30 border border-white/10 text-gray-400" data-target="tab-arkham">
+                        👻 Amadeus Arkham Spirits (+20 CP)
                     </button>
                     <button class="sandika-tab-btn px-4 py-2 rounded-xl text-xs font-bold transition-all bg-black/30 border border-white/10 text-gray-400" data-target="tab-tools">
                         ⚙️ Tactical Tools & ROT13
@@ -267,6 +271,64 @@
                     </div>
                 </div>
 
+                <!-- TAB: AMADEUS ARKHAM SPIRITS -->
+                <div id="tab-arkham" class="sandika-tab-content hidden space-y-4">
+                    <div class="arkham-terminal p-6 rounded-3xl space-y-4">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                            <div>
+                                <h2 class="text-sm font-bold text-amber-400 font-mono uppercase tracking-wider flex items-center gap-2">
+                                    👻 AMADEUS ARKHAM SPIRITS & WRAITH CIPHERS
+                                </h2>
+                                <p class="text-xs text-gray-400 mt-1">Decipher the 10 sacred Arkham Spirit ciphers. Each correct solution awards +20 CP and plays the recorded audio log.</p>
+                            </div>
+                            <span class="px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-xs font-mono font-bold">
+                                🎧 10 AUDIO CIPHERS AVAILABLE
+                            </span>
+                        </div>
+
+                        <!-- 10 SPIRIT CARDS GRID -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @for ($i = 1; $i <= 10; $i++)
+                                @php
+                                    $isSolved = in_array($i, $solvedArkhamIds ?? []);
+                                @endphp
+                                <div class="p-5 rounded-2xl bg-black/50 border border-white/10 space-y-3 relative overflow-hidden transition hover:border-indigo-500/50 group">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-red-600 flex items-center justify-center text-white font-mono font-bold text-sm shadow-md">
+                                                #{{ $i }}
+                                            </div>
+                                            <div>
+                                                <h3 class="text-xs font-bold text-white font-mono">Arkham Spirit Cipher #{{ $i }}</h3>
+                                                <span class="text-[10px] text-gray-400">Award: +20 CP + Audio Track</span>
+                                            </div>
+                                        </div>
+                                        <button onclick="playArkhamAudio({{ $i }})" class="p-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/60 border border-indigo-400/40 text-indigo-300 text-xs font-bold flex items-center gap-1.5 transition">
+                                            <span>▶</span> Listen
+                                        </button>
+                                    </div>
+
+                                    <form class="form-arkham-spirit space-y-2" data-spirit-id="{{ $i }}">
+                                        <div class="flex gap-2">
+                                            <input type="text" name="answer" required placeholder="Enter cipher answer..."
+                                                class="flex-1 bg-black/60 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-amber-400 font-mono">
+                                            <button type="submit" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-xl text-xs shadow-md hover:opacity-90 transition">
+                                                Decipher
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                    <div class="arkham-result-{{ $i }} text-[11px] font-mono font-semibold min-h-[18px]">
+                                        @if($isSolved)
+                                            <span class="text-emerald-400 flex items-center gap-1">✅ Deciphered! (+20 CP Claimed)</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endfor
+                        </div>
+                    </div>
+                </div>
+
                 <!-- TAB 5: TACTICAL TOOLS & ROT13 -->
                 <div id="tab-tools" class="sandika-tab-content hidden space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -364,7 +426,9 @@
         }
     </script>
 
-    <!-- External Sandika ESM Script -->
+    <!-- Taskbar & Mac Window Controls -->
+    @include('taskbar')
+    <script src="{{ asset('js/mac-window-controls.js') }}"></script>
     <script type="module" src="{{ asset('js/sandika.js') }}"></script>
 </body>
 </html>

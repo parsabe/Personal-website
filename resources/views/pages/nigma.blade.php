@@ -55,6 +55,7 @@
 
                         <form id="gateLoginForm" method="POST" action="{{ route('login') }}" class="space-y-3.5 text-left text-xs font-mono">
                             @csrf
+                            <input type="hidden" name="redirect" value="{{ url()->current() }}">
                             <div>
                                 <label class="block text-emerald-400 mb-1 font-medium">Email Address</label>
                                 <input type="email" name="email" required class="w-full bg-black/60 border border-emerald-500/40 rounded-xl px-3.5 py-2.5 text-emerald-300 focus:outline-none focus:border-emerald-400">
@@ -200,7 +201,9 @@
         }
     </script>
 
-    <!-- External Nigma ESM Script -->
+    <!-- Taskbar & Mac Window Controls -->
+    @include('taskbar')
+    <script src="{{ asset('js/mac-window-controls.js') }}"></script>
     <script type="module" src="{{ asset('js/nigma.js') }}"></script>
 </body>
 </html>

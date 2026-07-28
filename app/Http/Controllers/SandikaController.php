@@ -29,7 +29,19 @@ class SandikaController extends Controller
         $dictionary = DB::table('sandika_dictionary')->orderBy('created_at', 'desc')->take(15)->get();
         $gitInsights = DB::table('sandika_git_insights')->orderBy('created_at', 'desc')->take(10)->get();
 
-        return view('pages.sandika', compact('authenticated', 'user', 'rank', 'stories', 'dictionary', 'gitInsights'));
+        $solvedArkhamIds = [];
+        if ($user) {
+            try {
+                $solvedArkhamIds = DB::table('sandika_arkham_solves')
+                    ->where('user_id', $user->id)
+                    ->pluck('spirit_id')
+                    ->toArray();
+            } catch (\Exception $e) {
+                $solvedArkhamIds = [];
+            }
+        }
+
+        return view('pages.sandika', compact('authenticated', 'user', 'rank', 'stories', 'dictionary', 'gitInsights', 'solvedArkhamIds'));
     }
 
     /**
@@ -178,6 +190,98 @@ class SandikaController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'File ingested and encrypted in Sandika storage. +30 CP awarded!',
+            'rank' => $rank,
+        ]);
+    }
+
+    /**
+     * Solve Amadeus Arkham Spirit Cipher (+20 CP & MP3 Audio Playback).
+     */
+    public function solveArkhamSpirit(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => 'unauthorized', 'message' => 'Login required to decipher Arkham Spirits.'], 401);
+        }
+
+        $request->validate([
+            'spirit_id' => 'required|integer|between:1,10',
+            'answer' => 'required|string',
+        ]);
+
+        $spiritId = (int) $request->input('spirit_id');
+        $answer = strtolower(trim($request->input('answer')));
+        $userId = Auth::id();
+
+        // Check if already solved by user
+        try {
+            $alreadySolved = DB::table('sandika_arkham_solves')
+                ->where('user_id', $userId)
+                ->where('spirit_id', $spiritId)
+                ->exists();
+
+            if ($alreadySolved) {
+                return response()->json([
+                    'status' => 'already_solved',
+                    'message' => 'You have already deciphered this Arkham Spirit.',
+                    'audio_url' => asset("audio/{$spiritId}.mp3"),
+                ], 422);
+            }
+        } catch (\Exception $e) {
+            // Fallback table creation handled via migration
+        }
+
+        // Canonical answers per spirit ID
+        $validAnswers = [
+            1 => ['i am the spirit of amadeus arkham', 'amadeus arkham', 'amadeus', 'spirit of amadeus arkham'],
+            2 => ['my mother\'s memory', 'mother\'s memory', 'mother', 'memory'],
+            3 => ['madness is the only escape', 'madness', 'escape'],
+            4 => ['the asylum is my legacy', 'asylum', 'legacy'],
+            5 => ['cyrus pinkney', 'pinkney', 'cyrus'],
+            6 => ['the warden', 'warden', 'sharp'],
+            7 => ['batman will fall', 'batman', 'fall'],
+            8 => ['gotham city', 'gotham', 'city'],
+            9 => ['arkham island', 'arkham', 'island'],
+            10 => ['the spirit of arkham', 'spirit of arkham', 'spirit'],
+        ];
+
+        $accepted = $validAnswers[$spiritId] ?? ['arkham'];
+        $isCorrect = false;
+
+        foreach ($accepted as $target) {
+            if (Str::contains($answer, $target) || $answer === $target) {
+                $isCorrect = true;
+                break;
+            }
+        }
+
+        if (!$isCorrect && strlen($answer) < 3) {
+            return response()->json([
+                'status' => 'incorrect',
+                'message' => 'The deciphered answer is incorrect. Try again.',
+            ], 422);
+        }
+
+        // Award +20 CP and record solve
+        try {
+            DB::table('sandika_arkham_solves')->insert([
+                'user_id' => $userId,
+                'spirit_id' => $spiritId,
+                'user_answer' => $request->input('answer'),
+                'cp_awarded' => 20,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            // Ignore if table not ready
+        }
+
+        $rank = SandikaUserRank::addXp($userId, 20);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'The Arkham Spirit Deciphered! +20 CPs awarded!',
+            'audio_url' => asset("audio/{$spiritId}.mp3"),
+            'spirit_id' => $spiritId,
             'rank' => $rank,
         ]);
     }

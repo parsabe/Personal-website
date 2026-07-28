@@ -149,12 +149,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Arkham Spirit Cipher Submission Forms
+    const arkhamForms = document.querySelectorAll('.form-arkham-spirit');
+    arkhamForms.forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const spiritId = form.getAttribute('data-spirit-id');
+            const answerInput = form.querySelector('input[name="answer"]');
+            const answer = answerInput ? answerInput.value : '';
+            const resultBox = document.querySelector(`.arkham-result-${spiritId}`);
+
+            if (!answer.trim()) return;
+
+            if (resultBox) resultBox.innerHTML = '<span class="text-amber-400 font-mono animate-pulse">⏳ Deciphering Arkham Spirit...</span>';
+
+            try {
+                const res = await fetch('/sandika/arkham', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken || ''
+                    },
+                    body: JSON.stringify({ spirit_id: spiritId, answer: answer })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    if (resultBox) resultBox.innerHTML = `<span class="text-emerald-400 font-mono">✅ ${data.message}</span>`;
+                    updateRankUI(data.rank);
+
+                    // Play audio file
+                    if (data.audio_url) {
+                        const audio = new Audio(data.audio_url);
+                        audio.volume = 0.6;
+                        audio.play().catch(err => console.log('Audio autoplay prevented:', err));
+                    }
+                } else {
+                    if (resultBox) resultBox.innerHTML = `<span class="text-rose-400 font-mono">❌ ${data.message || 'Incorrect cipher.'}</span>`;
+                }
+            } catch (e) {
+                if (resultBox) resultBox.innerHTML = '<span class="text-rose-400 font-mono">❌ Network error.</span>';
+            }
+        });
+    });
+
+    // Global audio player function
+    window.playArkhamAudio = function(spiritId) {
+        const audio = new Audio(`/audio/${spiritId}.mp3`);
+        audio.volume = 0.6;
+        audio.play().then(() => {
+            const resultBox = document.querySelector(`.arkham-result-${spiritId}`);
+            if (resultBox) resultBox.innerHTML += ' <span class="text-indigo-400">🔊 Playing audio...</span>';
+        }).catch(err => alert(`Playing audio ${spiritId}.mp3 (Click to allow audio permissions)`));
+    };
+
     function updateRankUI(rank) {
         if (!rank) return;
         const xpElem = document.getElementById('user-xp-val');
         const levelElem = document.getElementById('user-level-val');
         const titleElem = document.getElementById('user-title-val');
-        if (xpElem) xpElem.textContent = rank.xp;
+        if (xpElem) xpElem.textContent = rank.xp + ' CP';
         if (levelElem) levelElem.textContent = rank.level;
         if (titleElem) titleElem.textContent = rank.rank_title;
     }
