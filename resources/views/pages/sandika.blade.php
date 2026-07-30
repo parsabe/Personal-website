@@ -191,9 +191,9 @@
                     <div class="arkham-terminal p-6 rounded-3xl space-y-4">
                         <div class="flex items-center justify-between">
                             <h2 class="text-sm font-bold text-purple-400 font-mono">📖 STORIES & INTELLIGENCE REPORTS</h2>
-                            <button onclick="document.getElementById('modal-story').classList.remove('hidden')" class="px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold shadow-lg hover:bg-purple-500">
-                                + POST STORY (+10 CP)
-                            </button>
+                            <a href="/chat" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl text-xs font-bold shadow-lg hover:opacity-90">
+                                💬 POST ON PROFILE FEED (+15 CP)
+                            </a>
                         </div>
 
                         <div class="space-y-3">
@@ -343,21 +343,6 @@
 
         </main>
 
-    </div>
-
-    <!-- POST STORY MODAL -->
-    <div id="modal-story" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="w-full max-w-lg bg-gray-900 border border-white/20 p-6 rounded-3xl space-y-4">
-            <h3 class="text-base font-bold text-white font-mono">Post Sandika Story</h3>
-            <form id="form-post-story" class="space-y-3">
-                <input type="text" name="title" required placeholder="Story Title..." class="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white">
-                <textarea name="content" required rows="5" placeholder="Write story (Over 1000 chars earns +15 CP)..." class="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-xs text-white"></textarea>
-                <div class="flex justify-end gap-2">
-                    <button type="button" onclick="document.getElementById('modal-story').classList.add('hidden')" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-xl text-xs">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded-xl text-xs font-bold">Post Story</button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <!-- ADD DICTIONARY MODAL -->

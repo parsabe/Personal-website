@@ -4,13 +4,14 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -26,8 +27,17 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'avatar',
+        'header_banner',
+        'avatars_gallery',
+        'headers_gallery',
+        'profile_theme_color',
+        'account_privacy',
+        'post_privacy',
+        'story_privacy',
         'bio',
         'social_links',
+        'deleted_reason',
+        'deleted_custom_reason',
     ];
 
     /**
@@ -51,6 +61,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'social_links' => 'array',
+            'avatars_gallery' => 'array',
+            'headers_gallery' => 'array',
         ];
     }
 
@@ -93,6 +105,46 @@ class User extends Authenticatable
                    "Reply-To: noreply@parsabe.com\r\n" .
                    "X-Mailer: PHP/" . phpversion();
         @mail($this->email, $subject, $htmlContent, $headers);
+    }
+
+    /**
+     * User's published blog articles.
+     */
+    public function articles()
+    {
+        return $this->hasMany(BlogPost::class, 'author_id');
+    }
+
+    /**
+     * Users following this user.
+     */
+    public function followers()
+    {
+        return $this->hasMany(UserFollow::class, 'following_id');
+    }
+
+    /**
+     * Users this user is following.
+     */
+    public function following()
+    {
+        return $this->hasMany(UserFollow::class, 'follower_id');
+    }
+
+    /**
+     * Check if user is following target user ID.
+     */
+    public function isFollowing($targetUserId)
+    {
+        return $this->following()->where('following_id', $targetUserId)->exists();
+    }
+
+    /**
+     * Twitter/X style user profile posts.
+     */
+    public function userPosts()
+    {
+        return $this->hasMany(UserPost::class, 'user_id');
     }
 }
 

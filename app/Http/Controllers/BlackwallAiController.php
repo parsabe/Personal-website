@@ -46,11 +46,11 @@ class BlackwallAiController extends Controller
             ], 403);
         }
 
-        // 3. Call local Ollama AI backend or intelligent response engine
+        // 3. Call local Ollama AI backend
         $aiContent = $this->askOllama($userText);
 
         if (!$aiContent) {
-            $aiContent = "🛡️ [BlackWall AI Core]: Analyzed query for '{$userText}'. Neural defense barriers active. All sub-processes operating cleanly.";
+            $aiContent = "🛡️ **[BlackWall AI Core]**: I am operational. Query received: \"{$userText}\". Neural defense matrix active.";
         }
 
         // 4. Return safe AI response
@@ -61,32 +61,41 @@ class BlackwallAiController extends Controller
     }
 
     /**
-     * Calls local Ollama REST API endpoint to generate response.
+     * Calls local Ollama REST API endpoint to generate response using qwen2.5:0.5b or active model.
      */
     private function askOllama(string $prompt): ?string
     {
         $baseUrl = env('OLLAMA_BASE_URL', 'http://localhost:11434');
-        $model = env('OLLAMA_MODEL', 'qwen3.6:latest');
+        $modelsToTry = [
+            env('OLLAMA_MODEL', 'qwen2.5:0.5b'),
+            'qwen2.5:0.5b',
+            'qwen3.6:latest',
+        ];
 
-        try {
-            $response = Http::timeout(60)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->post(rtrim($baseUrl, '/') . '/api/generate', [
-                    'model' => $model,
-                    'prompt' => $prompt,
-                    'stream' => false,
-                ]);
+        $systemPrompt = "You are BlackWall AI Core, a high-tech AI neural defense matrix and intelligent assistant created by Parsa Besharat. Answer questions clearly, accurately, concisely, and politely. Use clean Markdown formatting.";
+        $fullPrompt = "System: {$systemPrompt}\nUser: {$prompt}\nBlackWall AI:";
 
-            if ($response->successful()) {
-                return $response->json('response');
+        foreach (array_unique($modelsToTry) as $model) {
+            try {
+                $response = Http::timeout(30)
+                    ->withHeaders(['Content-Type' => 'application/json'])
+                    ->post(rtrim($baseUrl, '/') . '/api/generate', [
+                        'model' => $model,
+                        'prompt' => $fullPrompt,
+                        'stream' => false,
+                    ]);
+
+                if ($response->successful()) {
+                    $responseText = trim($response->json('response'));
+                    if (!empty($responseText)) {
+                        return "🛡️ **[BlackWall AI Core]**\n\n" . $responseText;
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::warning("Ollama call failed for model {$model}: " . $e->getMessage());
             }
-
-            Log::error('Ollama API Error: ' . $response->body());
-            return null;
-
-        } catch (\Exception $e) {
-            Log::error('Failed to connect to Ollama: ' . $e->getMessage());
-            return null;
         }
+
+        return null;
     }
 }

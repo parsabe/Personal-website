@@ -108,6 +108,36 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/user/delete-account', [ProfileController::class, 'deleteAccountWithReason'])->name('user.account.delete');
+    
+    // User Published Articles Management Routes
+    Route::get('/user/articles', [App\Http\Controllers\BlogController::class, 'userArticles'])->name('user.articles');
+    Route::post('/user/articles/{id}/update', [App\Http\Controllers\BlogController::class, 'updateArticle'])->name('user.articles.update');
+    Route::post('/user/articles/{id}/delete', [App\Http\Controllers\BlogController::class, 'deleteArticle'])->name('user.articles.delete');
+
+    // Multiple Profile Headers & Avatars Gallery Routes
+    Route::post('/user/profile/select-avatar', [App\Http\Controllers\ChatController::class, 'selectAvatar'])->name('user.profile.select-avatar');
+    Route::post('/user/profile/select-header', [App\Http\Controllers\ChatController::class, 'selectHeader'])->name('user.profile.select-header');
+    Route::post('/user/profile/delete-avatar', [App\Http\Controllers\ChatController::class, 'deleteAvatarFromGallery'])->name('user.profile.delete-avatar');
+    Route::post('/user/profile/delete-header', [App\Http\Controllers\ChatController::class, 'deleteHeaderFromGallery'])->name('user.profile.delete-header');
+
+    // Follow / Unfollow & Profile Stats Routes
+    Route::post('/user/{id}/follow', [App\Http\Controllers\ChatController::class, 'toggleFollow'])->name('user.follow.toggle');
+    Route::get('/user/{id}/stats', [App\Http\Controllers\ChatController::class, 'getUserStats'])->name('user.stats');
+
+    // Instagram Story Archive & Highlights Routes
+    Route::get('/user/stories/archive', [App\Http\Controllers\ChatController::class, 'fetchStoryArchive'])->name('user.stories.archive');
+    Route::post('/user/stories/{id}/highlight', [App\Http\Controllers\ChatController::class, 'toggleStoryHighlight'])->name('user.stories.highlight');
+
+    // Twitter/X User Profile Posts Routes
+    Route::post('/user/posts/create', [App\Http\Controllers\ChatController::class, 'createUserPost'])->name('user.posts.create');
+    Route::get('/user/{id}/posts', [App\Http\Controllers\ChatController::class, 'fetchUserPosts'])->name('user.posts.fetch');
+    Route::get('/user/posts/feed', [App\Http\Controllers\ChatController::class, 'fetchPublicFeedPosts'])->name('user.posts.public-feed');
+    Route::post('/user/posts/{id}/like', [App\Http\Controllers\ChatController::class, 'toggleLikeUserPost'])->name('user.posts.like');
+    Route::post('/user/posts/{id}/repost', [App\Http\Controllers\ChatController::class, 'toggleRepostUserPost'])->name('user.posts.repost');
+    Route::post('/user/posts/{id}/bookmark', [App\Http\Controllers\ChatController::class, 'toggleBookmarkUserPost'])->name('user.posts.bookmark');
+    Route::post('/user/posts/{id}/comment', [App\Http\Controllers\ChatController::class, 'addPostComment'])->name('user.posts.comment');
+    Route::post('/user/posts/{id}/delete', [App\Http\Controllers\ChatController::class, 'deleteUserPost'])->name('user.posts.delete');
 });
 
 // ==========================================
@@ -138,8 +168,11 @@ Route::middleware(['auth', 'admin.2fa'])->group(function () {
     Route::post('/parsa/contact/{id}/reply', [App\Http\Controllers\AdminPortalController::class, 'replyContact'])->name('parsa.contact.reply');
     Route::post('/parsa/contact/{id}/delete', [App\Http\Controllers\AdminPortalController::class, 'deleteContact'])->name('parsa.contact.delete');
     Route::post('/parsa/contacts/purge-all', [App\Http\Controllers\AdminPortalController::class, 'purgeAllContacts'])->name('parsa.contacts.purge-all');
+    Route::post('/parsa/contacts/purge_all', [App\Http\Controllers\AdminPortalController::class, 'purgeAllContacts'])->name('parsa.contacts.purge_all');
     Route::post('/parsa/feedback/{id}/reply', [App\Http\Controllers\AdminPortalController::class, 'replyFeedback'])->name('parsa.feedback.reply');
     Route::post('/parsa/feedback/{id}/delete', [App\Http\Controllers\AdminPortalController::class, 'deleteFeedback'])->name('parsa.feedback.delete');
+    Route::post('/parsa/article/{id}/delete', [App\Http\Controllers\AdminPortalController::class, 'adminDeleteArticle'])->name('parsa.article.delete');
+    Route::get('/parsa/article/{id}', [App\Http\Controllers\AdminPortalController::class, 'adminReadArticle'])->name('parsa.article.read');
 });
 
 require __DIR__ . '/auth.php';

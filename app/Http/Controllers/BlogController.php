@@ -57,4 +57,58 @@ class BlogController extends Controller
 
         return redirect()->route('blog')->with('success', 'Blog article published successfully!');
     }
+
+    /**
+     * Get articles for logged in user JSON / response.
+     */
+    public function userArticles()
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => 'unauthorized'], 401);
+        }
+
+        $articles = BlogPost::where('author_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json(['status' => 'success', 'articles' => $articles]);
+    }
+
+    /**
+     * Update user's article.
+     */
+    public function updateArticle(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => 'unauthorized'], 401);
+        }
+
+        $post = BlogPost::where('id', $id)->where('author_id', Auth::id())->firstOrFail();
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        $post->title = $request->input('title');
+        $post->content = $request->input('content');
+        $post->save();
+
+        return response()->json(['status' => 'success', 'message' => 'Article updated successfully!', 'post' => $post]);
+    }
+
+    /**
+     * Delete user's article (soft delete).
+     */
+    public function deleteArticle(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => 'unauthorized'], 401);
+        }
+
+        $post = BlogPost::where('id', $id)->where('author_id', Auth::id())->firstOrFail();
+        $post->delete();
+
+        return response()->json(['status' => 'success', 'message' => 'Article deleted successfully!']);
+    }
 }

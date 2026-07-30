@@ -235,21 +235,91 @@
     <!-- USER PROFILE CUSTOMIZER MODAL -->
     @if ($authenticated)
         <div id="profileModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-            <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-md shadow-2xl text-xs chat-scroll max-h-[90vh] overflow-y-auto animate-scale-up">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-sm font-bold text-white">👤 Profile Settings</h3>
+            <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-md shadow-2xl text-xs chat-scroll max-h-[90vh] overflow-y-auto animate-scale-up space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <span>👤 Profile Settings & Customizer</span>
+                    </h3>
                     <button onclick="toggleProfileModal()" class="text-gray-400 hover:text-white">✕</button>
                 </div>
 
-                <form id="profileForm" onsubmit="saveProfileSettings(event)" class="space-y-3">
-                    <div class="flex items-center space-x-4 mb-2">
-                        <img id="profileAvatarPreview" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" class="w-16 h-16 rounded-full border-2 border-blue-500 object-cover">
-                        <div>
-                            <label class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold text-white cursor-pointer inline-block transition transform hover:scale-105">
-                                Change Photo
+                <form id="profileForm" onsubmit="saveProfileSettings(event)" class="space-y-4">
+                    <!-- HEADER BANNER PREVIEW & UPLOAD SECTION -->
+                    <div class="relative w-full h-28 rounded-2xl overflow-hidden bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900 border border-white/10 group">
+                        <img id="profileHeaderPreview" src="{{ $user->header_banner ? asset($user->header_banner) : '' }}" 
+                            class="w-full h-full object-cover {{ $user->header_banner ? '' : 'hidden' }}">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <label class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold text-white cursor-pointer transition text-[11px] shadow-lg">
+                                🖼️ Change Cover Banner
+                                <input type="file" name="header_banner" accept="image/*" onchange="previewHeaderImage(event)" class="hidden">
+                            </label>
+                        </div>
+                        <span class="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-sm text-[9px] text-gray-300 font-mono">Profile Header</span>
+                    </div>
+
+                    <!-- AVATAR & NAME SECTION -->
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <img id="profileAvatarPreview" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" class="w-16 h-16 rounded-full border-2 border-blue-500 object-cover shadow-lg">
+                            <label class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center text-white cursor-pointer shadow">
+                                📷
                                 <input type="file" name="avatar" accept="image/*" onchange="previewAvatarImage(event)" class="hidden">
                             </label>
                         </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-white text-sm">{{ $user->name }}</h4>
+                            <p class="text-[11px] text-gray-400 font-mono">{{ $user->username ? '@' . $user->username : $user->email }}</p>
+                        </div>
+                    </div>
+
+                    <!-- MULTIPLE PROFILE AVATARS GALLERY -->
+                    @php
+                        $avatarsGallery = is_array($user->avatars_gallery) ? $user->avatars_gallery : [];
+                        if ($user->avatar && !in_array($user->avatar, $avatarsGallery)) {
+                            $avatarsGallery[] = $user->avatar;
+                        }
+                    @endphp
+                    <div class="space-y-1.5 pt-2 border-t border-white/10">
+                        <label class="block font-bold text-gray-300 flex items-center justify-between">
+                            <span>🖼️ My Profile Avatars Gallery ({{ count($avatarsGallery) }})</span>
+                        </label>
+                        @if(count($avatarsGallery) > 0)
+                            <div class="flex flex-wrap gap-2 pt-1 max-h-24 overflow-y-auto chat-scroll">
+                                @foreach($avatarsGallery as $avPath)
+                                    <div class="relative group border-2 {{ $user->avatar === $avPath ? 'border-blue-500 scale-105' : 'border-transparent' }} rounded-full overflow-hidden transition">
+                                        <img src="{{ asset($avPath) }}" onclick="selectAvatarFromGallery('{{ addslashes($avPath) }}')" class="w-10 h-10 rounded-full object-cover cursor-pointer hover:opacity-80">
+                                        <button type="button" onclick="deleteAvatarFromGallery('{{ addslashes($avPath) }}')" class="absolute inset-0 bg-red-600/80 text-white text-[9px] font-bold flex items-center justify-center opacity-0 group-hover:opacity-100 transition">✕</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-[10px] text-gray-500 italic">No saved avatars yet. Upload photos to build your avatar gallery.</p>
+                        @endif
+                    </div>
+
+                    <!-- MULTIPLE PROFILE HEADERS GALLERY -->
+                    @php
+                        $headersGallery = is_array($user->headers_gallery) ? $user->headers_gallery : [];
+                        if ($user->header_banner && !in_array($user->header_banner, $headersGallery)) {
+                            $headersGallery[] = $user->header_banner;
+                        }
+                    @endphp
+                    <div class="space-y-1.5 pt-2 border-t border-white/10">
+                        <label class="block font-bold text-gray-300 flex items-center justify-between">
+                            <span>🌄 My Cover Headers Gallery ({{ count($headersGallery) }})</span>
+                        </label>
+                        @if(count($headersGallery) > 0)
+                            <div class="flex flex-wrap gap-2 pt-1 max-h-24 overflow-y-auto chat-scroll">
+                                @foreach($headersGallery as $headPath)
+                                    <div class="relative group border-2 {{ $user->header_banner === $headPath ? 'border-indigo-500 scale-105' : 'border-transparent' }} rounded-xl overflow-hidden transition">
+                                        <img src="{{ asset($headPath) }}" onclick="selectHeaderFromGallery('{{ addslashes($headPath) }}')" class="w-20 h-10 rounded-lg object-cover cursor-pointer hover:opacity-80">
+                                        <button type="button" onclick="deleteHeaderFromGallery('{{ addslashes($headPath) }}')" class="absolute inset-0 bg-red-600/80 text-white text-[9px] font-bold flex items-center justify-center opacity-0 group-hover:opacity-100 transition">✕ Remove</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-[10px] text-gray-500 italic">No saved cover headers yet. Upload images to build your header gallery.</p>
+                        @endif
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -273,12 +343,110 @@
                         <textarea name="bio" rows="2" placeholder="Tell us about yourself (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white resize-none">{{ $user->bio }}</textarea>
                     </div>
 
+                    <!-- PRIVACY & VISIBILITY CONTROLS -->
+                    <div class="space-y-2 pt-2 border-t border-white/10">
+                        <label class="block font-bold text-gray-300">🛡️ Account Privacy & Content Settings</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-gray-400 text-[10px] mb-1">Account Visibility</label>
+                                <select name="account_privacy" class="w-full bg-black/40 border border-white/20 rounded-xl px-2.5 py-1.5 text-white">
+                                    <option value="public" {{ $user->account_privacy === 'public' ? 'selected' : '' }}>🌐 Public (Everyone)</option>
+                                    <option value="private" {{ $user->account_privacy === 'private' ? 'selected' : '' }}>🔒 Private (Approval Required)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 text-[10px] mb-1">Default Story Privacy</label>
+                                <select name="story_privacy" class="w-full bg-black/40 border border-white/20 rounded-xl px-2.5 py-1.5 text-white">
+                                    <option value="public" {{ $user->story_privacy === 'public' ? 'selected' : '' }}>🌐 Everyone</option>
+                                    <option value="followers" {{ $user->story_privacy === 'followers' ? 'selected' : '' }}>👥 Followers Only</option>
+                                    <option value="private" {{ $user->story_privacy === 'private' ? 'selected' : '' }}>🔒 Only Me</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="space-y-2 pt-2 border-t border-white/10">
                         <label class="block font-bold text-gray-300">Social Media Links <span class="text-[10px] text-gray-500 font-normal">(Optional)</span></label>
                         <input type="text" name="social_linkedin" value="{{ $user->social_links['linkedin'] ?? '' }}" placeholder="LinkedIn URL / Handle (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
                         <input type="text" name="social_github" value="{{ $user->social_links['github'] ?? '' }}" placeholder="GitHub URL / Handle (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
                         <input type="text" name="social_twitter" value="{{ $user->social_links['twitter'] ?? '' }}" placeholder="Twitter / X URL / Handle (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
                         <input type="text" name="social_website" value="{{ $user->social_links['website'] ?? '' }}" placeholder="Website URL (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
+                    </div>
+
+                    <!-- MY PUBLISHED ARTICLES MANAGEMENT SECTION -->
+                    @php
+                        $userArticles = \App\Models\BlogPost::where('author_id', Auth::id())->orderBy('created_at', 'desc')->get();
+                    @endphp
+                    <div class="space-y-2 pt-3 border-t border-white/10">
+                        <label class="block font-bold text-gray-300 flex items-center justify-between">
+                            <span>✍️ My Published Articles ({{ $userArticles->count() }})</span>
+                            <a href="/blog" class="text-[10px] text-blue-400 hover:underline">+ Write New</a>
+                        </label>
+
+                        @if($userArticles->count() > 0)
+                            <div class="space-y-2 max-h-36 overflow-y-auto chat-scroll pr-1">
+                                @foreach($userArticles as $art)
+                                    <div class="p-2 bg-black/50 border border-white/10 rounded-xl flex items-center justify-between gap-2 text-xs">
+                                        <div class="overflow-hidden flex-1">
+                                            <p class="font-semibold text-white truncate">{{ $art->title }}</p>
+                                            <p class="text-[10px] text-gray-400 font-mono">{{ $art->created_at->format('M d, Y') }}</p>
+                                        </div>
+                                        <div class="flex items-center space-x-1 shrink-0">
+                                            <button type="button" onclick="openEditArticleModal({{ $art->id }}, '{{ addslashes($art->title) }}', '{{ addslashes(str_replace(["\r", "\n"], [' ', ' '], $art->content)) }}')" 
+                                                class="px-2 py-0.5 bg-blue-600/50 hover:bg-blue-600 rounded text-[10px] font-semibold text-white transition">
+                                                Edit
+                                            </button>
+                                            <button type="button" onclick="deleteUserArticle({{ $art->id }})" 
+                                                class="px-2 py-0.5 bg-rose-600/50 hover:bg-rose-600 rounded text-[10px] font-semibold text-rose-200 transition">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-[11px] text-gray-400 italic">No published articles yet.</p>
+                        @endif
+                    </div>
+
+                    <!-- TWITTER / X STYLE USER POSTS COMPOSER & FEED SECTION -->
+                    <div class="space-y-3 pt-3 border-t border-white/10">
+                        <label class="block font-bold text-white flex items-center justify-between text-xs">
+                            <span>🐦 My Twitter / X Profile Feed</span>
+                            <span class="text-[10px] text-gray-400 font-mono">Publish thoughts, photos & videos</span>
+                        </label>
+
+                        <!-- POST COMPOSER BOX -->
+                        <div class="p-3 bg-black/50 border border-white/15 rounded-2xl space-y-2">
+                            <textarea id="myPostContent" rows="2" placeholder="What's happening? Post your thoughts, images, or videos..." 
+                                class="w-full bg-white/5 border border-white/10 rounded-xl p-2.5 text-white text-xs placeholder-gray-500 focus:outline-none focus:border-blue-500 resize-none"></textarea>
+                            
+                            <div class="flex items-center justify-between pt-1">
+                                <label class="px-2.5 py-1 bg-white/10 hover:bg-white/20 text-gray-300 rounded-lg text-[10px] font-semibold cursor-pointer transition flex items-center gap-1">
+                                    <span>📷 Attach Image / Video</span>
+                                    <input type="file" id="myPostMedia" accept="image/*,video/*" class="hidden" onchange="document.getElementById('postMediaSelectedText').innerText = this.files[0]?.name || ''">
+                                </label>
+                                <span id="postMediaSelectedText" class="text-[9px] text-amber-400 font-mono truncate max-w-[120px]"></span>
+
+                                <button type="button" onclick="submitMyUserPost(event)" class="px-4 py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl text-xs shadow-md transition transform active:scale-95">
+                                    Post ➔
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- USER POSTS FEED -->
+                        <div id="myUserPostsFeed" class="space-y-2 max-h-48 overflow-y-auto chat-scroll pr-1">
+                            <!-- Dynamic user posts loaded via JS -->
+                        </div>
+                    </div>
+
+                    <!-- ACCOUNT DELETION DANGER ZONE -->
+                    <div class="space-y-2 pt-3 border-t border-rose-500/20">
+                        <label class="block font-bold text-rose-400">⚠️ Account Deletion Danger Zone</label>
+                        <p class="text-[11px] text-gray-400">Deleting your account will remove your profile, published articles, and messages from public view.</p>
+                        <button type="button" onclick="openDeleteAccountModal()" class="w-full py-2 bg-rose-950/80 hover:bg-rose-900 text-rose-300 text-xs font-bold rounded-xl border border-rose-500/40 transition">
+                            Delete My Account Completely
+                        </button>
                     </div>
 
                     <div class="flex justify-end space-x-2 pt-3">
@@ -288,23 +456,218 @@
                 </form>
             </div>
         </div>
+
+        <!-- PUBLIC USER PROFILE INSPECTOR MODAL (TWITTER/X & INSTAGRAM HYBRID) -->
+        <div id="publicUserProfileModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <div class="bg-gray-900 border border-white/20 rounded-3xl w-full max-w-md shadow-2xl text-xs chat-scroll max-h-[90vh] overflow-y-auto animate-scale-up space-y-4 p-5 relative">
+                <button onclick="closePublicProfileModal()" class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-black/60 text-gray-300 hover:text-white flex items-center justify-center backdrop-blur-sm">✕</button>
+
+                <!-- COVER BANNER & AVATAR -->
+                <div class="relative w-full h-28 rounded-2xl overflow-hidden bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900 border border-white/10">
+                    <img id="publicHeaderBanner" src="" class="w-full h-full object-cover hidden">
+                </div>
+
+                <div class="flex items-end justify-between -mt-10 px-2 relative z-10">
+                    <img id="publicAvatarImg" src="" class="w-20 h-20 rounded-full border-4 border-gray-900 object-cover shadow-2xl">
+                    <button id="publicFollowBtn" onclick="toggleFollowUserPublic()" class="px-5 py-2 rounded-xl text-xs font-bold shadow-lg transition bg-blue-600 hover:bg-blue-500 text-white">
+                        + Follow
+                    </button>
+                </div>
+
+                <!-- USER INFO -->
+                <div class="px-2 space-y-1">
+                    <h3 id="publicUserName" class="text-base font-bold text-white flex items-center gap-1.5">User Name</h3>
+                    <p id="publicUserHandle" class="text-xs text-gray-400 font-mono">@username</p>
+                    <p id="publicUserBio" class="text-xs text-gray-300 pt-1 leading-relaxed"></p>
+                </div>
+
+                <!-- INSTAGRAM STYLE STATS COUNTERS -->
+                <div class="grid grid-cols-3 gap-2 p-3 bg-black/40 border border-white/10 rounded-2xl text-center font-mono">
+                    <div>
+                        <span id="publicPostsCount" class="block font-bold text-white text-sm">0</span>
+                        <span class="text-[9px] text-gray-400 uppercase">Posts</span>
+                    </div>
+                    <div>
+                        <span id="publicFollowersCount" class="block font-bold text-white text-sm">0</span>
+                        <span class="text-[9px] text-gray-400 uppercase">Followers</span>
+                    </div>
+                    <div>
+                        <span id="publicFollowingCount" class="block font-bold text-white text-sm">0</span>
+                        <span class="text-[9px] text-gray-400 uppercase">Following</span>
+                    </div>
+                </div>
+
+                <!-- TWITTER / X POSTS FEED -->
+                <div class="space-y-3 pt-2 border-t border-white/10">
+                    <h4 class="font-bold text-white text-xs flex items-center justify-between">
+                        <span>🐦 Posts & Activity Feed</span>
+                    </h4>
+                    <div id="publicUserPostsFeed" class="space-y-3">
+                        <!-- User posts loaded via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EDIT ARTICLE MODAL -->
+        <div id="editArticleModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <div class="bg-gray-900 border border-white/20 p-5 rounded-3xl w-full max-w-md shadow-2xl text-xs space-y-3 animate-scale-up">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-white">✍️ Edit Published Article</h3>
+                    <button onclick="closeEditArticleModal()" class="text-gray-400 hover:text-white">✕</button>
+                </div>
+                <form id="editArticleForm" onsubmit="submitArticleEdit(event)" class="space-y-3">
+                    <input type="hidden" id="editArticleId">
+                    <div>
+                        <label class="block text-gray-400 mb-1">Article Title</label>
+                        <input type="text" id="editArticleTitle" required class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Article Content</label>
+                        <textarea id="editArticleContent" rows="6" required class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white resize-none"></textarea>
+                    </div>
+                    <div class="flex justify-end space-x-2 pt-2">
+                        <button type="button" onclick="closeEditArticleModal()" class="px-4 py-2 bg-gray-800 rounded-xl text-gray-300">Cancel</button>
+                        <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl">Save Article</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ACCOUNT SELF DELETION SURVEY MODAL -->
+        <div id="deleteAccountModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+            <div class="bg-gray-900 border border-rose-500/30 p-6 rounded-3xl w-full max-w-md shadow-2xl text-xs space-y-4 animate-scale-up">
+                <div class="flex items-center justify-between border-b border-rose-500/20 pb-3">
+                    <h3 class="text-sm font-bold text-rose-400 flex items-center gap-2">
+                        <span>⚠️ Delete Account & All Content</span>
+                    </h3>
+                    <button onclick="closeDeleteAccountModal()" class="text-gray-400 hover:text-white">✕</button>
+                </div>
+
+                <div class="p-3 rounded-xl bg-rose-950/60 border border-rose-500/30 text-rose-200 leading-relaxed text-[11px]">
+                    <strong>Warning:</strong> Deleting your account will immediately remove your profile, login access, published articles, and messages from public view.
+                </div>
+
+                <form id="deleteAccountForm" onsubmit="submitAccountDeletion(event)" class="space-y-3">
+                    <div>
+                        <label class="block font-bold text-gray-300 mb-2">Please tell us why you are deleting your account:</label>
+                        <div class="space-y-1.5 text-gray-300">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="deletion_reason" value="No longer need the service" checked class="text-rose-600">
+                                <span>No longer using the platform</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="deletion_reason" value="Privacy & data concerns" class="text-rose-600">
+                                <span>Privacy & data removal concerns</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="deletion_reason" value="Creating a new account" class="text-rose-600">
+                                <span>Creating a new profile/account</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="deletion_reason" value="Found alternative service" class="text-rose-600">
+                                <span>Found another alternative service</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="deletion_reason" value="Other reason" class="text-rose-600">
+                                <span>Other reason</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-400 mb-1">Additional details (Optional):</label>
+                        <textarea id="deletionCustomReason" rows="2" placeholder="Help us improve (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white resize-none"></textarea>
+                    </div>
+
+                    <div class="flex justify-end space-x-2 pt-2">
+                        <button type="button" onclick="closeDeleteAccountModal()" class="px-4 py-2 bg-gray-800 rounded-xl text-gray-300">Cancel</button>
+                        <button type="submit" class="px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-lg">Confirm Account Deletion</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     @endif
 
-    <!-- ADD STORY MODAL -->
+    <!-- ADD INSTAGRAM STORY MODAL -->
     <div id="addStoryModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-white/20 p-5 rounded-3xl w-full max-w-sm shadow-2xl text-xs animate-scale-up">
-            <h3 class="text-sm font-bold text-white mb-2">📸 Post 24-Hour Story</h3>
+        <div class="bg-gray-900 border border-white/20 p-5 rounded-3xl w-full max-w-sm shadow-2xl text-xs space-y-3 animate-scale-up">
+            <div class="flex items-center justify-between">
+                <h3 class="text-sm font-bold text-white">📸 Post 24-Hour Story</h3>
+                <button onclick="toggleAddStoryModal()" class="text-gray-400 hover:text-white">✕</button>
+            </div>
             <form id="storyForm" onsubmit="submitStory(event)" class="space-y-3">
-                <textarea name="content" rows="3" placeholder="What's on your mind?..." class="w-full bg-black/40 border border-white/20 rounded-xl p-3 text-white focus:outline-none focus:border-blue-500 resize-none"></textarea>
+                <div>
+                    <label class="block text-gray-400 mb-1">Story Type</label>
+                    <select name="story_type" id="storyTypeSelect" onchange="toggleStoryTypeFields(this.value)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
+                        <option value="standard">📸 Standard Story (Photo / Text)</option>
+                        <option value="countdown">⏳ Countdown Event Story</option>
+                        <option value="poll">📊 Interactive Poll Story</option>
+                    </select>
+                </div>
+
+                <div id="countdownTargetContainer" class="hidden space-y-1">
+                    <label class="block text-amber-400 font-bold text-[10px]">Countdown Target Date & Time</label>
+                    <input type="datetime-local" name="countdown_target_at" class="w-full bg-black/40 border border-amber-500/40 rounded-xl px-3 py-2 text-white font-mono">
+                </div>
+
+                <div>
+                    <label class="block text-gray-400 mb-1">Story Caption / Message</label>
+                    <textarea name="content" rows="3" placeholder="What's on your mind?..." class="w-full bg-black/40 border border-white/20 rounded-xl p-3 text-white focus:outline-none focus:border-blue-500 resize-none"></textarea>
+                </div>
+
                 <div>
                     <label class="block text-gray-400 mb-1">Optional Photo/Media</label>
                     <input type="file" name="media" accept="image/*,video/*" class="w-full bg-black/40 border border-white/20 rounded-xl p-2 text-white">
                 </div>
+
+                <div>
+                    <label class="block text-gray-400 mb-1">Story Audience Privacy</label>
+                    <select name="privacy" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
+                        <option value="public">🌐 Public (Everyone)</option>
+                        <option value="followers">👥 Followers Only</option>
+                        <option value="private">🔒 Private (Only Me)</option>
+                    </select>
+                </div>
+
                 <div class="flex justify-end space-x-2 pt-2">
                     <button type="button" onclick="toggleAddStoryModal()" class="px-3 py-1.5 bg-gray-800 text-gray-300 rounded-xl">Cancel</button>
-                    <button type="submit" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 font-bold text-white rounded-xl">Post Story</button>
+                    <button type="submit" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 font-bold text-white rounded-xl shadow-lg">Post Story</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- INSTAGRAM STORY PLAYER OVERLAY MODAL -->
+    <div id="instagramStoryPlayerModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+        <div class="relative w-full max-w-sm bg-gray-900 border border-white/20 rounded-3xl overflow-hidden shadow-2xl animate-scale-up flex flex-col h-[75vh]">
+            <!-- TOP CONTROLS & USER INFO -->
+            <div class="p-3 bg-gradient-to-b from-black/80 to-transparent flex items-center justify-between z-20 shrink-0">
+                <div class="flex items-center space-x-2">
+                    <img id="storyPlayerUserAvatar" src="" class="w-8 h-8 rounded-full border border-amber-400 object-cover">
+                    <div>
+                        <span id="storyPlayerUserName" class="text-xs font-bold text-white block">User</span>
+                        <span id="storyPlayerTime" class="text-[9px] text-gray-400 font-mono">Just now</span>
+                    </div>
+                </div>
+                <button onclick="closeStoryPlayerModal()" class="text-gray-300 hover:text-white font-bold text-sm p-1">✕</button>
+            </div>
+
+            <!-- STORY PLAYER BODY & COUNTDOWN WIDGET -->
+            <div id="storyPlayerBody" class="flex-1 p-4 flex flex-col justify-center relative overflow-y-auto chat-scroll z-10">
+                <!-- Dynamic Story Content Injected Here -->
+            </div>
+
+            <!-- TAP LEFT / RIGHT TOUCH NAVIGATION AREAS -->
+            <div onclick="prevStory()" class="absolute left-0 top-12 bottom-0 w-1/3 z-20 cursor-pointer"></div>
+            <div onclick="nextStory()" class="absolute right-0 top-12 bottom-0 w-1/3 z-20 cursor-pointer"></div>
+
+            <!-- BOTTOM NAVIGATION ARROWS -->
+            <div class="p-3 bg-black/60 border-t border-white/10 flex items-center justify-between z-30 shrink-0 text-xs font-bold text-white">
+                <button onclick="prevStory()" class="px-3 py-1 bg-white/10 hover:bg-white/20 rounded-xl">◀ Prev</button>
+                <span class="text-[10px] text-gray-400 font-mono">Instagram Story</span>
+                <button onclick="nextStory()" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 rounded-xl">Next ▶</button>
+            </div>
         </div>
     </div>
 

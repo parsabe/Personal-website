@@ -100,6 +100,16 @@
             const sendBtn = document.getElementById('blackwall-send-btn');
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
+            // Enter to Submit / Shift+Enter for Newline
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (input.value.trim().length > 0) {
+                        form.requestSubmit();
+                    }
+                }
+            });
+
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const text = input.value.trim();

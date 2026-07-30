@@ -334,26 +334,150 @@ export function updateUnreadBadges(counts) {
     });
 }
 
-// Fetch Stories
+// Fetch Stories (Grouped by User for Instagram Story Tray)
+let storyUsersList = [];
+let activeUserIndex = 0;
+let activeStoryIndex = 0;
+let countdownInterval = null;
+
 export async function fetchStories() {
     try {
         const response = await fetch('/chat/stories');
         const data = await response.json();
         if (data.status === 'success') {
+            storyUsersList = data.story_users || [];
             const container = document.getElementById('storiesContainer');
             if (container) {
-                container.innerHTML = data.stories.map(s => `
-                    <div class="flex flex-col items-center space-y-1 cursor-pointer shrink-0 animate-scale-up" onclick="alert('${escapeHtml(s.user_name)}: ${escapeHtml(s.content || '')}')">
-                        <div class="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-rose-500 to-purple-600 transition transform hover:scale-110">
-                            <img src="${s.avatar_url}" class="w-full h-full rounded-full object-cover border-2 border-gray-900">
+                if (storyUsersList.length === 0) {
+                    container.innerHTML = '<span class="text-[10px] text-gray-500 italic p-1">No active stories</span>';
+                    return;
+                }
+
+                container.innerHTML = storyUsersList.map((u, idx) => `
+                    <div class="flex flex-col items-center space-y-1 cursor-pointer shrink-0 animate-scale-up group" onclick="window.openStoryGroupViewer(${idx})">
+                        <div class="w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-amber-400 via-rose-500 to-purple-600 transition transform group-hover:scale-110 shadow-md">
+                            <img src="${u.avatar_url}" class="w-full h-full rounded-full object-cover border-2 border-gray-900">
                         </div>
-                        <span class="text-[10px] text-gray-300 truncate max-w-[50px]">${escapeHtml(s.user_name)}</span>
+                        <span class="text-[10px] text-gray-300 truncate max-w-[55px] font-semibold">${escapeHtml(u.user_name)}</span>
                     </div>
                 `).join('');
             }
         }
     } catch (err) {
         console.error(err);
+    }
+}
+
+export function openStoryGroupViewer(userIndex) {
+    if (!storyUsersList[userIndex]) return;
+    activeUserIndex = userIndex;
+    activeStoryIndex = 0;
+
+    const modal = document.getElementById('instagramStoryPlayerModal');
+    if (modal) modal.classList.remove('hidden');
+    renderCurrentStory();
+}
+
+export function closeStoryPlayerModal() {
+    const modal = document.getElementById('instagramStoryPlayerModal');
+    if (modal) modal.classList.add('hidden');
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+    }
+}
+
+export function nextStory() {
+    const user = storyUsersList[activeUserIndex];
+    if (!user) return;
+    if (activeStoryIndex < user.stories.length - 1) {
+        activeStoryIndex++;
+        renderCurrentStory();
+    } else if (activeUserIndex < storyUsersList.length - 1) {
+        activeUserIndex++;
+        activeStoryIndex = 0;
+        renderCurrentStory();
+    } else {
+        closeStoryPlayerModal();
+    }
+}
+
+export function prevStory() {
+    if (activeStoryIndex > 0) {
+        activeStoryIndex--;
+        renderCurrentStory();
+    } else if (activeUserIndex > 0) {
+        activeUserIndex--;
+        const user = storyUsersList[activeUserIndex];
+        activeStoryIndex = user ? user.stories.length - 1 : 0;
+        renderCurrentStory();
+    }
+}
+
+function renderCurrentStory() {
+    const user = storyUsersList[activeUserIndex];
+    if (!user || !user.stories[activeStoryIndex]) return;
+    const story = user.stories[activeStoryIndex];
+
+    const playerUserAvatar = document.getElementById('storyPlayerUserAvatar');
+    const playerUserName = document.getElementById('storyPlayerUserName');
+    const playerTime = document.getElementById('storyPlayerTime');
+    const playerBody = document.getElementById('storyPlayerBody');
+
+    if (playerUserAvatar) playerUserAvatar.src = user.avatar_url;
+    if (playerUserName) playerUserName.innerText = user.user_name;
+    if (playerTime) playerTime.innerText = story.created_at;
+
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+    }
+
+    let mediaContent = '';
+    if (story.media_url) {
+        mediaContent = `<img src="${story.media_url}" class="w-full max-h-80 object-cover rounded-2xl border border-white/10 shadow-lg">`;
+    }
+
+    let countdownWidget = '';
+    if (story.story_type === 'countdown' && story.countdown_target_at) {
+        countdownWidget = `
+            <div class="p-3 rounded-2xl bg-gradient-to-r from-amber-500/20 via-rose-500/20 to-purple-500/20 border border-amber-400/40 text-center font-mono space-y-1 shadow-xl">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-300 block">⏳ LIVE EVENT COUNTDOWN</span>
+                <span id="liveCountdownClock" class="text-lg font-extrabold text-white tracking-widest block">Calculating...</span>
+            </div>
+        `;
+    }
+
+    if (playerBody) {
+        playerBody.innerHTML = `
+            <div class="space-y-3">
+                ${mediaContent}
+                ${countdownWidget}
+                ${story.content ? `<p class="text-xs text-white font-medium bg-black/50 p-3 rounded-xl border border-white/10 leading-relaxed">${escapeHtml(story.content)}</p>` : ''}
+            </div>
+        `;
+    }
+
+    if (story.story_type === 'countdown' && story.countdown_target_at) {
+        const targetDate = new Date(story.countdown_target_at).getTime();
+        const updateClock = () => {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            const clockEl = document.getElementById('liveCountdownClock');
+            if (!clockEl) return;
+
+            if (distance < 0) {
+                clockEl.innerText = '🎉 EVENT LIVE NOW!';
+            } else {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                clockEl.innerText = `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+            }
+        };
+        updateClock();
+        countdownInterval = setInterval(updateClock, 1000);
     }
 }
 
@@ -650,6 +774,385 @@ export function previewAvatarImage(e) {
     }
 }
 
+export function previewHeaderImage(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const el = document.getElementById('profileHeaderPreview');
+            if (el) {
+                el.src = ev.target.result;
+                el.classList.remove('hidden');
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+export async function selectAvatarFromGallery(avatarPath) {
+    try {
+        const response = await fetch('/user/profile/select-avatar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify({ avatar_path: avatarPath })
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            showToastNotification('Active avatar updated!');
+            setTimeout(() => window.location.reload(), 800);
+        } else {
+            alert(data.message || 'Error updating avatar');
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export async function selectHeaderFromGallery(headerPath) {
+    try {
+        const response = await fetch('/user/profile/select-header', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify({ header_path: headerPath })
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            showToastNotification('Active cover banner updated!');
+            setTimeout(() => window.location.reload(), 800);
+        } else {
+            alert(data.message || 'Error updating cover header');
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export async function deleteAvatarFromGallery(avatarPath) {
+    if (!confirm('Remove this photo from your avatar gallery?')) return;
+    try {
+        const response = await fetch('/user/profile/delete-avatar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify({ avatar_path: avatarPath })
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            showToastNotification('Avatar removed.');
+            setTimeout(() => window.location.reload(), 800);
+        } else {
+            alert(data.message || 'Error removing avatar');
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export async function deleteHeaderFromGallery(headerPath) {
+    if (!confirm('Remove this cover header from your gallery?')) return;
+    try {
+        const response = await fetch('/user/profile/delete-header', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify({ header_path: headerPath })
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            showToastNotification('Cover header removed.');
+            setTimeout(() => window.location.reload(), 800);
+        } else {
+            alert(data.message || 'Error removing cover header');
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+// User Article Editing Modal & Handlers
+export function openEditArticleModal(id, title, content) {
+    const modal = document.getElementById('editArticleModal');
+    const inputId = document.getElementById('editArticleId');
+    const inputTitle = document.getElementById('editArticleTitle');
+    const inputContent = document.getElementById('editArticleContent');
+
+    if (inputId) inputId.value = id;
+    if (inputTitle) inputTitle.value = title;
+    if (inputContent) inputContent.value = content;
+    if (modal) modal.classList.remove('hidden');
+}
+
+export function closeEditArticleModal() {
+    const modal = document.getElementById('editArticleModal');
+    if (modal) modal.classList.add('hidden');
+}
+
+export async function submitArticleEdit(event) {
+    event.preventDefault();
+    const id = document.getElementById('editArticleId').value;
+    const title = document.getElementById('editArticleTitle').value;
+    const content = document.getElementById('editArticleContent').value;
+
+    try {
+        const response = await fetch(`/user/articles/${id}/update`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify({ title, content })
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            showToastNotification('Article updated successfully!');
+            closeEditArticleModal();
+            setTimeout(() => window.location.reload(), 1000);
+        } else {
+            alert('Failed to update article: ' + (data.message || 'Error occurred'));
+        }
+    } catch (e) {
+        console.error('Edit Article error:', e);
+        alert('An error occurred while updating the article.');
+    }
+}
+
+export async function deleteUserArticle(id) {
+    if (!confirm('Are you sure you want to delete this published article?')) return;
+
+    try {
+        const response = await fetch(`/user/articles/${id}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken()
+            }
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            showToastNotification('Article deleted successfully.');
+            setTimeout(() => window.location.reload(), 1000);
+        } else {
+            alert('Failed to delete article.');
+        }
+    } catch (e) {
+        console.error('Delete Article error:', e);
+        alert('An error occurred while deleting the article.');
+    }
+}
+
+// User Account Self-Deletion Handlers
+export function openDeleteAccountModal() {
+    const modal = document.getElementById('deleteAccountModal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+export function closeDeleteAccountModal() {
+    const modal = document.getElementById('deleteAccountModal');
+    if (modal) modal.classList.add('hidden');
+}
+
+export async function submitAccountDeletion(event) {
+    event.preventDefault();
+
+    const selectedReasonEl = document.querySelector('input[name="deletion_reason"]:checked');
+    const reason = selectedReasonEl ? selectedReasonEl.value : 'No longer using platform';
+    const customReason = document.getElementById('deletionCustomReason')?.value || '';
+
+    if (!confirm('FINAL CONFIRMATION: Deleting your account will immediately log you out and delete your profile and published articles. Are you completely sure?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/user/delete-account', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify({ reason, custom_reason: customReason })
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            alert(data.message);
+            window.location.href = '/';
+        } else {
+            alert('Failed to delete account: ' + (data.message || 'Error occurred'));
+        }
+    } catch (e) {
+        console.error('Account deletion error:', e);
+        alert('An error occurred while processing account deletion.');
+    }
+}
+
+// Twitter/X Style User Posts & Public Profile Inspector
+let activePublicInspectorUserId = null;
+
+export async function submitMyUserPost(event) {
+    if (event) event.preventDefault();
+    const content = document.getElementById('myPostContent')?.value || '';
+    const mediaInput = document.getElementById('myPostMedia');
+
+    const formData = new FormData();
+    if (content) formData.append('content', content);
+    if (mediaInput && mediaInput.files[0]) {
+        formData.append('media', mediaInput.files[0]);
+    }
+
+    try {
+        const response = await fetch('/user/posts/create', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': getCsrfToken() },
+            body: formData
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            showToastNotification('Post published to your profile!');
+            if (document.getElementById('myPostContent')) document.getElementById('myPostContent').value = '';
+            if (mediaInput) mediaInput.value = '';
+            if (document.getElementById('postMediaSelectedText')) document.getElementById('postMediaSelectedText').innerText = '';
+        } else {
+            alert(data.message || 'Failed to publish post.');
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export async function openPublicProfileModal(userId) {
+    activePublicInspectorUserId = userId;
+    const modal = document.getElementById('publicUserProfileModal');
+    if (modal) modal.classList.remove('hidden');
+
+    try {
+        // Fetch stats
+        const statsRes = await fetch(`/user/${userId}/stats`);
+        const statsData = await statsRes.json();
+        if (statsData.status === 'success') {
+            document.getElementById('publicPostsCount').innerText = statsData.stats.posts;
+            document.getElementById('publicFollowersCount').innerText = statsData.stats.followers;
+            document.getElementById('publicFollowingCount').innerText = statsData.stats.following;
+
+            const followBtn = document.getElementById('publicFollowBtn');
+            if (followBtn) {
+                if (statsData.stats.is_following) {
+                    followBtn.innerText = '✓ Following';
+                    followBtn.className = 'px-5 py-2 rounded-xl text-xs font-bold shadow-lg transition bg-gray-800 text-gray-300 hover:bg-rose-900 hover:text-white';
+                } else {
+                    followBtn.innerText = '+ Follow';
+                    followBtn.className = 'px-5 py-2 rounded-xl text-xs font-bold shadow-lg transition bg-blue-600 hover:bg-blue-500 text-white';
+                }
+            }
+        }
+
+        // Fetch posts
+        const postsRes = await fetch(`/user/${userId}/posts`);
+        const postsData = await postsRes.json();
+        if (postsData.status === 'success') {
+            document.getElementById('publicUserName').innerText = postsData.user.name;
+            document.getElementById('publicUserHandle').innerText = '@' + postsData.user.username;
+            document.getElementById('publicAvatarImg').src = postsData.user.avatar_url;
+
+            const feed = document.getElementById('publicUserPostsFeed');
+            if (feed) {
+                if (!postsData.posts || postsData.posts.length === 0) {
+                    feed.innerHTML = '<p class="text-xs text-gray-500 italic p-3 text-center">No posts published yet.</p>';
+                } else {
+                    feed.innerHTML = postsData.posts.map(p => `
+                        <div class="p-3.5 rounded-2xl bg-black/50 border border-white/10 space-y-2.5 text-xs">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <img src="${p.avatar_url}" class="w-8 h-8 rounded-full border border-white/20 object-cover">
+                                    <div>
+                                        <span class="font-bold text-white block">${escapeHtml(p.user_name)}</span>
+                                        <span class="text-[10px] text-gray-400 font-mono">@${escapeHtml(p.username)} • ${p.created_at}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            ${p.content ? `<p class="text-gray-200 leading-relaxed font-sans text-xs">${escapeHtml(p.content)}</p>` : ''}
+
+                            ${p.media_url && p.media_type === 'image' ? `
+                                <img src="${p.media_url}" class="w-full max-h-64 object-cover rounded-xl border border-white/10 shadow-md">
+                            ` : ''}
+
+                            ${p.media_url && p.media_type === 'video' ? `
+                                <video src="${p.media_url}" controls class="w-full max-h-64 rounded-xl border border-white/10 shadow-md"></video>
+                            ` : ''}
+
+                            <div class="flex items-center space-x-4 pt-1 text-[11px] text-gray-400">
+                                <button onclick="toggleLikeUserPost(${p.id})" class="flex items-center space-x-1 hover:text-rose-400 transition ${p.is_liked ? 'text-rose-500 font-bold' : ''}">
+                                    <span>${p.is_liked ? '❤️' : '🤍'}</span>
+                                    <span>${p.likes_count} Likes</span>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export function closePublicProfileModal() {
+    const modal = document.getElementById('publicUserProfileModal');
+    if (modal) modal.classList.add('hidden');
+    activePublicInspectorUserId = null;
+}
+
+export async function toggleFollowUserPublic() {
+    if (!activePublicInspectorUserId) return;
+    try {
+        const response = await fetch(`/user/${activePublicInspectorUserId}/follow`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': getCsrfToken() }
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            showToastNotification(data.action === 'followed' ? 'You are now following this user!' : 'Unfollowed user.');
+            openPublicProfileModal(activePublicInspectorUserId);
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export async function toggleLikeUserPost(postId) {
+    try {
+        const response = await fetch(`/user/posts/${postId}/like`, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': getCsrfToken() }
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            if (activePublicInspectorUserId) {
+                openPublicProfileModal(activePublicInspectorUserId);
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export function toggleStoryTypeFields(val) {
+    const countdownContainer = document.getElementById('countdownTargetContainer');
+    if (countdownContainer) {
+        if (val === 'countdown') countdownContainer.classList.remove('hidden');
+        else countdownContainer.classList.add('hidden');
+    }
+}
+
 export function escapeHtml(t) { 
     return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); 
 }
@@ -664,6 +1167,16 @@ window.chatPortal = {
     toggleReaction,
     fetchUsers,
     fetchStories,
+    openStoryGroupViewer,
+    closeStoryPlayerModal,
+    nextStory,
+    prevStory,
+    toggleStoryTypeFields,
+    submitMyUserPost,
+    openPublicProfileModal,
+    closePublicProfileModal,
+    toggleFollowUserPublic,
+    toggleLikeUserPost,
     dispatchMessage,
     handleFileSelect,
     startVoiceRecording,
@@ -696,6 +1209,18 @@ window.chatPortal = {
     showUploadProgress,
     handleKeyPress,
     previewAvatarImage,
+    previewHeaderImage,
+    selectAvatarFromGallery,
+    selectHeaderFromGallery,
+    deleteAvatarFromGallery,
+    deleteHeaderFromGallery,
+    openEditArticleModal,
+    closeEditArticleModal,
+    submitArticleEdit,
+    deleteUserArticle,
+    openDeleteAccountModal,
+    closeDeleteAccountModal,
+    submitAccountDeletion,
     escapeHtml
 };
 
