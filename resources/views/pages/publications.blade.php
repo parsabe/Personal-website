@@ -55,13 +55,13 @@
                 <div id="publications">
                     <span
                         class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6">
-                        📚 PUBLICATIONS
+                        {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? '📚 PUBLIKATIONEN' : '📚 PUBLICATIONS' }}
                     </span>
 
                     <h1
                         class="text-4xl lg:text-5xl font-extrabold mb-8 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
-                        Research <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">Papers.</span>
+                        {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Forschungs' : 'Research' }} <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Arbeiten.' : 'Papers.' }}</span>
                     </h1>
                     <hr class="border-gray-200 dark:border-gray-700 mb-8 opacity-50">
 

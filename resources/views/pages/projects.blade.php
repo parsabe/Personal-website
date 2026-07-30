@@ -58,13 +58,13 @@
                 <div id="projects">
                     <span
                         class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6">
-                        🚀 PROJECTS
+                        {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? '🚀 PROJEKTE' : '🚀 PROJECTS' }}
                     </span>
 
                     <h1
                         class="text-4xl lg:text-5xl font-extrabold mb-8 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
-                        Featured <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">Projects.</span>
+                        {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Ausgewählte' : 'Featured' }} <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Projekte.' : 'Projects.' }}</span>
                     </h1>
                     <hr class="border-gray-200 dark:border-gray-700 mb-8 opacity-50">
 

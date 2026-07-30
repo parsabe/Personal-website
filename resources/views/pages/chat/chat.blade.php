@@ -106,10 +106,10 @@
                             </div>
                             <div>
                                 <h1 class="text-sm font-bold text-white flex items-center gap-1.5">
-                                    <span id="activeContactName">Members Directory</span>
+                                    <span id="activeContactName">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Mitglieder-Verzeichnis' : 'Members Directory' }}</span>
                                     <span id="activeContactUsername" class="text-xs font-normal text-gray-400">(@all)</span>
                                 </h1>
-                                <p id="activeContactStatus" class="text-[11px] text-indigo-400 font-medium">Select a user below to start chatting</p>
+                                <p id="activeContactStatus" class="text-[11px] text-indigo-400 font-medium">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Wählen Sie einen Benutzer aus, um zu chatten' : 'Select a user below to start chatting' }}</p>
                             </div>
                         </div>
                     </div>
@@ -117,10 +117,10 @@
                     <!-- Action Buttons -->
                     <div class="flex items-center space-x-2">
                         <button onclick="startAudioCall()" class="px-3 py-1.5 rounded-full bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-semibold flex items-center space-x-1 shadow-md transition transform hover:scale-105 active:scale-95">
-                            📞 <span>Call</span>
+                            📞 <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Anrufen' : 'Call' }}</span>
                         </button>
                         <button onclick="toggleProfileModal()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold flex items-center space-x-1 transition transform hover:scale-105 active:scale-95">
-                            👤 <span>My Profile</span>
+                            👤 <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Mein Profil' : 'My Profile' }}</span>
                         </button>
                     </div>
                 </header>

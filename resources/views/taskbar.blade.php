@@ -19,7 +19,7 @@
             class="p-2.5 rounded-2xl hover:bg-white/10 text-white transition-all group relative flex items-center justify-center">
         <span class="text-xl group-hover:scale-125 transition-transform">🗔</span>
         <span class="absolute -top-9 px-2.5 py-1 bg-black/80 text-[10px] font-bold text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg border border-white/10">
-            Window Focus
+            {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Fenster-Fokus' : 'Window Focus' }}
         </span>
     </button>
 </div>

@@ -37,8 +37,8 @@
                     <div class="w-20 h-20 mb-4 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center text-3xl shadow-2xl animate-bounce">
                         🔐
                     </div>
-                    <h2 class="text-2xl font-extrabold text-white mb-1 tracking-tight">Sandika Agent Portal</h2>
-                    <p class="text-xs text-gray-400 max-w-sm mb-6 font-medium">Guest access is disabled. Please log in or create an account with 2FA protection to access Sandika ranks and tools.</p>
+                    <h2 class="text-2xl font-extrabold text-white mb-1 tracking-tight">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Sandika Agenten-Portal' : 'Sandika Agent Portal' }}</h2>
+                    <p class="text-xs text-gray-400 max-w-sm mb-6 font-medium">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Gastzugriff ist deaktiviert. Bitte melden Sie sich an oder erstellen Sie ein Konto mit 2FA-Schutz, um auf Ränge und Werkzeuge zuzugreifen.' : 'Guest access is disabled. Please log in or create an account with 2FA protection to access Sandika ranks and tools.' }}</p>
 
                     <div class="w-full max-w-md bg-black/40 p-6 rounded-3xl border border-white/15 shadow-2xl backdrop-blur-xl">
                         <div class="flex rounded-2xl bg-white/5 p-1 mb-3 text-xs font-semibold">

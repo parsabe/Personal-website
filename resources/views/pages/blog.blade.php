@@ -36,9 +36,9 @@
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                            PARSABE BLOG & RESEARCH CHRONICLES
+                            {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'PARSABE BLOG & FORSCHUNGSCHRONIK' : 'PARSABE BLOG & RESEARCH CHRONICLES' }}
                         </h1>
-                        <p class="text-xs text-gray-400">Rich Text Publishing, Technical AI Insights & Articles</p>
+                        <p class="text-xs text-gray-400">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Rich-Text-Veröffentlichung, Technische KI-Einblicke & Artikel' : 'Rich Text Publishing, Technical AI Insights & Articles' }}</p>
                     </div>
                 </div>
             </div>
