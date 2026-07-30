@@ -5,8 +5,13 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 2. Base Body Styles */
+/* 2. Base Body & Global Apple San Francisco Font Stack */
+* {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
     min-height: 100vh;
     background-color: #f3f4f6;
     position: relative;
