@@ -70,16 +70,38 @@
             }
         @endphp
 
+        @php
+            $isDe = (session('app_locale') === 'de' || app()->getLocale() === 'de');
+            $deMap = [
+                'Home' => 'Startseite',
+                'About' => 'Über mich',
+                'Contact' => 'Kontakt',
+                'Projects' => 'Projekte',
+                'Publications' => 'Publikationen',
+                'My Playlist' => 'Meine Wiedergabeliste',
+                'Favorite Books' => 'Lieblingsbücher',
+                'Search' => 'Suchen',
+                'MAIN & PERSONAL' => 'HAUPTMENÜ & PERSÖNLICHES',
+                'SERVICES & PORTALS' => 'DIENSTE & PORTALE',
+                'ACCOUNT & CONTROL' => 'KONTO & STEUERUNG',
+                'Profile Settings' => 'Profil-Einstellungen',
+                'Parsa Dashboard' => 'Parsa Dashboard',
+                'Services Locked' => 'Dienste Gesperrt',
+                'Login / Sign Up to see services' => 'Anmelden um Dienste zu sehen',
+            ];
+        @endphp
+
         @foreach($sections as $category => $items)
             <div class="space-y-1">
                 <div class="px-3 pt-2 pb-1 text-[10px] uppercase tracking-wider font-mono font-bold text-gray-500 dark:text-gray-400">
-                    {{ $category }}
+                    {{ $isDe ? ($deMap[$category] ?? $category) : $category }}
                 </div>
                 @foreach($items as $item)
                     @php
                         $isExternal = isset($item['url']);
                         $href = $isExternal ? $item['url'] : (isset($item['query']) ? route($item['route']) . '?' . $item['query'] : route($item['route']));
                         $isActive = !$isExternal && request()->routeIs($item['route']) && (!isset($item['query']) || request()->getQueryString() === $item['query']);
+                        $displayName = $isDe ? ($deMap[$item['name']] ?? $item['name']) : $item['name'];
                     @endphp
 
                     <a href="{{ $href }}"
@@ -87,7 +109,7 @@
                                     {{ $isActive ? 'bg-white/50 dark:bg-black/50 shadow-md border border-white/20 dark:border-white/10 text-indigo-600 dark:text-indigo-400 font-bold' : 'border border-transparent' }}">
 
                         <span class="text-base">{{ $item['icon'] }}</span>
-                        {{ $item['name'] }}
+                        {{ $displayName }}
                     </a>
                 @endforeach
             </div>
@@ -96,14 +118,14 @@
         @guest
             <div class="space-y-1 pt-1">
                 <div class="px-3 pt-2 pb-1 text-[10px] uppercase tracking-wider font-mono font-bold text-gray-400">
-                    SERVICES & PORTALS
+                    {{ $isDe ? 'DIENSTE & PORTALE' : 'SERVICES & PORTALS' }}
                 </div>
                 <a href="{{ route('login') }}" class="flex items-center justify-between p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 transition group">
                     <div class="flex items-center gap-2.5">
                         <span class="text-base">🔒</span>
                         <div>
-                            <p class="text-xs font-bold">Services Locked</p>
-                            <p class="text-[10px] text-amber-200/70">Login / Sign Up to see services</p>
+                            <p class="text-xs font-bold">{{ $isDe ? 'Dienste Gesperrt' : 'Services Locked' }}</p>
+                            <p class="text-[10px] text-amber-200/70">{{ $isDe ? 'Anmelden um Dienste zu sehen' : 'Login / Sign Up to see services' }}</p>
                         </div>
                     </div>
                     <span class="text-xs font-bold text-amber-400 group-hover:translate-x-1 transition-transform">➔</span>

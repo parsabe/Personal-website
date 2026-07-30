@@ -71,20 +71,21 @@
                 <div class="animate-page-slide-up">
                     <span
                         class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6 hover:scale-105 transition-transform">
-                        👋 HELLO!
+                        {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? '👋 HALLO!' : '👋 HELLO!' }}
                     </span>
 
                     <h1
                         class="text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
-                        I'm <span
+                        {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Ich bin' : "I'm" }} <span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-600 dark:from-orange-400 dark:to-pink-500">Parsa
                             Besharat.</span>
                     </h1>
 
                     <p
                         class="text-lg text-gray-800 dark:text-gray-200 leading-relaxed mb-10 font-medium drop-shadow-sm">
-                        I am a Persian AI Researcher, currently pursuing my
-                        MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.
+                        {{ (session('app_locale') === 'de' || app()->getLocale() === 'de')
+                            ? 'Ich bin ein persischer KI-Forscher und absolviere derzeit meinen Master in Data Science an der TU Freiberg in Sachsen, Deutschland.'
+                            : 'I am a Persian AI Researcher, currently pursuing my MS.c degree in Data Science at the TU Freiberg University in Sachsen, Germany.' }}
                     </p>
 
                     <div class="flex flex-wrap items-center gap-5">

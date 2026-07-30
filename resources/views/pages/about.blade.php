@@ -54,26 +54,36 @@
             <div class="relative z-10 animate-page-slide-up">
                 <div>
                     <span class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6">
-                        ABOUT ME
+                        {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'ÜBER MICH' : 'ABOUT ME' }}
                     </span>
 
                     <h1 class="text-4xl lg:text-5xl font-extrabold mb-6 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
                         Parsa <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-600 dark:from-orange-400 dark:to-pink-500">Besharat.</span>
                     </h1>
 
-                    <div class="text-base lg:text-lg text-gray-800 dark:text-gray-200 leading-relaxed mb-10 font-medium drop-shadow-sm space-y-4">
-                        <p>I am currently pursuing a Master's degree in Data Science at TU Freiberg, fueled by a deep passion for utilizing data to create impactful solutions.</p>
-                        <p>My journey has led me to a position as a Working Student Senior Software Engineer, where I am eager to apply my expertise and contribute to image-based data coordination.</p>
-                        <p>In addition, I have a strong interest in Artificial Intelligence and its vast potential. My goal is to specialize in this domain, leveraging my foundation in Data Science to uncover insights that enhance operational efficiency and drive strategic innovation.</p>
-                        <p>Bringing together Artificial Intelligence, Data Science, Software, and IT Engineering defines my professional vision. I believe that this interconnected approach is the key to developing groundbreaking solutions and making a lasting difference.</p>
-                        <p>I’d love to connect and explore new opportunities where data-driven insights lead to transformative possibilities!</p>
-                    </div>
+                    @if(session('app_locale') === 'de' || app()->getLocale() === 'de')
+                        <div class="text-base lg:text-lg text-gray-800 dark:text-gray-200 leading-relaxed mb-10 font-medium drop-shadow-sm space-y-4">
+                            <p>Ich absolviere derzeit ein Masterstudium in Data Science an der TU Freiberg, angetrieben von einer tiefen Leidenschaft für die Nutzung von Daten zur Erstellung wirkungsvoller Lösungen.</p>
+                            <p>Mein Weg hat mich zu einer Position als Werkstudent Senior Software Engineer geführt, wo ich mein Fachwissen einbringen und zur bildbasierten Datenkoordination beitragen möchte.</p>
+                            <p>Zusätzlich habe ich ein starkes Interesse an Künstlicher Intelligenz und ihrem immensen Potenzial. Mein Ziel ist es, mich in diesem Bereich zu spezialisieren und meine Grundlagen in Data Science zu nutzen, um Erkenntnisse zu gewinnen, die die betriebliche Effizienz steigern und strategische Innovationen vorantreiben.</p>
+                            <p>Die Zusammenführung von Künstlicher Intelligenz, Data Science, Software- und IT-Engineering definiert meine berufliche Vision. Ich glaube, dass dieser vernetzte Ansatz der Schlüssel zur Entwicklung bahnbrechender Lösungen und zur Erzielung nachhaltiger Wirkung ist.</p>
+                            <p>Ich freue mich darauf, mich zu vernetzen und neue Möglichkeiten zu erkunden, bei denen datengestützte Erkenntnisse zu transformativen Möglichkeiten führen!</p>
+                        </div>
+                    @else
+                        <div class="text-base lg:text-lg text-gray-800 dark:text-gray-200 leading-relaxed mb-10 font-medium drop-shadow-sm space-y-4">
+                            <p>I am currently pursuing a Master's degree in Data Science at TU Freiberg, fueled by a deep passion for utilizing data to create impactful solutions.</p>
+                            <p>My journey has led me to a position as a Working Student Senior Software Engineer, where I am eager to apply my expertise and contribute to image-based data coordination.</p>
+                            <p>In addition, I have a strong interest in Artificial Intelligence and its vast potential. My goal is to specialize in this domain, leveraging my foundation in Data Science to uncover insights that enhance operational efficiency and drive strategic innovation.</p>
+                            <p>Bringing together Artificial Intelligence, Data Science, Software, and IT Engineering defines my professional vision. I believe that this interconnected approach is the key to developing groundbreaking solutions and making a lasting difference.</p>
+                            <p>I’d love to connect and explore new opportunities where data-driven insights lead to transformative possibilities!</p>
+                        </div>
+                    @endif
 
                     <!-- Work Experience Section -->
                     <div id="work" class="mb-16">
                         <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
                             <span class="p-2 bg-orange-100 dark:bg-orange-900/40 rounded-lg text-orange-600 dark:text-orange-300 text-xl">💼</span>
-                            Work Experience
+                            {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Berufserfahrung' : 'Work Experience' }}
                         </h3>
 
                         <div class="relative border-l-2 border-gray-300 dark:border-gray-700 ml-3.5 space-y-12 pb-4">
