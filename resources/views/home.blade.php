@@ -260,12 +260,14 @@
                     });
                     const data = await res.json();
                     if (data.status === 'success') {
+                        if (window.showToast) window.showToast(data.message || 'Post published! (+15 Sandika CPs earned)', 'success');
                         if (document.getElementById('homePostContent')) document.getElementById('homePostContent').value = '';
                         if (document.getElementById('homePostMedia')) document.getElementById('homePostMedia').value = '';
                         if (document.getElementById('homeMediaName')) document.getElementById('homeMediaName').innerText = '';
                         fetchHomePublicFeed();
                     } else {
-                        alert(data.message || 'Error creating post.');
+                        if (window.showToast) window.showToast(data.message || 'Error creating post.', 'error');
+                        else alert(data.message || 'Error creating post.');
                     }
                 } catch (err) {
                     console.error(err);
@@ -274,11 +276,18 @@
 
             async function homeToggleAction(postId, action) {
                 try {
-                    await fetch(`/user/posts/${postId}/${action}`, {
+                    const res = await fetch(`/user/posts/${postId}/${action}`, {
                         method: 'POST',
                         headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' }
                     });
-                    fetchHomePublicFeed();
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        const label = action === 'like' ? (data.action === 'liked' ? 'Liked post! ❤️' : 'Unliked post')
+                                    : action === 'repost' ? (data.action === 'reposted' ? 'Reposted to your timeline! 🔁' : 'Removed repost')
+                                    : (data.action === 'bookmarked' ? 'Bookmarked post! 🔖' : 'Removed bookmark');
+                        if (window.showToast) window.showToast(label, 'info');
+                        fetchHomePublicFeed();
+                    }
                 } catch (e) {
                     console.error(e);
                 }
@@ -306,8 +315,21 @@
                     });
                     const data = await res.json();
                     if (data.status === 'success') {
+                        if (window.showToast) window.showToast('Comment published! 💬', 'info');
                         fetchHomePublicFeed();
                     }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            function sharePostLink(postId) {
+                const url = window.location.origin + '/#post-' + postId;
+                navigator.clipboard.writeText(url).then(() => {
+                    if (window.showToast) window.showToast('Post link copied to clipboard! 🔗', 'info');
+                    else alert('Link copied!');
+                });
+            }
                 } catch (e) {
                     console.error(e);
                 }

@@ -668,14 +668,19 @@ export function playNotificationSound() {
     } catch (e) {}
 }
 
-export function showToastNotification(msg) {
-    const toast = document.getElementById('toastNotification');
-    if (!toast) return;
-    document.getElementById('toastAvatar').src = msg.avatar_url;
-    document.getElementById('toastSender').innerText = msg.sender_name;
-    document.getElementById('toastMessage').innerText = msg.message || (msg.type + ' attachment');
-    toast.classList.remove('hidden');
-    setTimeout(hideToastNotification, 4500);
+export function showToastNotification(msg, type = 'success') {
+    const messageText = typeof msg === 'string' ? msg : (msg.message || (msg.type ? msg.type + ' attachment' : 'Notification received'));
+    if (window.showToast) {
+        window.showToast(messageText, type);
+    } else {
+        const toast = document.getElementById('toastNotification');
+        if (!toast) return;
+        if (msg.avatar_url && document.getElementById('toastAvatar')) document.getElementById('toastAvatar').src = msg.avatar_url;
+        if (msg.sender_name && document.getElementById('toastSender')) document.getElementById('toastSender').innerText = msg.sender_name;
+        if (document.getElementById('toastMessage')) document.getElementById('toastMessage').innerText = messageText;
+        toast.classList.remove('hidden');
+        setTimeout(hideToastNotification, 4500);
+    }
 }
 
 export function hideToastNotification() {

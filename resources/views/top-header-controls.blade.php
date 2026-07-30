@@ -30,3 +30,6 @@
         <div class="mac-dot-green w-3 h-3 rounded-full bg-[#27c93f] shadow-sm border border-[#1aab29] cursor-pointer hover:opacity-80 transition transform hover:scale-110" title="Maximize Window"></div>
     </div>
 </div>
+
+<!-- GLOBAL REACT-TOASTIFY NOTIFICATION AUDIO & VISUAL ENGINE -->
+<script type="module" src="{{ asset('js/toast-notifications.js') }}"></script>
