@@ -73,15 +73,19 @@ class BlogController extends Controller
      */
     public function showArticle($slug)
     {
-        $viewName = 'pages.publications.articles.' . $slug;
-        if (view()->exists($viewName)) {
-            return view($viewName);
-        }
-
         $post = BlogPost::with('author')
             ->where('slug', $slug)
             ->where('is_published', true)
             ->firstOrFail();
+
+        $viewName = 'pages.publications.articles.' . $slug;
+        if (!view()->exists($viewName)) {
+            $this->generateArticleBladeFile($post);
+        }
+
+        if (view()->exists($viewName)) {
+            return view($viewName);
+        }
 
         return view('pages.blog_show', compact('post'));
     }

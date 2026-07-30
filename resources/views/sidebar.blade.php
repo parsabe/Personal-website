@@ -62,7 +62,7 @@
                 ];
 
                 $accountItems = [];
-                $accountItems[] = ['name' => 'Profile Settings', 'route' => 'chat', 'icon' => '⚙️', 'query' => 'action=profile'];
+                $accountItems[] = ['name' => 'My Profile', 'route' => 'chat', 'icon' => '👤', 'query' => 'action=profile'];
                 if (auth()->user()->email === 'parsabe99@gmail.com') {
                     $accountItems[] = ['name' => 'Parsa Dashboard', 'route' => 'parsa.dashboard', 'icon' => '🔒'];
                 }
@@ -84,7 +84,7 @@
                 'MAIN & PERSONAL' => 'HAUPTMENÜ & PERSÖNLICHES',
                 'SERVICES & PORTALS' => 'DIENSTE & PORTALE',
                 'ACCOUNT & CONTROL' => 'KONTO & STEUERUNG',
-                'Profile Settings' => 'Profil-Einstellungen',
+                'My Profile' => 'Mein Profil',
                 'Parsa Dashboard' => 'Parsa Dashboard',
                 'Services Locked' => 'Dienste Gesperrt',
                 'Login / Sign Up to see services' => 'Anmelden um Dienste zu sehen',

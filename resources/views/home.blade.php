@@ -109,31 +109,39 @@
                         <div class="w-full bg-black/60 backdrop-blur-md border border-white/15 rounded-3xl p-5 shadow-2xl space-y-4 text-xs font-sans text-white">
                             <div class="flex items-center justify-between border-b border-white/10 pb-3">
                                 <h3 class="font-bold text-sm text-white flex items-center gap-2">
-                                    <span>🐦 Community Timeline & Quick Post</span>
+                                    <span>🐦 {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Community-Zeitleiste & Beiträge' : 'Community Timeline & Feed' }}</span>
                                 </h3>
-                                <span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Feed
-                                </span>
+                                <button type="button" onclick="toggleHomeCreatePostTools()" class="px-3.5 py-1.5 bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-400 hover:to-pink-500 text-white font-bold rounded-xl text-xs shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center gap-1.5">
+                                    <span>➕</span>
+                                    <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Beitrag Erstellen' : 'Create Post' }}</span>
+                                </button>
                             </div>
 
-                            <!-- QUICK POST FORM -->
+                            <!-- QUICK POST FORM WITH FULL TOOLBAR -->
                             <form id="homeQuickPostForm" onsubmit="submitHomePost(event)" class="space-y-3">
-                                <textarea id="homePostContent" rows="2" placeholder="Share a thoughts, photo, video, or update..." 
+                                <textarea id="homePostContent" rows="2.5" placeholder="{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Teile Gedanken, Fotos, Videos oder Veröffentlichungen...' : 'Share thoughts, photos, videos, or updates...' }}" 
                                     class="w-full bg-white/5 border border-white/15 rounded-2xl p-3 text-white text-xs placeholder-gray-400 focus:outline-none focus:border-pink-500 resize-none font-sans"></textarea>
                                 
-                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div id="homeCreatePostTools" class="flex flex-wrap items-center justify-between gap-2 pt-1">
                                     <div class="flex items-center gap-2">
                                         <label class="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-gray-200 rounded-xl text-[11px] font-semibold cursor-pointer transition flex items-center gap-1">
-                                            <span>📷 Photo / Video</span>
+                                            <span>📷 {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Foto / Video' : 'Photo / Video' }}</span>
                                             <input type="file" id="homePostMedia" accept="image/*,video/*" class="hidden" onchange="document.getElementById('homeMediaName').innerText = this.files[0]?.name || ''">
                                         </label>
                                         <span id="homeMediaName" class="text-[10px] text-amber-400 font-mono truncate max-w-[100px]"></span>
                                     </div>
 
                                     <div class="flex items-center gap-2">
+                                        <select id="homePostPrivacy" class="bg-black/60 border border-white/20 rounded-xl px-2 py-1 text-[10px] text-gray-300 font-mono focus:outline-none">
+                                            <option value="public">🌐 {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Öffentlich' : 'Public' }}</option>
+                                            <option value="followers">👥 {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Nur Follower' : 'Followers Only' }}</option>
+                                            <option value="private">🔒 {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Privat' : 'Private' }}</option>
+                                        </select>
+
                                         <input type="datetime-local" id="homePostScheduledAt" title="Optional Scheduled Release" class="bg-black/50 border border-white/20 rounded-xl px-2 py-1 text-[10px] text-gray-300 font-mono">
+                                        
                                         <button type="submit" class="px-5 py-1.5 bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-400 hover:to-pink-500 text-white font-bold rounded-xl text-xs shadow-lg transition transform active:scale-95">
-                                            Post ➔
+                                            {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Veröffentlichen ➔' : 'Post ➔' }}
                                         </button>
                                     </div>
                                 </div>
@@ -153,6 +161,15 @@
             document.addEventListener('DOMContentLoaded', () => {
                 fetchHomePublicFeed();
             });
+
+            function toggleHomeCreatePostTools() {
+                const tools = document.getElementById('homeCreatePostTools');
+                const input = document.getElementById('homePostContent');
+                if (input) input.focus();
+                if (tools) {
+                    tools.classList.remove('hidden');
+                }
+            }
 
             async function fetchHomePublicFeed() {
                 const stream = document.getElementById('homeLiveFeedStream');
