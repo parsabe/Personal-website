@@ -57,9 +57,20 @@
                                 </span>
                                 <span class="text-xs text-gray-400">by <strong class="text-white">{{ $post->author->name ?? 'Parsa Besharat' }}</strong></span>
                             </div>
-                            <h2 class="text-lg font-bold text-white tracking-wide">{{ $post->title }}</h2>
+                            <a href="/publications/articles/{{ $post->slug }}" class="group/title block">
+                                <h2 class="text-lg font-bold text-white tracking-wide group-hover/title:text-indigo-400 transition-colors flex items-center gap-2">
+                                    <span>{{ $post->title }}</span>
+                                    <span class="text-xs text-indigo-400 opacity-0 group-hover/title:opacity-100 transition-opacity">➔</span>
+                                </h2>
+                            </a>
                             <div class="blog-content text-xs text-slate-300 line-clamp-3">
                                 {!! $post->content !!}
+                            </div>
+                            <div class="pt-2">
+                                <a href="/publications/articles/{{ $post->slug }}" class="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-400 hover:text-indigo-300 transition">
+                                    <span>Read Full Article</span>
+                                    <span>➔</span>
+                                </a>
                             </div>
                         </div>
                     </article>
@@ -113,6 +124,7 @@
                             <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-mono" data-cmd="formatBlock" data-val="h2">H2</button>
                             <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-mono" data-cmd="formatBlock" data-val="h3">H3</button>
                             <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs" data-cmd="insertUnorderedList">• Bullet List</button>
+                            <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs" data-cmd="insertTable">📊 Insert Table</button>
                             <button type="button" class="rich-tool-btn px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs" data-cmd="createLink">🔗 Link</button>
                         </div>
                     </div>

@@ -40,3 +40,57 @@
     font-family: monospace;
     color: #ec4899;
 }
+
+/* Lists & Bullet Points Styling */
+#rich-editor-area ul, .blog-content ul {
+    list-style-type: disc !important;
+    margin-left: 1.5rem !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    padding-left: 0.5rem !important;
+}
+
+#rich-editor-area ol, .blog-content ol {
+    list-style-type: decimal !important;
+    margin-left: 1.5rem !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    padding-left: 0.5rem !important;
+}
+
+#rich-editor-area li, .blog-content li {
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+    color: #cbd5e1 !important;
+}
+
+/* Responsive Table Styling */
+#rich-editor-area table, .blog-content table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+    border-radius: 0.75rem !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+#rich-editor-area th, .blog-content th {
+    background: rgba(79, 70, 229, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 0.75rem 1rem !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    text-align: left !important;
+}
+
+#rich-editor-area td, .blog-content td {
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 0.6rem 0.85rem !important;
+    color: #e2e8f0 !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+}
+
+#rich-editor-area tr:hover td, .blog-content tr:hover td {
+    background: rgba(255, 255, 255, 0.05) !important;
+}

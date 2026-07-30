@@ -55,6 +55,7 @@ Route::post('/nigma/solve', [App\Http\Controllers\NigmaController::class, 'solve
 // Rich Text Blog Routes
 Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog');
 Route::post('/blog', [App\Http\Controllers\BlogController::class, 'store'])->name('blog.store');
+Route::get('/publications/articles/{slug}', [App\Http\Controllers\BlogController::class, 'showArticle'])->name('publications.article.show');
 
     Route::get('/search', [App\Http\Controllers\SearchController::class, 'index'])->name('search');
 
