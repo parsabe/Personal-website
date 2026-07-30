@@ -308,6 +308,44 @@ class ChatController extends Controller
             }
         }
 
+        // Handle Batch Multiple Avatars Upload
+        if ($request->hasFile('multiple_avatars')) {
+            $uploadDir = public_path('uploads/avatars');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            foreach ($request->file('multiple_avatars') as $file) {
+                $filename = 'avatar_' . $user->id . '_' . time() . '_' . rand(1000, 9999) . '.' . $file->getClientOriginalExtension();
+                $file->move($uploadDir, $filename);
+                $path = 'uploads/avatars/' . $filename;
+                if (!in_array($path, $avatarsGallery)) {
+                    $avatarsGallery[] = $path;
+                }
+            }
+            if (empty($user->avatar) && count($avatarsGallery) > 0) {
+                $user->avatar = $avatarsGallery[0];
+            }
+        }
+
+        // Handle Batch Multiple Headers Upload
+        if ($request->hasFile('multiple_headers')) {
+            $uploadDir = public_path('uploads/headers');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            foreach ($request->file('multiple_headers') as $file) {
+                $filename = 'header_' . $user->id . '_' . time() . '_' . rand(1000, 9999) . '.' . $file->getClientOriginalExtension();
+                $file->move($uploadDir, $filename);
+                $path = 'uploads/headers/' . $filename;
+                if (!in_array($path, $headersGallery)) {
+                    $headersGallery[] = $path;
+                }
+            }
+            if (empty($user->header_banner) && count($headersGallery) > 0) {
+                $user->header_banner = $headersGallery[0];
+            }
+        }
+
         $user->avatars_gallery = array_values(array_unique($avatarsGallery));
         $user->headers_gallery = array_values(array_unique($headersGallery));
 
@@ -812,6 +850,16 @@ class ChatController extends Controller
                 return $this->formatPostArray($p, $currentUserId);
             });
 
+        $avatarsGallery = is_array($user->avatars_gallery) ? array_map(fn($p) => asset($p), $user->avatars_gallery) : [];
+        if ($user->avatar && !in_array(asset($user->avatar), $avatarsGallery)) {
+            array_unshift($avatarsGallery, asset($user->avatar));
+        }
+
+        $headersGallery = is_array($user->headers_gallery) ? array_map(fn($p) => asset($p), $user->headers_gallery) : [];
+        if ($user->header_banner && !in_array(asset($user->header_banner), $headersGallery)) {
+            array_unshift($headersGallery, asset($user->header_banner));
+        }
+
         return response()->json([
             'status' => 'success',
             'user' => [
@@ -819,6 +867,11 @@ class ChatController extends Controller
                 'name' => $user->name,
                 'username' => $user->username,
                 'avatar_url' => $user->avatar ? asset($user->avatar) : asset('images/profile.jpg'),
+                'header_url' => $user->header_banner ? asset($user->header_banner) : null,
+                'avatars_gallery' => array_values(array_unique($avatarsGallery)),
+                'headers_gallery' => array_values(array_unique($headersGallery)),
+                'bio' => $user->bio,
+                'social_links' => $user->social_links,
             ],
             'posts' => array_values($posts->toArray())
         ]);

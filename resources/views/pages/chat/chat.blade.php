@@ -280,9 +280,13 @@
                         }
                     @endphp
                     <div class="space-y-1.5 pt-2 border-t border-white/10">
-                        <label class="block font-bold text-gray-300 flex items-center justify-between">
-                            <span>🖼️ My Profile Avatars Gallery ({{ count($avatarsGallery) }})</span>
-                        </label>
+                        <div class="flex items-center justify-between">
+                            <label class="font-bold text-gray-300">🖼️ My Profile Avatars Gallery ({{ count($avatarsGallery) }})</label>
+                            <label class="px-2.5 py-1 bg-blue-600/40 hover:bg-blue-600 border border-blue-500/40 text-blue-200 hover:text-white rounded-lg text-[10px] font-bold cursor-pointer transition">
+                                + Batch Add Avatars
+                                <input type="file" name="multiple_avatars[]" multiple accept="image/*" onchange="document.getElementById('profileForm').requestSubmit()" class="hidden">
+                            </label>
+                        </div>
                         @if(count($avatarsGallery) > 0)
                             <div class="flex flex-wrap gap-2 pt-1 max-h-24 overflow-y-auto chat-scroll">
                                 @foreach($avatarsGallery as $avPath)
@@ -305,9 +309,13 @@
                         }
                     @endphp
                     <div class="space-y-1.5 pt-2 border-t border-white/10">
-                        <label class="block font-bold text-gray-300 flex items-center justify-between">
-                            <span>🌄 My Cover Headers Gallery ({{ count($headersGallery) }})</span>
-                        </label>
+                        <div class="flex items-center justify-between">
+                            <label class="font-bold text-gray-300">🌄 My Cover Headers Gallery ({{ count($headersGallery) }})</label>
+                            <label class="px-2.5 py-1 bg-indigo-600/40 hover:bg-indigo-600 border border-indigo-500/40 text-indigo-200 hover:text-white rounded-lg text-[10px] font-bold cursor-pointer transition">
+                                + Batch Add Headers
+                                <input type="file" name="multiple_headers[]" multiple accept="image/*" onchange="document.getElementById('profileForm').requestSubmit()" class="hidden">
+                            </label>
+                        </div>
                         @if(count($headersGallery) > 0)
                             <div class="flex flex-wrap gap-2 pt-1 max-h-24 overflow-y-auto chat-scroll">
                                 @foreach($headersGallery as $headPath)
