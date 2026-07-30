@@ -41,9 +41,22 @@
                     <p class="text-xs text-gray-400 max-w-sm mb-6 font-medium">Guest access is disabled. Please log in or create an account with 2FA protection to access Sandika ranks and tools.</p>
 
                     <div class="w-full max-w-md bg-black/40 p-6 rounded-3xl border border-white/15 shadow-2xl backdrop-blur-xl">
-                        <div class="flex rounded-2xl bg-white/5 p-1 mb-5 text-xs font-semibold">
+                        <div class="flex rounded-2xl bg-white/5 p-1 mb-3 text-xs font-semibold">
                             <button id="gateLoginTab" onclick="switchGateTab('login')" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white shadow-md">Log In</button>
                             <button id="gateRegisterTab" onclick="switchGateTab('register')" class="flex-1 py-2.5 rounded-xl text-gray-400">Sign Up</button>
+                        </div>
+
+                        <!-- SOCIAL OAUTH BUTTONS -->
+                        <div class="grid grid-cols-3 gap-1.5 mb-3">
+                            <a href="{{ route('social.redirect', 'google') }}" class="py-2 bg-white/10 hover:bg-white/20 border border-white/15 rounded-xl flex items-center justify-center gap-1 text-[11px] font-bold text-white transition">
+                                <span>🌐</span> Google
+                            </a>
+                            <a href="{{ route('social.redirect', 'facebook') }}" class="py-2 bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/30 rounded-xl flex items-center justify-center gap-1 text-[11px] font-bold text-blue-200 transition">
+                                <span>📘</span> Facebook
+                            </a>
+                            <a href="{{ route('social.redirect', 'apple') }}" class="py-2 bg-black/60 hover:bg-black/80 border border-white/25 rounded-xl flex items-center justify-center gap-1 text-[11px] font-bold text-white transition">
+                                <span>🍎</span> Apple
+                            </a>
                         </div>
 
                         <form id="gateLoginForm" method="POST" action="{{ route('login') }}" class="space-y-3.5 text-left text-xs">

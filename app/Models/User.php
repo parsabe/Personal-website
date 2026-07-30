@@ -36,6 +36,8 @@ class User extends Authenticatable
         'story_privacy',
         'bio',
         'social_links',
+        'provider_name',
+        'provider_id',
         'deleted_reason',
         'deleted_custom_reason',
     ];
