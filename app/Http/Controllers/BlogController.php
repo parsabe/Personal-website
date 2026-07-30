@@ -39,7 +39,14 @@ class BlogController extends Controller
 
         $coverPath = null;
         if ($request->hasFile('cover_image')) {
-            $coverPath = '/storage/' . $request->file('cover_image')->store('blog_covers', 'public');
+            $file = $request->file('cover_image');
+            $uploadDir = public_path('uploads/blog_covers');
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            $filename = 'cover_' . time() . '_' . Str::random(6) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $filename);
+            $coverPath = '/uploads/blog_covers/' . $filename;
         }
 
         $title = $request->input('title');
