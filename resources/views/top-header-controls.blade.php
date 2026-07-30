@@ -47,3 +47,9 @@
 
 <!-- GLOBAL REACT-TOASTIFY NOTIFICATION AUDIO & VISUAL ENGINE -->
 <script type="module" src="{{ asset('js/toast-notifications.js') }}"></script>
+
+<!-- SMART GERMAN TRANSLATOR ENGINE -->
+<script>
+    window.APP_LOCALE = "{{ session('app_locale', app()->getLocale()) }}";
+</script>
+<script type="module" src="{{ asset('js/german-translator.js') }}"></script>
