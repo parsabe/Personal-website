@@ -17,6 +17,14 @@ Route::get('/generate-sitemap', function () {
 // Independent Routes & Closures
 // ==========================================
 
+// Language Switcher Route (EN / DE)
+Route::get('/lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'de'])) {
+        session(['app_locale' => $locale]);
+    }
+    return back();
+})->name('lang.switch');
+
 // Contact Form Routes (Moved here so ContactController handles them)
 Route::get('/contact', [ContactController::class, 'index'])->name('contact'); // Re-added the name('contact') so your navbar doesn't break!
 Route::post('/contact', [ContactController::class, 'store']);

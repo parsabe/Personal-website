@@ -19,6 +19,20 @@
         </a>
     @endauth
 
+    <!-- LANGUAGE SWITCHER (EN / DE) -->
+    @php
+        $currentLocale = session('app_locale', app()->getLocale());
+    @endphp
+    @if($currentLocale === 'de')
+        <a href="{{ route('lang.switch', 'en') }}" class="px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-[11px] font-bold shadow-sm transition transform hover:scale-105" title="Switch to English (EN)">
+            🇬🇧 EN
+        </a>
+    @else
+        <a href="{{ route('lang.switch', 'de') }}" class="px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-[11px] font-bold shadow-sm transition transform hover:scale-105" title="Auf Deutsch wechseln (DE)">
+            🇩🇪 DE
+        </a>
+    @endif
+
     <button id="theme-toggle" class="p-1.5 rounded-full ios-glass transition hover:scale-110" title="Toggle Light / Dark Theme">
         <span id="theme-icon-light" class="hidden text-xs">☀️</span>
         <span id="theme-icon-dark" class="hidden text-xs">🌙</span>
