@@ -36,9 +36,9 @@
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                            {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'PARSABE BLOG & FORSCHUNGSCHRONIK' : 'PARSABE BLOG & RESEARCH CHRONICLES' }}
+                            {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'PARSABE JOURNALE & FORSCHUNGSCHRONIK' : 'PARSABE JOURNALS & RESEARCH CHRONICLES' }}
                         </h1>
-                        <p class="text-xs text-gray-400">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Rich-Text-Veröffentlichung, Technische KI-Einblicke & Artikel' : 'Rich Text Publishing, Technical AI Insights & Articles' }}</p>
+                        <p class="text-xs text-gray-400">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Rich-Text-Veröffentlichung, Technische KI-Einblicke & Journale' : 'Rich Text Publishing, Technical AI Insights & Journals' }}</p>
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
                             </div>
                             <div class="pt-2">
                                 <a href="/publications/articles/{{ $post->slug }}" class="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-400 hover:text-indigo-300 transition">
-                                    <span>Read Full Article</span>
+                                    <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Vollständiges Journal lesen' : 'Read Full Journal' }}</span>
                                     <span>➔</span>
                                 </a>
                             </div>

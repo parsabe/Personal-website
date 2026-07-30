@@ -11,8 +11,22 @@
         <!-- JS renders chat member avatars & red unread badges -->
     </div>
 
-    <!-- Separator line -->
-    <div class="h-6 w-[1px] bg-white/20 mx-1"></div>
+    <!-- CENTRAL ACTION BUTTONS (CREATE POST & WRITE JOURNAL) -->
+    @if(Auth::check())
+        <div class="flex items-center gap-2 border-x border-white/15 px-2">
+            <button onclick="window.openGlobalCreatePostModal ? window.openGlobalCreatePostModal() : (window.location.href='/#create-post')" 
+                class="px-3.5 py-1.5 bg-gradient-to-r from-orange-500 via-rose-600 to-pink-600 hover:from-orange-400 hover:to-pink-500 text-white font-bold rounded-full text-xs shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center gap-1.5 border border-white/20">
+                <span>➕</span>
+                <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Beitrag Erstellen' : 'Create Post' }}</span>
+            </button>
+
+            <a href="/blog?action=write" 
+                class="px-3.5 py-1.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-full text-xs shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center gap-1.5 border border-white/20">
+                <span>✍️</span>
+                <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Journal Schreiben' : 'Write Journal' }}</span>
+            </a>
+        </div>
+    @endif
 
     <!-- Restore Window Trigger -->
     <button onclick="window.restoreMacWindow && window.restoreMacWindow()" title="Restore / Focus Active Window"

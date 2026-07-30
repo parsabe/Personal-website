@@ -247,7 +247,36 @@ class ChatController extends Controller
     }
 
     /**
-     * Update user profile settings.
+     * Dedicated Standalone User Profile Page View.
+     */
+    public function myProfilePage()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please log in to view your profile.');
+        }
+
+        $user = Auth::user();
+        $posts = UserPost::where('user_id', $user->id)
+            ->published()
+            ->with(['user', 'comments.user'])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($p) use ($user) {
+                return $this->formatPostArray($p, $user->id);
+            });
+
+        $articles = \App\Models\BlogPost::where('author_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $followersCount = UserFollow::where('following_id', $user->id)->count();
+        $followingCount = UserFollow::where('follower_id', $user->id)->count();
+
+        return view('pages.user_profile', compact('user', 'posts', 'articles', 'followersCount', 'followingCount'));
+    }
+
+    /**
+     * Update user profile settings (name, username, bio, avatars gallery, headers gallery, theme).
      */
     public function updateProfile(Request $request)
     {

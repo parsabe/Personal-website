@@ -62,7 +62,7 @@
                 ];
 
                 $accountItems = [];
-                $accountItems[] = ['name' => 'My Profile', 'route' => 'chat', 'icon' => '👤', 'query' => 'action=profile'];
+                $accountItems[] = ['name' => 'My Profile', 'route' => 'user.profile.show', 'icon' => '👤'];
                 if (auth()->user()->email === 'parsabe99@gmail.com') {
                     $accountItems[] = ['name' => 'Parsa Dashboard', 'route' => 'parsa.dashboard', 'icon' => '🔒'];
                 }
