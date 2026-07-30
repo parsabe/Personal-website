@@ -142,6 +142,8 @@ Route::middleware('auth')->group(function () {
     // Instagram Story Archive & Highlights Routes
     Route::get('/user/stories/archive', [App\Http\Controllers\ChatController::class, 'fetchStoryArchive'])->name('user.stories.archive');
     Route::post('/user/stories/{id}/highlight', [App\Http\Controllers\ChatController::class, 'toggleStoryHighlight'])->name('user.stories.highlight');
+    Route::post('/user/story-archives/create', [App\Http\Controllers\ChatController::class, 'createStoryArchive'])->name('user.story-archives.create');
+    Route::post('/user/story-archives/{id}/delete', [App\Http\Controllers\ChatController::class, 'deleteStoryArchive'])->name('user.story-archives.delete');
 
     // Twitter/X User Profile Posts Routes
     Route::post('/user/posts/create', [App\Http\Controllers\ChatController::class, 'createUserPost'])->name('user.posts.create');

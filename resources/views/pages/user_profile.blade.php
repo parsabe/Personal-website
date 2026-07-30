@@ -90,7 +90,40 @@
                                 <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $followingCount }}</strong> Following</span>
                             </button>
                         </div>
+            <!-- INSTAGRAM STORY HIGHLIGHTS & ARCHIVES TRAY -->
+            <div class="p-5 rounded-3xl bg-black/40 border border-white/10 space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-xs text-white flex items-center gap-2">
+                        <span>📸 {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Story-Archive & Highlights' : 'Story Archives & Highlights' }} ({{ count($archives) }})</span>
+                    </h3>
+                    <button onclick="openCreateArchiveModal()" class="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-white font-bold rounded-xl text-[11px] shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center gap-1 border border-white/20">
+                        <span>➕</span>
+                        <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Neues Archiv' : 'New Archive' }}</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center space-x-4 overflow-x-auto pb-2 chat-scroll">
+                    <!-- + NEW ARCHIVE BUBBLE -->
+                    <div onclick="openCreateArchiveModal()" class="flex flex-col items-center space-y-1 cursor-pointer shrink-0 group">
+                        <div class="w-16 h-16 rounded-full border-2 border-dashed border-white/30 hover:border-pink-500 flex items-center justify-center bg-white/5 group-hover:bg-pink-500/20 transition">
+                            <span class="text-xl text-gray-300 group-hover:text-white font-bold">+</span>
+                        </div>
+                        <span class="text-[11px] font-semibold text-gray-400 group-hover:text-white transition">New</span>
                     </div>
+
+                    @forelse($archives as $arc)
+                        <div onclick="viewStoryArchive({{ json_encode($arc) }})" class="flex flex-col items-center space-y-1 cursor-pointer shrink-0 group relative">
+                            <div class="p-[2px] rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shadow-md group-hover:scale-105 transition">
+                                <img src="{{ asset($arc->cover_image) }}" class="w-16 h-16 rounded-full object-cover border-2 border-gray-900">
+                            </div>
+                            <span class="text-[11px] font-semibold text-gray-200 truncate max-w-[70px]">{{ $arc->title }}</span>
+                            <button onclick="event.stopPropagation(); deleteStoryArchive({{ $arc->id }})" title="Delete Archive" class="absolute -top-1 -right-1 w-5 h-5 bg-rose-600 hover:bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow">✕</button>
+                        </div>
+                    @empty
+                        <div class="flex-1 py-3 text-center text-xs text-gray-400 font-mono italic bg-white/5 rounded-2xl border border-white/10">
+                            No Story Archives created yet. Click "New Archive" to create your first Instagram-style Story Highlight!
+                        </div>
+                    @endforelse
                 </div>
             </div>
 
@@ -520,6 +553,143 @@
                 }
             } catch (e) { console.error(e); }
         }
+
+        function openCreateArchiveModal() {
+            document.getElementById('createArchiveModal').classList.remove('hidden');
+        }
+        function closeCreateArchiveModal() {
+            document.getElementById('createArchiveModal').classList.add('hidden');
+        }
+        function closeViewArchiveModal() {
+            document.getElementById('viewArchiveModal').classList.add('hidden');
+        }
+
+        async function submitCreateArchive(e) {
+            e.preventDefault();
+            const form = document.getElementById('createArchiveForm');
+            const formData = new FormData(form);
+
+            try {
+                const res = await fetch('/user/story-archives/create', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    if (window.showToast) window.showToast(data.message || 'Story Archive Highlight created!', 'success');
+                    closeCreateArchiveModal();
+                    location.reload();
+                } else {
+                    if (window.showToast) window.showToast(data.message || 'Error creating archive.', 'error');
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        function viewStoryArchive(arc) {
+            if (!arc) return;
+            document.getElementById('archiveViewerTitle').innerText = arc.title || 'Story Archive';
+            document.getElementById('archiveViewerCover').src = arc.cover_image ? '/' + arc.cover_image.replace(/^\//, '') : '/images/profile.jpg';
+            
+            const container = document.getElementById('archiveViewerMediaContainer');
+            const items = arc.story_items || [];
+            document.getElementById('archiveViewerCount').innerText = `${items.length} Story Media Items`;
+
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-6 space-y-2">
+                        <img src="/${arc.cover_image}" class="w-full max-h-64 object-cover rounded-2xl border border-white/10 shadow-md">
+                        <p class="text-xs text-gray-300 font-bold">${arc.title}</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = items.map(item => `
+                    <div class="rounded-2xl overflow-hidden border border-white/10 shadow-md">
+                        ${item.type === 'video' ? `<video src="/${item.url}" controls class="w-full max-h-72 rounded-2xl"></video>` : `<img src="/${item.url}" class="w-full max-h-72 object-cover rounded-2xl">`}
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('viewArchiveModal').classList.remove('hidden');
+        }
+
+        async function deleteStoryArchive(id) {
+            if (!confirm('Are you sure you want to delete this Story Archive?')) return;
+            try {
+                const res = await fetch(`/user/story-archives/${id}/delete`, {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') }
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    if (window.showToast) window.showToast('Story Archive deleted.', 'success');
+                    location.reload();
+                }
+            } catch (e) { console.error(e); }
+        }
     </script>
+
+    <!-- CREATE STORY ARCHIVE MODAL -->
+    <div id="createArchiveModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-md shadow-2xl text-xs space-y-4 animate-scale-up">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <span>📸 {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Story-Archiv Highlight Erstellen' : 'Create Story Archive Highlight' }}</span>
+                </h3>
+                <button onclick="closeCreateArchiveModal()" class="text-gray-400 hover:text-white text-base font-bold">✕</button>
+            </div>
+
+            <form id="createArchiveForm" onsubmit="submitCreateArchive(event)" class="space-y-4">
+                @csrf
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1">Archive Title</label>
+                    <input type="text" name="title" required placeholder="e.g. Travels ✈️, AI Research 🤖, Memories..." class="w-full bg-black/50 border border-white/20 rounded-xl px-3.5 py-2 text-white text-xs focus:outline-none focus:border-pink-500">
+                </div>
+
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1">Cover Thumbnail Image (Optional)</label>
+                    <input type="file" name="cover_image" accept="image/*" class="w-full text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-600/30 file:text-pink-300 hover:file:bg-pink-600/50">
+                </div>
+
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1">Story Photos / Videos (Multiple)</label>
+                    <input type="file" name="multiple_media[]" multiple accept="image/*,video/*" class="w-full text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600/30 file:text-indigo-300 hover:file:bg-indigo-600/50">
+                </div>
+
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1">Visibility</label>
+                    <select name="visibility" class="w-full bg-black/50 border border-white/20 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-pink-500">
+                        <option value="public">🌐 Public (Everyone)</option>
+                        <option value="private">🔒 Private (Only Me)</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 pt-3 border-t border-white/10">
+                    <button type="button" onclick="closeCreateArchiveModal()" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-xl font-semibold">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:opacity-90 transition">Create Archive</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- VIEW STORY ARCHIVE MODAL -->
+    <div id="viewArchiveModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-lg shadow-2xl text-xs space-y-4 animate-scale-up relative">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div class="flex items-center space-x-3">
+                    <img id="archiveViewerCover" src="{{ asset('images/profile.jpg') }}" class="w-9 h-9 rounded-full border border-pink-500 object-cover">
+                    <div>
+                        <h3 id="archiveViewerTitle" class="text-sm font-bold text-white">Archive Title</h3>
+                        <p id="archiveViewerCount" class="text-[10px] text-gray-400 font-mono">0 Story Media Items</p>
+                    </div>
+                </div>
+                <button onclick="closeViewArchiveModal()" class="text-gray-400 hover:text-white text-base font-bold">✕</button>
+            </div>
+
+            <div id="archiveViewerMediaContainer" class="w-full max-h-[60vh] overflow-y-auto chat-scroll space-y-3 p-2 bg-black/60 rounded-2xl border border-white/10">
+                <p class="text-center text-gray-400 italic py-6">No media in this archive.</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

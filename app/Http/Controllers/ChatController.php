@@ -272,7 +272,77 @@ class ChatController extends Controller
         $followersCount = UserFollow::where('following_id', $user->id)->count();
         $followingCount = UserFollow::where('follower_id', $user->id)->count();
 
-        return view('pages.user_profile', compact('user', 'posts', 'articles', 'followersCount', 'followingCount'));
+        $archives = \App\Models\UserStoryArchive::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('pages.user_profile', compact('user', 'posts', 'articles', 'followersCount', 'followingCount', 'archives'));
+    }
+
+    /**
+     * Create a new Instagram-style Story Archive Highlight.
+     */
+    public function createStoryArchive(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'title' => 'required|string|max:100',
+        ]);
+
+        $coverImagePath = null;
+        if ($request->hasFile('cover_image')) {
+            $file = $request->file('cover_image');
+            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/story_archives/'), $filename);
+            $coverImagePath = 'uploads/story_archives/' . $filename;
+        }
+
+        $storyItems = [];
+        if ($request->hasFile('multiple_media')) {
+            foreach ($request->file('multiple_media') as $mediaFile) {
+                $mName = time() . '_' . uniqid() . '.' . $mediaFile->getClientOriginalExtension();
+                $mediaFile->move(public_path('uploads/story_archives/'), $mName);
+                $storyItems[] = [
+                    'url' => 'uploads/story_archives/' . $mName,
+                    'type' => str_starts_with($mediaFile->getMimeType(), 'video') ? 'video' : 'image'
+                ];
+            }
+        }
+
+        if (!$coverImagePath && count($storyItems) > 0) {
+            $coverImagePath = $storyItems[0]['url'];
+        }
+
+        $archive = \App\Models\UserStoryArchive::create([
+            'user_id' => $user->id,
+            'title' => $request->input('title'),
+            'cover_image' => $coverImagePath ?: 'images/profile.jpg',
+            'visibility' => $request->input('visibility', 'public'),
+            'story_items' => $storyItems,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Story Archive Highlight created!',
+            'archive' => $archive
+        ]);
+    }
+
+    /**
+     * Delete a Story Archive Highlight.
+     */
+    public function deleteStoryArchive($id)
+    {
+        $archive = \App\Models\UserStoryArchive::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $archive->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Story Archive deleted successfully.'
+        ]);
     }
 
     /**
