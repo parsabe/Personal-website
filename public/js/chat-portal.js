@@ -28,6 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
             fetchMessages();
         }, 2500);
     }
+
+    // Auto-open Profile Settings modal if action=profile in query params
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('action') === 'profile') {
+        const profileModal = document.getElementById('profileModal');
+        if (profileModal) {
+            profileModal.classList.remove('hidden');
+        }
+    }
 });
 
 // Select Recipient User Function (Switches to Direct Chat Screen)

@@ -21,26 +21,15 @@
 <body data-authenticated="{{ $authenticated ? 'true' : 'false' }}" class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-3 lg:p-8 min-h-screen relative overflow-x-hidden">
 
     <!-- MAIN FLOATING WINDOW CONTAINER (MATCHES HOMEPAGE EXACTLY) -->
-    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[88vh] z-10 transition-all duration-700 shadow-2xl border border-white/10">
+    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[88vh] z-10 transition-all duration-700 shadow-2xl border border-white/10 animate-page-zoom-in">
 
-        <!-- Top Right Mac Window Dots & Theme Toggle -->
-        <div class="absolute top-5 right-6 flex items-center gap-4 z-40">
-            <button id="theme-toggle" class="p-2 rounded-full ios-glass transition hover:scale-110">
-                <span id="theme-icon-light" class="hidden text-xs">☀️</span>
-                <span id="theme-icon-dark" class="hidden text-xs">🌙</span>
-            </button>
-            <div class="flex gap-2">
-                <div class="w-3.5 h-3.5 rounded-full bg-[#ff5f56] shadow-sm border border-[#e0443e]"></div>
-                <div class="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] shadow-sm border border-[#dea123]"></div>
-                <div class="w-3.5 h-3.5 rounded-full bg-[#27c93f] shadow-sm border border-[#1aab29]"></div>
-            </div>
-        </div>
+        @include('top-header-controls')
 
         <!-- SIDEBAR INTEGRATED INSIDE THE CONTAINER -->
         @include('sidebar')
 
         <!-- MAIN CHAT CONTENT AREA -->
-        <main class="flex-1 flex flex-col overflow-hidden relative p-4 lg:p-6 justify-between bg-black/20">
+        <main class="flex-1 flex flex-col overflow-hidden relative p-4 pt-14 lg:p-6 lg:pt-16 justify-between bg-black/20">
 
             @if (!$authenticated)
                 <!-- AUTHENTICATION GATE (NO GUEST MODE) -->
@@ -104,7 +93,7 @@
                 <!-- AUTHENTICATED CHAT PORTAL CONTENT -->
 
                 <!-- Header Controls Bar (Telegram Style) -->
-                <header class="flex items-center justify-between px-4 py-2.5 bg-black/40 border border-white/10 rounded-2xl shrink-0 mb-3 animate-fade-in backdrop-blur-md">
+                <header class="flex items-center justify-between px-4 py-2.5 bg-black/40 border border-white/10 rounded-2xl shrink-0 mb-3 animate-page-slide-down backdrop-blur-md">
                     <div class="flex items-center space-x-3">
                         <button id="btnBackToUsers" onclick="backToUserDirectory()" class="hidden px-3 py-1.5 rounded-full bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-semibold flex items-center space-x-1 shadow-md transition transform hover:scale-105 active:scale-95">
                             <span>← Back</span>
@@ -125,7 +114,7 @@
                         </div>
                     </div>
 
-                    <!-- Telegram Style Action Buttons -->
+                    <!-- Action Buttons -->
                     <div class="flex items-center space-x-2">
                         <button onclick="startAudioCall()" class="px-3 py-1.5 rounded-full bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-semibold flex items-center space-x-1 shadow-md transition transform hover:scale-105 active:scale-95">
                             📞 <span>Call</span>
@@ -133,16 +122,6 @@
                         <button onclick="toggleProfileModal()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold flex items-center space-x-1 transition transform hover:scale-105 active:scale-95">
                             👤 <span>My Profile</span>
                         </button>
-                        <button id="theme-toggle" class="p-2 rounded-full ios-glass transition hover:scale-110" title="Toggle Theme">
-                            <span id="theme-icon-light" class="hidden text-xs">☀️</span>
-                            <span id="theme-icon-dark" class="hidden text-xs">🌙</span>
-                        </button>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="px-3 py-1.5 rounded-full bg-rose-950/80 hover:bg-rose-900 text-rose-300 text-xs font-semibold border border-rose-500/30 transition transform hover:scale-105 active:scale-95">
-                                Logout
-                            </button>
-                        </form>
                     </div>
                 </header>
 
@@ -290,16 +269,16 @@
                     </div>
 
                     <div>
-                        <label class="block text-gray-400 mb-1">Bio / About You</label>
-                        <textarea name="bio" rows="2" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white resize-none">{{ $user->bio }}</textarea>
+                        <label class="block text-gray-400 mb-1">Bio / About You <span class="text-[10px] text-gray-500 font-normal">(Optional)</span></label>
+                        <textarea name="bio" rows="2" placeholder="Tell us about yourself (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white resize-none">{{ $user->bio }}</textarea>
                     </div>
 
                     <div class="space-y-2 pt-2 border-t border-white/10">
-                        <label class="block font-bold text-gray-300">Social Media Links</label>
-                        <input type="url" name="social_linkedin" value="{{ $user->social_links['linkedin'] ?? '' }}" placeholder="LinkedIn URL" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
-                        <input type="url" name="social_github" value="{{ $user->social_links['github'] ?? '' }}" placeholder="GitHub URL" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
-                        <input type="url" name="social_twitter" value="{{ $user->social_links['twitter'] ?? '' }}" placeholder="Twitter / X URL" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
-                        <input type="url" name="social_website" value="{{ $user->social_links['website'] ?? '' }}" placeholder="Website URL" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
+                        <label class="block font-bold text-gray-300">Social Media Links <span class="text-[10px] text-gray-500 font-normal">(Optional)</span></label>
+                        <input type="text" name="social_linkedin" value="{{ $user->social_links['linkedin'] ?? '' }}" placeholder="LinkedIn URL / Handle (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
+                        <input type="text" name="social_github" value="{{ $user->social_links['github'] ?? '' }}" placeholder="GitHub URL / Handle (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
+                        <input type="text" name="social_twitter" value="{{ $user->social_links['twitter'] ?? '' }}" placeholder="Twitter / X URL / Handle (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
+                        <input type="text" name="social_website" value="{{ $user->social_links['website'] ?? '' }}" placeholder="Website URL (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
                     </div>
 
                     <div class="flex justify-end space-x-2 pt-3">

@@ -31,7 +31,7 @@
 
     <!-- Main Container -->
     <main class="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
-        <div class="w-full max-w-lg fade-in">
+        <div class="w-full max-w-lg fade-in animate-page-slide-up">
             
             <!-- App Logo / Title -->
             <div class="text-center mb-8">

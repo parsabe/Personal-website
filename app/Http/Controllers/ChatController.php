@@ -258,10 +258,10 @@ class ChatController extends Controller
             'last_name' => 'nullable|string|max:100',
             'username' => 'nullable|string|max:100|unique:users,username,' . $user->id,
             'bio' => 'nullable|string|max:2000',
-            'social_linkedin' => 'nullable|url',
-            'social_github' => 'nullable|url',
-            'social_twitter' => 'nullable|url',
-            'social_website' => 'nullable|url',
+            'social_linkedin' => 'nullable|string|max:255',
+            'social_github' => 'nullable|string|max:255',
+            'social_twitter' => 'nullable|string|max:255',
+            'social_website' => 'nullable|string|max:255',
             'avatar' => 'nullable|image|max:10240',
         ]);
 
@@ -276,16 +276,26 @@ class ChatController extends Controller
             $user->avatar = 'uploads/avatars/' . $filename;
         }
 
-        if ($request->filled('first_name')) $user->first_name = $request->input('first_name');
-        if ($request->filled('last_name')) $user->last_name = $request->input('last_name');
+        if ($request->has('first_name')) $user->first_name = $request->input('first_name');
+        if ($request->has('last_name')) $user->last_name = $request->input('last_name');
         if ($request->filled('username')) $user->username = $request->input('username');
-        if ($request->filled('bio')) $user->bio = $request->input('bio');
+        if ($request->has('bio')) $user->bio = $request->input('bio');
+
+        $formatUrl = function ($url) {
+            if (!$url) return null;
+            $url = trim($url);
+            if ($url === '') return null;
+            if (!preg_match('~^https?://~i', $url)) {
+                return 'https://' . $url;
+            }
+            return $url;
+        };
 
         $user->social_links = [
-            'linkedin' => $request->input('social_linkedin'),
-            'github' => $request->input('social_github'),
-            'twitter' => $request->input('social_twitter'),
-            'website' => $request->input('social_website'),
+            'linkedin' => $formatUrl($request->input('social_linkedin')),
+            'github' => $formatUrl($request->input('social_github')),
+            'twitter' => $formatUrl($request->input('social_twitter')),
+            'website' => $formatUrl($request->input('social_website')),
         ];
 
         $user->save();

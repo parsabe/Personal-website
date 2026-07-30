@@ -20,7 +20,7 @@
 <body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-3 lg:p-8 min-h-screen relative overflow-x-hidden">
 
     <!-- MAIN FLOATING WINDOW CONTAINER -->
-    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[88vh] z-10 transition-all duration-700 shadow-2xl border border-white/10">
+    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[88vh] z-10 transition-all duration-700 shadow-2xl border border-white/10 animate-page-zoom-in">
 
         @include('top-header-controls')
 
@@ -28,7 +28,7 @@
         @include('sidebar')
 
         <!-- MAIN BLACKWALL CONTENT AREA -->
-        <main class="flex-1 flex flex-col overflow-hidden relative p-4 pt-12 lg:p-6 lg:pt-14 justify-between bg-black/40 backdrop-blur-xl">
+        <main class="flex-1 flex flex-col overflow-hidden relative p-4 pt-12 lg:p-6 lg:pt-14 justify-between bg-black/40 backdrop-blur-xl animate-page-slide-up">
 
             <!-- HEADER BAR -->
             <div class="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">

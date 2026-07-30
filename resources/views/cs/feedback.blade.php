@@ -208,7 +208,7 @@
 
     <!-- Main Container -->
     <main class="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12 z-10">
-        <div class="w-full max-w-xl">
+        <div class="w-full max-w-xl animate-page-slide-up">
             
             <!-- Wild West Poster Header -->
             <div class="text-center mb-10">

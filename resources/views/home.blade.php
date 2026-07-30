@@ -56,8 +56,10 @@
 <body
     class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-4 lg:p-10 min-h-screen relative overflow-x-hidden">
 
+    @include('loading_screen')
+
     <div id="main-container"
-        class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[85vh] z-10 transition-colors duration-700">
+        class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[85vh] z-10 transition-colors duration-700 animate-page-zoom-in">
 
         @include('top-header-controls')
 
@@ -66,9 +68,9 @@
         <main class="flex-1 p-8 pt-12 lg:p-14 lg:pt-14 relative flex flex-col justify-center overflow-y-auto">
             <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12 lg:mt-0">
 
-                <div>
+                <div class="animate-page-slide-up">
                     <span
-                        class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6">
+                        class="inline-flex items-center gap-2 px-4 py-1.5 ios-glass text-gray-900 dark:text-white rounded-full text-sm font-bold mb-6 hover:scale-105 transition-transform">
                         👋 HELLO!
                     </span>
 
@@ -87,15 +89,15 @@
 
                     <div class="flex flex-wrap items-center gap-5">
                         <a href="/contact"
-                            class="px-8 py-3.5 bg-gradient-to-r from-orange-500 to-pink-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition transform border border-white/20">
+                            class="px-8 py-3.5 bg-gradient-to-r from-orange-500 to-pink-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition transform border border-white/20 active:scale-95">
                             Contact me
                         </a>
                     </div>
                 </div>
 
-                <div class="relative flex justify-center mt-10 lg:mt-0">
+                <div class="relative flex justify-center mt-10 lg:mt-0 animate-page-zoom-in delay-200">
                     <img src="{{ asset('images/profile.jpg') }}" alt="Hero Portrait"
-                        class="w-full max-w-sm rounded-full object-cover object-[50%_25%] aspect-square border-4 border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.2)]">
+                        class="w-full max-w-sm rounded-full object-cover object-[50%_25%] aspect-square border-4 border-white/40 shadow-[0_10px_40px_rgba(0,0,0,0.2)] hover:scale-105 transition-transform duration-500">
                 </div>
             </div>
         </main>
