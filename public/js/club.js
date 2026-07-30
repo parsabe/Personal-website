@@ -1,139 +1,150 @@
 /**
- * Club Interactive ESM Module
+ * Club Cyber Visualizer & Interactive Audio Studio
  */
-export function u() {
-    "use strict";
-    const theLastExperience = noWorkers => {
-        "use strict";
-        const struct = {
-            points: [{
-                    x: 0,
-                    y: -4,
-                    f(s, d) {
-                        this.y -= 0.01 * s * ts;
-                    }
-                },
-                {
-                    x: 0,
-                    y: -16,
-                    f(s, d) {
-                        this.y -= 0.02 * s * d * ts;
-                    }
-                },
-                {
-                    x: 0,
-                    y: 12,
-                    f(s, d) {
-                        this.y += 0.02 * s * d * ts;
-                    }
-                },
-                { x: -12, y: 0 },
-                { x: 12, y: 0 },
-                { x: -24, y: 0 },
-                { x: 24, y: 0 },
-                { x: -12, y: 24 },
-                { x: 12, y: 24 },
-                {
-                    x: -12,
-                    y: 48,
-                    f(s, d) {
-                        this.x += 0.02 * s * d * ts;
-                    }
-                },
-                {
-                    x: 12,
-                    y: 48,
-                    f(s, d) {
-                        this.x += 0.02 * s * d * ts;
-                    }
-                }
-            ],
-            links: [
-                { p0: 0, p1: 1, p: 0.1 },
-                { p0: 0, p1: 2, p: 0.1 },
-                { p0: 0, p1: 3, p: 0.1 },
-                { p0: 0, p1: 4, p: 0.1 },
-                { p0: 1, p1: 3, p: 0.1 },
-                { p0: 1, p1: 4, p: 0.1 },
-                { p0: 3, p1: 5, p: 0.1 },
-                { p0: 4, p1: 6, p: 0.1 },
-                { p0: 2, p1: 7, p: 0.1 },
-                { p0: 2, p1: 8, p: 0.1 },
-                { p0: 7, p1: 9, p: 0.1 },
-                { p0: 8, p1: 10, p: 0.1 }
-            ]
-        };
+let animationFrameId = null;
+let audioCtx = null;
+let analyser = null;
+let dataArray = null;
 
-        const canvas = {
-            init() {
-                this.elem = document.querySelector("canvas");
-                this.ctx = this.elem.getContext("2d");
-                this.resize();
-                window.addEventListener("resize", () => this.resize(), false);
-                return this.ctx;
-            },
-            resize() {
-                this.width = this.elem.width = this.elem.offsetWidth;
-                this.height = this.elem.height = this.elem.offsetHeight;
+export function initClubVisualizer() {
+    const canvas = document.getElementById('clubCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const resize = () => {
+        canvas.width = canvas.parentElement ? canvas.parentElement.clientWidth : window.innerWidth;
+        canvas.height = canvas.parentElement ? canvas.parentElement.clientHeight : window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Glowing Particles Pool
+    const particles = [];
+    const particleCount = 120;
+    for (let i = 0; i < particleCount; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 3 + 1,
+            color: `hsl(${Math.random() * 360}, 100%, 65%)`,
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2,
+            pulse: Math.random() * Math.PI,
+        });
+    }
+
+    let angle = 0;
+
+    const render = () => {
+        ctx.fillStyle = 'rgba(5, 5, 15, 0.25)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        angle += 0.02;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+
+        // Draw Cyber Neon Equalizer Waves
+        ctx.save();
+        ctx.lineWidth = 3;
+
+        for (let j = 0; j < 3; j++) {
+            ctx.beginPath();
+            const colors = ['#f43f5e', '#8b5cf6', '#3b82f6'];
+            ctx.strokeStyle = colors[j];
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = colors[j];
+
+            for (let x = 0; x < canvas.width; x += 10) {
+                const y = centerY + Math.sin(x * 0.008 + angle + j) * 45 + Math.cos(angle * 1.5) * 20;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
             }
-        };
+            ctx.stroke();
+        }
+        ctx.restore();
 
-        const ctx = canvas.init();
-        let ts = 0;
+        // Render Floating Pulsing Club Particles
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.pulse += 0.05;
 
-        const pointer = {
-            x: 0,
-            y: 0,
-            down(e) {
-                this.x = e.clientX || (e.touches && e.touches[0].clientX);
-                this.y = e.clientY || (e.touches && e.touches[0].clientY);
-            },
-            up(e) {}
-        };
+            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
-        window.addEventListener("mousemove", e => pointer.down(e), false);
-        window.addEventListener("touchmove", e => pointer.down(e), false);
-        window.addEventListener("mousedown", e => pointer.down(e), false);
-        window.addEventListener("touchstart", e => pointer.down(e), false);
+            const currentRadius = p.radius + Math.sin(p.pulse) * 1.5;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, Math.max(0.5, currentRadius), 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = p.color;
+            ctx.fill();
+            ctx.restore();
+        });
+
+        // Draw Central Equalizer Bar Grid
+        const barWidth = 8;
+        const gap = 4;
+        const numBars = Math.min(64, Math.floor(canvas.width / (barWidth + gap)));
+        const startX = (canvas.width - (numBars * (barWidth + gap))) / 2;
+
+        for (let i = 0; i < numBars; i++) {
+            const h = Math.abs(Math.sin(angle * 2 + i * 0.2)) * 120 + 15;
+            const barX = startX + i * (barWidth + gap);
+            const barY = centerY - h / 2;
+
+            const grad = ctx.createLinearGradient(barX, barY, barX, barY + h);
+            grad.addColorStop(0, '#ec4899');
+            grad.addColorStop(0.5, '#8b5cf6');
+            grad.addColorStop(1, '#06b6d4');
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(barX, barY, barWidth, h);
+        }
+
+        animationFrameId = requestAnimationFrame(render);
     };
 
-    theLastExperience(true);
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    render();
 }
 
-export function p() {
-    var q = document.getElementById('audio');
-    var t = document.getElementById('lo');
-    var fr = document.getElementById('fr');
-    if (!q) return false;
-    if (q.paused) {
-        q.play();
-        if (t) t.style.display = "block";
-        if (fr) fr.style.display = "none";
-        return false;
-    } else {
-        q.pause();
-        if (t) t.style.display = "none";
-        if (fr) fr.style.display = "block";
-        return false;
-    }
-}
+export function toggleClubAudio() {
+    const audio = document.getElementById('audioTrack');
+    const playBtn = document.getElementById('btnPlayClub');
+    const pauseBtn = document.getElementById('btnPauseClub');
+    const eqBadge = document.getElementById('equalizerStatusBadge');
 
-export function o() {
-    var audio = document.getElementById('audio');
     if (!audio) return;
-    var playPromise = audio.play();
-    if (playPromise !== undefined) {
-        playPromise.then(_ => {}).catch(error => {});
+
+    if (audio.paused) {
+        audio.play().then(() => {
+            if (playBtn) playBtn.classList.add('hidden');
+            if (pauseBtn) pauseBtn.classList.remove('hidden');
+            if (eqBadge) {
+                eqBadge.innerText = '🎵 Playing Live Techno & Cyber Beats';
+                eqBadge.className = 'px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full text-xs font-mono font-bold flex items-center gap-1.5 animate-pulse';
+            }
+        }).catch(err => {
+            console.error('Audio playback failed:', err);
+            alert('Please interact with the page to play audio.');
+        });
+    } else {
+        audio.pause();
+        if (playBtn) playBtn.classList.remove('hidden');
+        if (pauseBtn) pauseBtn.classList.add('hidden');
+        if (eqBadge) {
+            eqBadge.innerText = '⏸️ Audio Paused';
+            eqBadge.className = 'px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-xs font-mono font-bold';
+        }
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (typeof mdc !== 'undefined' && mdc.ripple && document.querySelector('.foo-button')) {
-        mdc.ripple.MDCRipple.attachTo(document.querySelector('.foo-button'));
-    }
+    initClubVisualizer();
 });
 
-// Bind to window for inline HTML onclick/onload attributes
-window.u = u;
-window.p = p;
-window.o = o;
+window.initClubVisualizer = initClubVisualizer;
+window.toggleClubAudio = toggleClubAudio;
