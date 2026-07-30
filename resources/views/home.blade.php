@@ -111,10 +111,9 @@
                                 <h3 class="font-bold text-sm text-white flex items-center gap-2">
                                     <span>🐦 {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Community-Zeitleiste & Beiträge' : 'Community Timeline & Feed' }}</span>
                                 </h3>
-                                <button type="button" onclick="openCreatePostModal()" class="px-4 py-2 bg-gradient-to-r from-orange-500 via-rose-600 to-pink-600 hover:from-orange-400 hover:to-pink-500 text-white font-bold rounded-2xl text-xs shadow-xl transition transform hover:scale-105 active:scale-95 flex items-center gap-2 border border-white/20">
-                                    <span>➕</span>
-                                    <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Beitrag Erstellen' : 'Create Post' }}</span>
-                                </button>
+                                <span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Feed
+                                </span>
                             </div>
 
                             <!-- HOMEPAGE LIVE FEED STREAM -->
@@ -289,6 +288,7 @@
                 const modal = document.getElementById('createPostModal');
                 if (modal) modal.classList.remove('hidden');
             }
+            window.openGlobalCreatePostModal = openCreatePostModal;
 
             function closeCreatePostModal() {
                 const modal = document.getElementById('createPostModal');

@@ -88,13 +88,6 @@
 
     </div>
 
-    <!-- 2. FLOATING BOTTOM-RIGHT WRITE A BLOG BUTTON -->
-    <button onclick="openWriteBlogModal()" title="Write a New Blog Article"
-        class="fixed bottom-8 right-8 z-40 px-6 py-3.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold text-xs rounded-full shadow-[0_10px_35px_rgba(99,102,241,0.6)] border border-white/20 flex items-center gap-2 transition transform hover:scale-110 active:scale-95 animate-pulse">
-        <span class="text-base">✏️</span>
-        <span>Write a Blog</span>
-    </button>
-
     <!-- 3. RICH TEXT WRITER MODAL SUITE (PLACED OUTSIDE MAIN CONTAINER FOR FULLSCREEN BACKDROP) -->
     <div id="write-blog-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4">
         <div class="bg-gray-900/95 border border-white/20 p-6 rounded-3xl w-full max-w-2xl shadow-2xl space-y-4 animate-scale-up backdrop-blur-xl">
