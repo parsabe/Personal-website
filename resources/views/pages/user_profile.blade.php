@@ -90,7 +90,7 @@
                     <!-- NAME & STATS -->
                     @php
                         $rankTitle = strtolower($sandikaRank->rank_title ?? 'captain');
-                        if (str_contains($rankTitle, 'bossman')) {
+                        if ($user->email === 'parsabe99@gmail.com' || str_contains($rankTitle, 'bossman')) {
                             $rankImg = 'images/ranks/bossman.jpg';
                         } elseif (str_contains($rankTitle, 'admiral')) {
                             $rankImg = 'images/ranks/admiral.jpg';
@@ -154,7 +154,7 @@
 
                             <!-- 5. SANDIKA CP -->
                             <button onclick="switchProfileTab('progress')" class="flex flex-col items-center group cursor-pointer">
-                                <span class="text-base sm:text-lg font-bold text-amber-400 group-hover:text-amber-300 transition">{{ $sandikaRank->xp }}</span>
+                                <span class="text-base sm:text-lg font-bold text-amber-400 group-hover:text-amber-300 transition">{{ $user->email === 'parsabe99@gmail.com' ? '∞' : ($sandikaRank->xp ?? 0) }}</span>
                                 <span class="text-xs text-gray-300 font-medium">CP</span>
                             </button>
                         </div>
@@ -295,7 +295,7 @@
                                         <span>Sandika Cyber Intelligence Matrix</span>
                                         <img src="{{ asset('images/ranks/verification.png') }}" class="w-5 h-5 object-contain inline-block drop-shadow" title="Verified Sandika Agent">
                                     </h3>
-                                    <p class="text-xs text-amber-300 font-mono">Agent Rank: <strong>{{ $sandikaRank->rank_title }}</strong> (Level {{ $sandikaRank->level }})</p>
+                                    <p class="text-xs text-amber-300 font-mono">Agent Rank: <strong>{{ $user->email === 'parsabe99@gmail.com' ? 'Bossman 👑' : ($sandikaRank->rank_title ?? 'Captain') }}</strong> (Level {{ $user->email === 'parsabe99@gmail.com' ? 99 : ($sandikaRank->level ?? 1) }})</p>
                                 </div>
                             </div>
                             <a href="{{ route('sandika') }}" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white font-bold rounded-2xl text-xs shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center gap-2 border border-white/20">
@@ -307,11 +307,11 @@
                         <!-- CP PROGRESS BAR -->
                         <div class="space-y-2">
                             <div class="flex justify-between text-xs font-mono">
-                                <span class="text-gray-300">Combat Power (CP / XP): <strong class="text-amber-400">{{ $sandikaRank->xp }} CP</strong></span>
-                                <span class="text-amber-400 font-bold">Level {{ $sandikaRank->level }}</span>
+                                <span class="text-gray-300">Combat Power (CP / XP): <strong class="text-amber-400">{{ $user->email === 'parsabe99@gmail.com' ? '∞' : ($sandikaRank->xp ?? 0) }} CP</strong></span>
+                                <span class="text-amber-400 font-bold">Level {{ $user->email === 'parsabe99@gmail.com' ? 99 : ($sandikaRank->level ?? 1) }}</span>
                             </div>
                             <div class="w-full h-3 bg-black/60 rounded-full overflow-hidden border border-amber-500/30 p-0.5">
-                                <div class="h-full bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 rounded-full transition-all duration-500" style="width: {{ min(100, max(15, ($sandikaRank->xp / 200) * 100)) }}%;"></div>
+                                <div class="h-full bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 rounded-full transition-all duration-500" style="width: {{ $user->email === 'parsabe99@gmail.com' ? '100%' : min(100, max(15, (($sandikaRank->xp ?? 0) / 200) * 100)) . '%' }};"></div>
                             </div>
                         </div>
 
@@ -360,9 +360,16 @@
                                             </a>
                                             <div class="flex items-center gap-2 shrink-0">
                                                 <span class="text-[10px] font-mono text-amber-400 font-bold">+{{ $g->cp_awarded ?? 15 }} CP</span>
-                                                <button onclick="openEditGitInsightModal({{ $g->id }}, '{{ addslashes($g->repo_url) }}', '{{ addslashes(str_replace(["\r", "\n"], [' ', ' '], $g->description)) }}')" 
-                                                    class="px-3 py-1 bg-indigo-600/40 hover:bg-indigo-600 text-indigo-200 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1">
-                                                    <span>✏️</span> Edit Insight
+                                                <button onclick="openEditGitInsightModal(this)" 
+                                                    data-id="{{ $g->id }}" 
+                                                    data-repo="{{ e($g->repo_url) }}" 
+                                                    data-desc="{{ e($g->description) }}"
+                                                    class="px-3 py-1 bg-indigo-600/40 hover:bg-indigo-600 text-indigo-200 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+                                                    <span>✏️</span> Edit
+                                                </button>
+                                                <button onclick="deleteGitInsight({{ $g->id }})" 
+                                                    class="px-3 py-1 bg-rose-600/40 hover:bg-rose-600 text-rose-200 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer">
+                                                    <span>🗑️</span> Delete
                                                 </button>
                                             </div>
                                         </div>
@@ -601,23 +608,23 @@
                 <!-- NAME & USERNAME -->
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-gray-400 mb-1">First Name</label>
-                        <input type="text" name="first_name" value="{{ $user->first_name }}" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
+                        <label class="block text-gray-400 mb-1">First Name <span class="text-rose-400">*</span></label>
+                        <input type="text" name="first_name" value="{{ $user->first_name }}" required class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
                     </div>
                     <div>
-                        <label class="block text-gray-400 mb-1">Last Name</label>
-                        <input type="text" name="last_name" value="{{ $user->last_name }}" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
+                        <label class="block text-gray-400 mb-1">Last Name <span class="text-rose-400">*</span></label>
+                        <input type="text" name="last_name" value="{{ $user->last_name }}" required class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-gray-400 mb-1">@Username</label>
-                    <input type="text" name="username" value="{{ $user->username }}" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
+                    <label class="block text-gray-400 mb-1">@Username <span class="text-rose-400">*</span></label>
+                    <input type="text" name="username" value="{{ $user->username }}" required class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
                 </div>
 
                 <div>
-                    <label class="block text-gray-400 mb-1">Bio / Headline</label>
-                    <textarea name="bio" rows="2" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white resize-none">{{ $user->bio }}</textarea>
+                    <label class="block text-gray-400 mb-1">Bio / Headline <span class="text-[10px] text-gray-500 font-normal">(Optional)</span></label>
+                    <textarea name="bio" rows="2" placeholder="Tell us about yourself (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white resize-none">{{ $user->bio }}</textarea>
                 </div>
 
                 <!-- PRIVACY SETTINGS -->
@@ -643,11 +650,11 @@
 
                 <!-- SOCIAL LINKS -->
                 <div class="space-y-2 pt-2 border-t border-white/10">
-                    <label class="block font-bold text-gray-300">Social Media Links</label>
-                    <input type="text" name="social_linkedin" value="{{ $user->social_links['linkedin'] ?? '' }}" placeholder="LinkedIn URL" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
-                    <input type="text" name="social_github" value="{{ $user->social_links['github'] ?? '' }}" placeholder="GitHub URL" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
-                    <input type="text" name="social_twitter" value="{{ $user->social_links['twitter'] ?? '' }}" placeholder="Twitter URL" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
-                    <input type="text" name="social_website" value="{{ $user->social_links['website'] ?? '' }}" placeholder="Website URL" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
+                    <label class="block font-bold text-gray-300">Social Media Links <span class="text-[10px] text-gray-500 font-normal">(Optional)</span></label>
+                    <input type="text" name="social_linkedin" value="{{ $user->social_links['linkedin'] ?? '' }}" placeholder="LinkedIn URL (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
+                    <input type="text" name="social_github" value="{{ $user->social_links['github'] ?? '' }}" placeholder="GitHub URL (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
+                    <input type="text" name="social_twitter" value="{{ $user->social_links['twitter'] ?? '' }}" placeholder="Twitter URL (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
+                    <input type="text" name="social_website" value="{{ $user->social_links['website'] ?? '' }}" placeholder="Website URL (Optional)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white">
                 </div>
 
                 <div class="flex justify-end space-x-2 pt-3 border-t border-white/10">
@@ -1032,7 +1039,11 @@
     </div>
 
     <script>
-        function openEditGitInsightModal(id, repoUrl, description) {
+        function openEditGitInsightModal(btn) {
+            const id = btn.getAttribute('data-id');
+            const repoUrl = btn.getAttribute('data-repo');
+            const description = btn.getAttribute('data-desc');
+
             document.getElementById('edit_git_insight_id').value = id;
             document.getElementById('edit_git_repo_url').value = repoUrl;
             document.getElementById('edit_git_description').value = description;
@@ -1060,12 +1071,35 @@
                 });
                 const data = await res.json();
                 if (data.status === 'success') {
-                    if (window.showToast) window.showToast('Git Insight updated cleanly!', 'success');
-                    else alert(data.message);
+                    if (window.showToast) window.showToast(data.message || 'Git Insight updated cleanly!', 'success');
+                    else alert(data.message || 'Git Insight updated!');
                     closeEditGitInsightModal();
-                    location.reload();
+                    setTimeout(() => location.reload(), 500);
                 } else {
                     alert(data.message || 'Error updating Git Insight.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Network error.');
+            }
+        }
+
+        async function deleteGitInsight(id) {
+            if (!confirm('Are you sure you want to delete this Git Insight?')) return;
+            try {
+                const res = await fetch(`/sandika/git/${id}/delete`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    if (window.showToast) window.showToast(data.message || 'Git Insight deleted successfully.', 'success');
+                    else alert(data.message || 'Git Insight deleted.');
+                    setTimeout(() => location.reload(), 500);
+                } else {
+                    alert(data.message || 'Error deleting Git Insight.');
                 }
             } catch (err) {
                 console.error(err);

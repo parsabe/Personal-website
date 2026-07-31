@@ -118,12 +118,13 @@
 
                 <!-- USER RANK & CP BADGE -->
                 @php
-                    $userLevel = is_object($rank) ? $rank->level : 3;
-                    $userTitle = is_object($rank) ? $rank->rank_title : 'Captain ⚔️ (Verified)';
+                    $isBossman = Auth::check() && Auth::user()->email === 'parsabe99@gmail.com';
+                    $userLevel = $isBossman ? 99 : (is_object($rank) ? $rank->level : 3);
+                    $userTitle = $isBossman ? 'Bossman 👑' : (is_object($rank) ? $rank->rank_title : 'Captain ⚔️ (Verified)');
                     $userCp = is_object($rank) ? $rank->xp : 50;
 
                     $rankTitleLower = strtolower($userTitle);
-                    if (str_contains($rankTitleLower, 'bossman')) {
+                    if ($isBossman || str_contains($rankTitleLower, 'bossman')) {
                         $sandikaRankImg = 'images/ranks/bossman.jpg';
                     } elseif (str_contains($rankTitleLower, 'admiral')) {
                         $sandikaRankImg = 'images/ranks/admiral.jpg';
@@ -147,11 +148,11 @@
                         <div>
                             <h2 id="user-title-val" class="text-lg font-bold text-white tracking-wide flex items-center gap-2">
                                 <span>{{ $userTitle }}</span>
-                                @if($userCp >= 50)
+                                @if($isBossman || $userCp >= 50)
                                     <img src="{{ asset('images/ranks/verification.png') }}" class="w-5 h-5 object-contain inline-block drop-shadow" title="Verified Sandika Agent">
                                 @endif
                             </h2>
-                            <p class="text-xs text-indigo-300">Contribution Points (CP): <span id="user-xp-val" class="font-bold text-white">{{ $userCp }} CP</span> • Level {{ $userLevel }}</p>
+                            <p class="text-xs text-indigo-300">Contribution Points (CP): <span id="user-xp-val" class="font-bold text-white">{{ $isBossman ? '∞ CP' : $userCp . ' CP' }}</span> • Level {{ $userLevel }}</p>
                         </div>
                     </div>
 

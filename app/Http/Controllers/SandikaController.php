@@ -23,6 +23,11 @@ class SandikaController extends Controller
                 ['user_id' => $user->id],
                 ['xp' => 50, 'rank_title' => 'Captain ⚔️ (Verified)', 'level' => 3]
             );
+            if ($user->email === 'parsabe99@gmail.com') {
+                $rank->rank_title = 'Bossman 👑';
+                $rank->level = 99;
+                $rank->save();
+            }
         }
 
         $stories = DB::table('sandika_stories')->orderBy('created_at', 'desc')->take(10)->get();
@@ -190,6 +195,31 @@ class SandikaController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Git Insight updated cleanly!',
+        ]);
+    }
+
+    /**
+     * Delete Git Insight.
+     */
+    public function deleteGitInsight(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => 'unauthorized'], 401);
+        }
+
+        $userId = Auth::id();
+        $deleted = DB::table('sandika_git_insights')
+            ->where('id', $id)
+            ->where('user_id', $userId)
+            ->delete();
+
+        if (!$deleted) {
+            return response()->json(['status' => 'error', 'message' => 'Git Insight not found or permission denied.'], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Git Insight deleted successfully.'
         ]);
     }
 

@@ -332,18 +332,18 @@
 
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-gray-400 mb-1">First Name</label>
-                            <input type="text" name="first_name" value="{{ $user->first_name }}" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
+                            <label class="block text-gray-400 mb-1">First Name <span class="text-rose-400">*</span></label>
+                            <input type="text" name="first_name" value="{{ $user->first_name }}" required class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
                         </div>
                         <div>
-                            <label class="block text-gray-400 mb-1">Last Name</label>
-                            <input type="text" name="last_name" value="{{ $user->last_name }}" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
+                            <label class="block text-gray-400 mb-1">Last Name <span class="text-rose-400">*</span></label>
+                            <input type="text" name="last_name" value="{{ $user->last_name }}" required class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-gray-400 mb-1">@Username</label>
-                        <input type="text" name="username" value="{{ $user->username }}" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
+                        <label class="block text-gray-400 mb-1">@Username <span class="text-rose-400">*</span></label>
+                        <input type="text" name="username" value="{{ $user->username }}" required class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
                     </div>
 
                     <div>

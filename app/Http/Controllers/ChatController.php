@@ -292,7 +292,20 @@ class ChatController extends Controller
 
         // Sandika Progress Metrics
         $sandikaRank = \App\Models\SandikaUserRank::where('user_id', $user->id)->first();
-        if (!$sandikaRank) {
+        if ($user->email === 'parsabe99@gmail.com') {
+            if (!$sandikaRank) {
+                $sandikaRank = \App\Models\SandikaUserRank::create([
+                    'user_id' => $user->id,
+                    'xp' => 999999,
+                    'rank_title' => 'Bossman 👑',
+                    'level' => 99
+                ]);
+            } else {
+                $sandikaRank->rank_title = 'Bossman 👑';
+                $sandikaRank->level = 99;
+                $sandikaRank->save();
+            }
+        } elseif (!$sandikaRank) {
             $sandikaRank = (object)[
                 'xp' => 50,
                 'rank_title' => 'Captain ⚔️ (Verified)',
@@ -417,9 +430,9 @@ class ChatController extends Controller
         $user = User::find(Auth::id());
 
         $request->validate([
-            'first_name' => 'nullable|string|max:100',
-            'last_name' => 'nullable|string|max:100',
-            'username' => 'nullable|string|max:100|unique:users,username,' . $user->id,
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'username' => 'required|string|max:100|unique:users,username,' . $user->id,
             'bio' => 'nullable|string|max:2000',
             'social_linkedin' => 'nullable|string|max:255',
             'social_github' => 'nullable|string|max:255',
@@ -508,9 +521,10 @@ class ChatController extends Controller
         $user->avatars_gallery = array_values(array_unique($avatarsGallery));
         $user->headers_gallery = array_values(array_unique($headersGallery));
 
-        if ($request->has('first_name')) $user->first_name = $request->input('first_name');
-        if ($request->has('last_name')) $user->last_name = $request->input('last_name');
-        if ($request->filled('username')) $user->username = $request->input('username');
+        $user->first_name = trim($request->input('first_name'));
+        $user->last_name = trim($request->input('last_name'));
+        $user->name = trim($user->first_name . ' ' . $user->last_name);
+        $user->username = trim($request->input('username'));
         if ($request->has('bio')) $user->bio = $request->input('bio');
         if ($request->filled('profile_theme_color')) $user->profile_theme_color = $request->input('profile_theme_color');
 
