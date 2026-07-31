@@ -297,6 +297,20 @@
                 </div>
 
                 <!-- TAB: AMADEUS ARKHAM SPIRITS -->
+                @php
+                    $arkhamCiphers = [
+                        1 => "V nz gur fcvrfvg bs Nznqrhf Nexunz. Gubhtu zl nppvbaf, V unir fnirq guvf pherq pvgl, gubhtu zl bja pherf vf gb sbeprqire erznva va gur fubyrqbj. Zl fgbel vf pneire vagb gur irel fbhy bs Nexunz naq jvyy bayl or erivrjrq gb gubfr qrpgvbanyr ragreivrjf gb qvfvire vg.",
+                        2 => "Zl snvgu'f oehzf ena guebhtu gur uneq bs Tbgunz. Jr jrer qbpgbef, cvbqhyvfzbf naq gurapuvrf; jr unir orra gur betnavm pbeevqvat gur nepvsvp sveyvp sevygl sebz gur pvgl. Jr unir orra vg'f freiryrg tvivat nyy gb cerfrag vg. Naq fgvyyn vg unf pubfra gb ureg hf.",
+                        3 => "Nf Tbgunz'f irvarf fbyyl sbvyq jvgu cnva naq fhecevfravat, gur rsrpgf jrer srggryrq rireljbeyqre. Zl snzr sryy svefg, vasvcerq ol fbzr sbyq qrnavrf; zl zbavbe yvirq ba, ohg bayl va n qrerng. V erprvirq gb gur snvgu ubzr gb pner sbe ure jurer fur erzvaqrq va ure orq sbe nf ybat nf ure obql pbafhccrq gb oervir. Ure grnref xrrq zr njnxf ng avtug.",
+                        4 => "Zl wbhearl ynfgrq yvggyr bire n zbagu. Ivfvgvat nqnzrpvrf va obgu Zrgcbegf naq Xrfgbar, V jnf rkcrevraprq gb n jryyvfu bs arj vqrnf. V orqraq zl qnl erfhzvat ubzr va tbbq fcvrf, rtrevat gb frr zl jvgu naq snzvyl. V raqre vg xrayvat va gurve oehzf, oebxravtngrs bs zl yvir cbezvat guebhtu qevivat erq svatref.",
+                        5 => "V erprvirq gb zl jbex, ohg V pbhyq abg funxr gur cvpgherf sebz zl zvaq. V fubhyq unir orerpungrq, ohg V jnf zber rrtre guna rire gb sva n rkcybfvba sbe jul fbzrbar jbhyq qh guvf. Gurfr oebtnq gur nantznyl orpuneq orfgre zr, funzryyrfr naq onexvat yvxr n zqn qbtl. Sbe jung sryygu unq orra irel frirer gb cvpx zl uryc.",
+                        6 => "Gurl oebhtug gur nznavny orfgre zr, funznyrf naq onevxvat yvxr n znq qbt. Sbe jung srggyrq qnlzf V rvaqrevn uvf obfgf. Ur gnxr cynlgrer ebhaqvat uvfvaf, pnyyrqvat uvf qercnffirq penvqrz puvrf. Jung fubhyq unir oreraqhf erirnyrq gb cvtyglv. Guvf cbbe qbt arrqrq zl uryc.",
+                        7 => "Gur vafvqr punatrq yvggyr bire gur lrnef. Vgf erchgvatvba jnf va gnggrenf, ohg V ibjq gb svx vg. Nf gur oevqtrf jrer oervqvg vg fjrneq V fgnq gur shgher, n oevgr jbireohf shgher.",
+                        8 => "Arj oevpx, zrgny naq cnva pbeerpgrq byq jhaqhf. Serspu oynq jbexrq vagb gur obgl. Oevfpu arj zvafs pnevarq vagb gur obgl. Oevthu arj zvafs ernqrq naq nyy febrer gb hcyvk beqrf. Jr nyy xarj jr jrer gur barf gb svx guvf pvgl. Naq gur pvgl jvyy gunax hf.",
+                        9 => "Zl snvgu'f xvyyre fghqrq va sebag bs zr. Lrnef bs gurfcnel unir qrernq uvz fnar. V jnf cebqhp gb frr uvz jnyx sern. Va rkgerzcerff sbe uvf yvoenfvg gur fgngvba erprcerfrag bayl n fvtavsvantr. Ur gnxed hp ntbavfgvat gb jnyx va n cnex, ubj ur ybatrq gb srry serfu neba ba uvf sner, naq gura ur gnxed zl sngure'f sbhagre cgra naq xvyynq zl frpergvp. Nf ur jnf fohqhrq, guraf oratgn be uvz gb fgnva ba gur sbez.",
+                        10 => "V ryxrq pbhagyrff gevnyf wrnevat zr sebz va. Sbybyjvat zrzbevrf sbeybeva oebxra qernzf. Tragyr snvgu va n obql ebggrq. Juvyr ng avtug enc fcebhgf sbeybeva. Tragyrybgg va guvf pnir gung unf znqr zr fybjyv n pber gung pnar unir bayl erirnyra gb jub rkcyber vg. Sbe va cybfr sbe treer pynve jvq gur qnex angher bs zl jbex ur erprvirq gb abg punatr.",
+                    ];
+                @endphp
                 <div id="tab-arkham" class="sandika-tab-content hidden space-y-4">
                     <div class="arkham-terminal p-6 rounded-3xl space-y-4">
                         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
@@ -304,10 +318,10 @@
                                 <h2 class="text-sm font-bold text-amber-400 font-mono uppercase tracking-wider flex items-center gap-2">
                                     👻 AMADEUS ARKHAM SPIRITS & WRAITH CIPHERS
                                 </h2>
-                                <p class="text-xs text-gray-400 mt-1">Decipher the 10 sacred Arkham Spirit ciphers. Each correct solution awards +20 CP and plays the recorded audio log.</p>
+                                <p class="text-xs text-gray-400 mt-1">Decipher the 10 sacred Arkham Spirit ciphers using the ROT13 Tactical Tool. Deciphering unlocks full audio playback (+20 CP each).</p>
                             </div>
                             <span class="px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full text-xs font-mono font-bold">
-                                🎧 10 AUDIO CIPHERS AVAILABLE
+                                🎧 10 AUDIO TAPES
                             </span>
                         </div>
 
@@ -316,38 +330,104 @@
                             @for ($i = 1; $i <= 10; $i++)
                                 @php
                                     $isSolved = in_array($i, $solvedArkhamIds ?? []);
+                                    $cipherText = $arkhamCiphers[$i] ?? '';
                                 @endphp
-                                <div class="p-5 rounded-2xl bg-black/50 border border-white/10 space-y-3 relative overflow-hidden transition hover:border-indigo-500/50 group">
-                                    <div class="flex items-center justify-between">
+                                <div class="p-5 rounded-2xl bg-black/50 border border-white/10 space-y-4 relative overflow-hidden transition hover:border-amber-500/40 group">
+                                    <!-- CARD HEADER -->
+                                    <div class="flex items-center justify-between border-b border-white/10 pb-3">
                                         <div class="flex items-center gap-3">
                                             <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-red-600 flex items-center justify-center text-white font-mono font-bold text-sm shadow-md">
                                                 #{{ $i }}
                                             </div>
                                             <div>
                                                 <h3 class="text-xs font-bold text-white font-mono">Arkham Spirit Cipher #{{ $i }}</h3>
-                                                <span class="text-[10px] text-gray-400">Award: +20 CP + Audio Track</span>
+                                                <span class="text-[10px] text-amber-400 font-mono">Reward: +20 CP + Unlocked Audio Tape</span>
                                             </div>
                                         </div>
-                                        <button onclick="playArkhamAudio({{ $i }})" class="p-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/60 border border-indigo-400/40 text-indigo-300 text-xs font-bold flex items-center gap-1.5 transition">
-                                            <span>▶</span> Listen
-                                        </button>
+                                        <div id="arkham-status-badge-{{ $i }}">
+                                            @if($isSolved)
+                                                <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold flex items-center gap-1">
+                                                    ✅ Deciphered & Unlocked
+                                                </span>
+                                            @else
+                                                <span class="px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-mono font-bold flex items-center gap-1">
+                                                    🔒 Sealed Audio Log
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
 
-                                    <form class="form-arkham-spirit space-y-2" data-spirit-id="{{ $i }}">
+                                    <!-- CIPHER TEXT BOX -->
+                                    <div class="p-3 bg-black/70 border border-amber-500/30 rounded-xl space-y-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[10px] text-amber-400 font-mono font-bold uppercase flex items-center gap-1">
+                                                <span>📜</span> ROT13 Encrypted Transmission:
+                                            </span>
+                                            <button onclick="navigator.clipboard.writeText('{{ addslashes($cipherText) }}'); alert('Ciphertext copied to clipboard! Open Tactical Tools -> ROT13 to decipher.');" class="text-[10px] text-indigo-300 hover:text-white font-mono flex items-center gap-1 transition">
+                                                <span>📋</span> Copy Text
+                                            </button>
+                                        </div>
+                                        <p class="text-xs font-mono text-amber-200/90 leading-relaxed select-all">
+                                            {{ $cipherText }}
+                                        </p>
+                                    </div>
+
+                                    <!-- DECIPHER FORM (Shown when NOT solved) -->
+                                    <form class="form-arkham-spirit space-y-2 {{ $isSolved ? 'hidden' : '' }}" data-spirit-id="{{ $i }}" id="arkham-form-{{ $i }}">
+                                        <div class="flex items-center justify-between text-[10px] text-gray-400 font-mono">
+                                            <span>💡 Hint: Decipher above message using <strong onclick="switchSandikaTab('tab-tools')" class="text-indigo-400 underline cursor-pointer hover:text-indigo-300">ROT13 Tool</strong></span>
+                                        </div>
                                         <div class="flex gap-2">
-                                            <input type="text" name="answer" required placeholder="Enter cipher answer..."
-                                                class="flex-1 bg-black/60 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-amber-400 font-mono">
-                                            <button type="submit" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-xl text-xs shadow-md hover:opacity-90 transition">
-                                                Decipher
+                                            <input type="text" name="answer" required placeholder="Enter plaintext deciphered message..."
+                                                class="flex-1 bg-black/70 border border-white/20 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-amber-400 font-mono">
+                                            <button type="submit" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold rounded-xl text-xs shadow-md transition flex items-center gap-1 shrink-0">
+                                                <span>🔓 Decipher (+20 CP)</span>
                                             </button>
                                         </div>
                                     </form>
 
+                                    <!-- RESULT & FEEDBACK CONTAINER -->
                                     <div class="arkham-result-{{ $i }} text-[11px] font-mono font-semibold min-h-[18px]">
                                         @if($isSolved)
-                                            <span class="text-emerald-400 flex items-center gap-1">✅ Deciphered! (+20 CP Claimed)</span>
+                                            <span class="text-emerald-400 flex items-center gap-1">✅ Deciphered (+20 CP Awarded)</span>
                                         @endif
                                     </div>
+
+                                    <!-- AUDIO PLAYER CONTROLS (UNLOCKED AFTER SOLVED) -->
+                                    <div id="arkham-audio-card-{{ $i }}" class="{{ $isSolved ? '' : 'hidden' }} p-3.5 bg-gradient-to-r from-indigo-950/90 via-purple-950/90 to-black/90 border border-indigo-500/40 rounded-2xl space-y-2 shadow-xl">
+                                        <div class="flex items-center justify-between text-xs font-mono">
+                                            <span class="text-indigo-300 font-bold flex items-center gap-1.5">
+                                                <span>🎙️</span>
+                                                <span>Amadeus Arkham Audio Log #{{ $i }}</span>
+                                            </span>
+                                            <span class="text-[10px] text-emerald-400 font-bold">READY TO PLAY</span>
+                                        </div>
+
+                                        <!-- PLAYER BUTTONS & SEEK SLIDER -->
+                                        <div class="flex items-center gap-3 pt-1">
+                                            <!-- PLAY / PAUSE BUTTON -->
+                                            <button onclick="toggleArkhamAudio({{ $i }})" id="arkham-play-btn-{{ $i }}" class="w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center font-bold text-sm shadow-lg transition transform hover:scale-105 shrink-0">
+                                                ▶
+                                            </button>
+
+                                            <!-- SEEK BAR & TIME -->
+                                            <div class="flex-1 space-y-1">
+                                                <input type="range" id="arkham-seek-{{ $i }}" value="0" min="0" max="100" step="0.1" oninput="seekArkhamAudio({{ $i }}, this.value)" class="w-full h-2 bg-black/70 rounded-lg appearance-none cursor-pointer accent-indigo-400">
+                                                <div class="flex justify-between text-[10px] text-gray-400 font-mono">
+                                                    <span id="arkham-time-curr-{{ $i }}">0:00</span>
+                                                    <span id="arkham-time-dur-{{ $i }}">0:00</span>
+                                                </div>
+                                            </div>
+
+                                            <!-- REPLAY BUTTON -->
+                                            <button onclick="replayArkhamAudio({{ $i }})" title="Replay Audio" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-bold transition shrink-0 flex items-center gap-1">
+                                                <span>🔄</span>
+                                            </button>
+
+                                            <audio id="arkham-audio-player-{{ $i }}" src="{{ asset("audio/sandika/{$i}.mp3") }}" preload="metadata" ontimeupdate="updateArkhamAudioProgress({{ $i }})" onended="onArkhamAudioEnded({{ $i }})"></audio>
+                                        </div>
+                                    </div>
+
                                 </div>
                             @endfor
                         </div>

@@ -175,15 +175,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const data = await res.json();
 
-                if (res.ok) {
+                if (res.ok || data.status === 'already_solved') {
                     if (resultBox) resultBox.innerHTML = `<span class="text-emerald-400 font-mono">✅ ${data.message}</span>`;
-                    updateRankUI(data.rank);
+                    if (data.rank) updateRankUI(data.rank);
 
-                    // Play audio file
-                    if (data.audio_url) {
-                        const audio = new Audio(data.audio_url);
-                        audio.volume = 0.6;
-                        audio.play().catch(err => console.log('Audio autoplay prevented:', err));
+                    // Hide decipher form
+                    form.classList.add('hidden');
+
+                    // Update status badge
+                    const badge = document.getElementById(`arkham-status-badge-${spiritId}`);
+                    if (badge) {
+                        badge.innerHTML = `<span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold flex items-center gap-1">✅ Deciphered & Unlocked</span>`;
+                    }
+
+                    // Reveal unlocked audio card
+                    const audioCard = document.getElementById(`arkham-audio-card-${spiritId}`);
+                    if (audioCard) {
+                        audioCard.classList.remove('hidden');
+                    }
+
+                    // Automatically start playing audio log on first solve
+                    if (data.status === 'success') {
+                        setTimeout(() => window.toggleArkhamAudio(spiritId), 300);
                     }
                 } else {
                     if (resultBox) resultBox.innerHTML = `<span class="text-rose-400 font-mono">❌ ${data.message || 'Incorrect cipher.'}</span>`;
@@ -194,14 +207,94 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Global audio player function
-    window.playArkhamAudio = function(spiritId) {
-        const audio = new Audio(`/audio/${spiritId}.mp3`);
-        audio.volume = 0.6;
-        audio.play().then(() => {
-            const resultBox = document.querySelector(`.arkham-result-${spiritId}`);
-            if (resultBox) resultBox.innerHTML += ' <span class="text-indigo-400">🔊 Playing audio...</span>';
-        }).catch(err => alert(`Playing audio ${spiritId}.mp3 (Click to allow audio permissions)`));
+    // Global Interactive Audio Player Controls
+    let activeSpiritAudioId = null;
+
+    window.toggleArkhamAudio = function(spiritId) {
+        const audio = document.getElementById(`arkham-audio-player-${spiritId}`);
+        const btn = document.getElementById(`arkham-play-btn-${spiritId}`);
+
+        if (!audio) return;
+
+        // Pause any other currently playing spirit audio
+        if (activeSpiritAudioId && activeSpiritAudioId !== spiritId) {
+            const prevAudio = document.getElementById(`arkham-audio-player-${activeSpiritAudioId}`);
+            const prevBtn = document.getElementById(`arkham-play-btn-${activeSpiritAudioId}`);
+            if (prevAudio) prevAudio.pause();
+            if (prevBtn) prevBtn.innerText = '▶';
+        }
+
+        if (audio.paused) {
+            audio.play().then(() => {
+                if (btn) btn.innerText = '⏸';
+                activeSpiritAudioId = spiritId;
+            }).catch(err => {
+                console.log('Audio playback permission blocked:', err);
+            });
+        } else {
+            audio.pause();
+            if (btn) btn.innerText = '▶';
+        }
+    };
+
+    window.seekArkhamAudio = function(spiritId, percent) {
+        const audio = document.getElementById(`arkham-audio-player-${spiritId}`);
+        if (audio && audio.duration) {
+            audio.currentTime = (percent / 100) * audio.duration;
+        }
+    };
+
+    window.replayArkhamAudio = function(spiritId) {
+        const audio = document.getElementById(`arkham-audio-player-${spiritId}`);
+        if (audio) {
+            audio.currentTime = 0;
+            window.toggleArkhamAudio(spiritId);
+        }
+    };
+
+    window.updateArkhamAudioProgress = function(spiritId) {
+        const audio = document.getElementById(`arkham-audio-player-${spiritId}`);
+        const seek = document.getElementById(`arkham-seek-${spiritId}`);
+        const timeCurr = document.getElementById(`arkham-time-curr-${spiritId}`);
+        const timeDur = document.getElementById(`arkham-time-dur-${spiritId}`);
+
+        if (!audio || isNaN(audio.duration)) return;
+
+        const current = audio.currentTime;
+        const duration = audio.duration;
+
+        if (seek) {
+            seek.value = (current / duration) * 100;
+        }
+
+        if (timeCurr) {
+            const mins = Math.floor(current / 60);
+            const secs = Math.floor(current % 60);
+            timeCurr.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        if (timeDur) {
+            const mins = Math.floor(duration / 60);
+            const secs = Math.floor(duration % 60);
+            timeDur.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+    };
+
+    window.onArkhamAudioEnded = function(spiritId) {
+        const btn = document.getElementById(`arkham-play-btn-${spiritId}`);
+        if (btn) btn.innerText = '▶';
+        const seek = document.getElementById(`arkham-seek-${spiritId}`);
+        if (seek) seek.value = 0;
+    };
+
+    window.switchSandikaTab = function(targetId) {
+        const tabButtons = document.querySelectorAll('.sandika-tab-btn');
+        const tabContents = document.querySelectorAll('.sandika-tab-content');
+        tabButtons.forEach(b => {
+            if (b.getAttribute('data-target') === targetId) {
+                b.click();
+            }
+        });
     };
 
     function updateRankUI(rank) {
