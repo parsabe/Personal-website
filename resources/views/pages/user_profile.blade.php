@@ -89,7 +89,7 @@
                         <div class="relative group cursor-pointer" onclick="openTelegramAvatarViewer(0)" title="Click to view full profile pictures (Telegram Style)">
                             <img id="mainProfileAvatarImg" src="{{ asset($activeAvatarPath) }}" 
                                 class="w-28 h-28 rounded-full border-4 border-gray-900 object-cover shadow-2xl transition transform group-hover:scale-105 group-hover:brightness-110">
-                            <div class="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition backdrop-blur-[2px]">
+                            <div class="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition backdrop-blur-[2px] pointer-events-none">
                                 <span class="text-white text-base">🔍</span>
                                 <span class="text-white text-[10px] font-bold drop-shadow">View</span>
                             </div>
@@ -239,11 +239,6 @@
                         <span>⚔️</span>
                         <span>Sandika & Nigma {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Fortschritt' : 'Progress' }}</span>
                     </button>
-
-                    <button onclick="switchProfileTab('galleries')" id="tabBtnGalleries" class="px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10">
-                        <span>🖼️</span>
-                        <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Avatare & Banner Galerie' : 'Avatars & Headers' }}</span>
-                    </button>
                 </div>
 
                 <!-- 1. POSTS TAB CONTENT -->
@@ -314,51 +309,7 @@
                     @endif
                 </div>
 
-                <!-- 3. GALLERIES TAB CONTENT -->
-                <div id="tabContentGalleries" class="hidden animate-tab-fade space-y-6">
-                    @php
-                        $avatarsGallery = is_array($user->avatars_gallery) ? $user->avatars_gallery : [];
-                        $headersGallery = is_array($user->headers_gallery) ? $user->headers_gallery : [];
-                    @endphp
-                    
-                    <!-- AVATARS GALLERY -->
-                    <div class="p-5 rounded-3xl bg-black/50 border border-white/10 space-y-3">
-                        <h4 class="font-bold text-white text-xs flex items-center gap-2">
-                            <span>👤 Avatars Gallery ({{ count($avatarsGallery) }})</span>
-                        </h4>
-                        @if(count($avatarsGallery) > 0)
-                            <div class="flex flex-wrap gap-3">
-                                @foreach($avatarsGallery as $avIdx => $avPath)
-                                    <div class="relative group border-2 {{ $user->avatar === $avPath ? 'border-indigo-400 scale-105 shadow-lg' : 'border-transparent' }} rounded-full overflow-hidden transition">
-                                        <img src="{{ asset($avPath) }}" onclick="openTelegramAvatarViewer({{ $avIdx }})" class="w-14 h-14 rounded-full object-cover cursor-pointer hover:opacity-80 shadow-md">
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-xs text-gray-400 italic">No saved avatars yet.</p>
-                        @endif
-                    </div>
-
-                    <!-- HEADERS GALLERY -->
-                    <div class="p-5 rounded-3xl bg-black/50 border border-white/10 space-y-3">
-                        <h4 class="font-bold text-white text-xs flex items-center gap-2">
-                            <span>🌄 Cover Banner Headers Gallery ({{ count($headersGallery) }})</span>
-                        </h4>
-                        @if(count($headersGallery) > 0)
-                            <div class="flex flex-wrap gap-3">
-                                @foreach($headersGallery as $headPath)
-                                    <div class="relative group border-2 {{ $user->header_banner === $headPath ? 'border-indigo-500 scale-105' : 'border-transparent' }} rounded-2xl overflow-hidden transition">
-                                        <img src="{{ asset($headPath) }}" onclick="selectHeaderFromGallery('{{ addslashes($headPath) }}')" class="w-28 h-14 rounded-xl object-cover cursor-pointer hover:opacity-80 shadow-md">
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-xs text-gray-400 italic">No saved cover headers yet.</p>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- 4. SANDIKA & NIGMA PROGRESS TAB CONTENT -->
+                <!-- 3. SANDIKA & NIGMA PROGRESS TAB CONTENT -->
                 <div id="tabContentProgress" class="hidden animate-tab-fade space-y-6">
                     <!-- SANDIKA AGENT PROGRESS CARD -->
                     <div class="p-6 rounded-3xl bg-gradient-to-br from-amber-950/40 via-black/60 to-purple-950/40 border border-amber-500/30 shadow-2xl space-y-5">
@@ -809,35 +760,28 @@
             const btnPosts = document.getElementById('tabBtnPosts');
             const btnJournals = document.getElementById('tabBtnJournals');
             const btnProgress = document.getElementById('tabBtnProgress');
-            const btnGalleries = document.getElementById('tabBtnGalleries');
 
             const contentPosts = document.getElementById('tabContentPosts');
             const contentJournals = document.getElementById('tabContentJournals');
             const contentProgress = document.getElementById('tabContentProgress');
-            const contentGalleries = document.getElementById('tabContentGalleries');
 
-            btnPosts.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10";
-            btnJournals.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10";
+            if (btnPosts) btnPosts.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10";
+            if (btnJournals) btnJournals.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10";
             if (btnProgress) btnProgress.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10";
-            btnGalleries.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10";
 
-            contentPosts.classList.add('hidden');
-            contentJournals.classList.add('hidden');
+            if (contentPosts) contentPosts.classList.add('hidden');
+            if (contentJournals) contentJournals.classList.add('hidden');
             if (contentProgress) contentProgress.classList.add('hidden');
-            contentGalleries.classList.add('hidden');
 
-            if (tab === 'posts') {
-                btnPosts.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-indigo-600 text-white shadow-lg border border-indigo-400/40";
+            if (tab === 'posts' && contentPosts) {
+                if (btnPosts) btnPosts.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-indigo-600 text-white shadow-lg border border-indigo-400/40";
                 contentPosts.classList.remove('hidden');
-            } else if (tab === 'journals') {
-                btnJournals.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-pink-600 text-white shadow-lg border border-pink-400/40";
+            } else if (tab === 'journals' && contentJournals) {
+                if (btnJournals) btnJournals.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-pink-600 text-white shadow-lg border border-pink-400/40";
                 contentJournals.classList.remove('hidden');
-            } else if (tab === 'progress') {
+            } else if (tab === 'progress' && contentProgress) {
                 if (btnProgress) btnProgress.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-amber-600 text-white shadow-lg border border-amber-400/40";
-                if (contentProgress) contentProgress.classList.remove('hidden');
-            } else if (tab === 'galleries') {
-                btnGalleries.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-purple-600 text-white shadow-lg border border-purple-400/40";
-                contentGalleries.classList.remove('hidden');
+                contentProgress.classList.remove('hidden');
             }
         }
 
@@ -1234,17 +1178,22 @@
         const telegramAvatarsList = @json($avatarsList);
         const currentActiveAvatarPath = @json($user->avatar ?: 'images/profile.jpg');
         const isProfileOwner = @json($isProfileOwner);
+        const assetBaseUrl = "{{ asset('') }}".replace(/\/$/, '');
         let currentAvatarIndex = 0;
 
         function openTelegramAvatarViewer(startIndex = 0) {
             currentAvatarIndex = startIndex;
-            updateTelegramAvatarDisplay();
-            document.getElementById('telegramAvatarViewerModal').classList.remove('hidden');
+            const modal = document.getElementById('telegramAvatarViewerModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                updateTelegramAvatarDisplay();
+            }
             document.addEventListener('keydown', handleTelegramAvatarKeyDown);
         }
 
         function closeTelegramAvatarViewer() {
-            document.getElementById('telegramAvatarViewerModal').classList.add('hidden');
+            const modal = document.getElementById('telegramAvatarViewerModal');
+            if (modal) modal.classList.add('hidden');
             document.removeEventListener('keydown', handleTelegramAvatarKeyDown);
         }
 
@@ -1255,6 +1204,7 @@
         }
 
         function navigateTelegramAvatar(direction) {
+            if (!telegramAvatarsList || telegramAvatarsList.length === 0) return;
             currentAvatarIndex = (currentAvatarIndex + direction + telegramAvatarsList.length) % telegramAvatarsList.length;
             updateTelegramAvatarDisplay();
         }
@@ -1264,16 +1214,27 @@
             updateTelegramAvatarDisplay();
         }
 
+        function getFullAssetUrl(path) {
+            if (!path) return assetBaseUrl + '/images/profile.jpg';
+            if (path.startsWith('http://') || path.startsWith('https://')) return path;
+            const cleanPath = path.startsWith('/') ? path : '/' + path;
+            return assetBaseUrl + cleanPath;
+        }
+
         function updateTelegramAvatarDisplay() {
+            if (!telegramAvatarsList || telegramAvatarsList.length === 0) return;
+            if (currentAvatarIndex < 0 || currentAvatarIndex >= telegramAvatarsList.length) {
+                currentAvatarIndex = 0;
+            }
+
             const path = telegramAvatarsList[currentAvatarIndex];
             const mainImg = document.getElementById('telegramAvatarMainImg');
             const counter = document.getElementById('telegramAvatarCounter');
             const setMainBtn = document.getElementById('setMainAvatarBtn');
 
             if (mainImg) {
-                mainImg.style.opacity = '0.4';
-                mainImg.src = path.startsWith('http') || path.startsWith('/') ? path : '/' + path;
-                setTimeout(() => mainImg.style.opacity = '1', 80);
+                mainImg.src = getFullAssetUrl(path);
+                mainImg.style.opacity = '1';
             }
 
             if (counter) {
@@ -1294,8 +1255,8 @@
 
             // Owner main avatar status button
             if (setMainBtn) {
-                const cleanPath = path.replace(/^\//, '');
-                const cleanActive = currentActiveAvatarPath.replace(/^\//, '');
+                const cleanPath = path ? path.replace(/^\//, '') : '';
+                const cleanActive = currentActiveAvatarPath ? currentActiveAvatarPath.replace(/^\//, '') : '';
 
                 if (cleanPath === cleanActive) {
                     setMainBtn.innerHTML = `<span>✓</span><span>Active Main Profile Picture</span>`;
