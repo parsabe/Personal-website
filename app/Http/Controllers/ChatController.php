@@ -558,16 +558,17 @@ class ChatController extends Controller
 
         $request->validate(['avatar_path' => 'required|string']);
         $user = User::find(Auth::id());
-        $path = $request->input('avatar_path');
+        $path = trim($request->input('avatar_path'));
 
         $gallery = is_array($user->avatars_gallery) ? $user->avatars_gallery : [];
-        if (in_array($path, $gallery)) {
-            $user->avatar = $path;
-            $user->save();
-            return response()->json(['status' => 'success', 'message' => 'Active profile avatar updated!']);
+        if (!in_array($path, $gallery)) {
+            $gallery[] = $path;
+            $user->avatars_gallery = array_values(array_unique($gallery));
         }
 
-        return response()->json(['status' => 'error', 'message' => 'Avatar image not found in your gallery.'], 404);
+        $user->avatar = $path;
+        $user->save();
+        return response()->json(['status' => 'success', 'message' => 'Active profile avatar updated!']);
     }
 
     /**

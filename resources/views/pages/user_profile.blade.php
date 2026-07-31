@@ -56,6 +56,20 @@
         @include('top-header-controls')
         @include('sidebar')
 
+        @php
+            $avatarsList = is_array($user->avatars_gallery) && count($user->avatars_gallery) > 0 
+                ? $user->avatars_gallery 
+                : [];
+            if ($user->avatar && !in_array($user->avatar, $avatarsList)) {
+                array_unshift($avatarsList, $user->avatar);
+            }
+            if (count($avatarsList) === 0) {
+                $avatarsList = [$user->avatar ?: 'images/profile.jpg'];
+            }
+            $activeAvatarPath = $user->avatar ?: 'images/profile.jpg';
+            $isProfileOwner = Auth::check() && Auth::id() === $user->id;
+        @endphp
+
         <!-- MAIN PROFILE CONTENT CONTAINER (INNER CONTAINER SCROLLING ONLY) -->
         <main id="profile-scroll-area" class="flex-1 min-h-0 h-full flex flex-col custom-profile-scroll relative p-6 pt-12 lg:p-8 lg:pt-14 bg-black/30 space-y-6 pb-36">
             
@@ -72,9 +86,13 @@
                 <!-- AVATAR & EDIT BUTTON HEADER -->
                 <div class="px-6 pb-6 relative z-10">
                     <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between -mt-16 mb-4 gap-4">
-                        <div class="relative">
-                            <img id="mainProfileAvatarImg" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" 
-                                class="w-28 h-28 rounded-full border-4 border-gray-900 object-cover shadow-2xl">
+                        <div class="relative group cursor-pointer" onclick="openTelegramAvatarViewer(0)" title="Click to view full profile pictures (Telegram Style)">
+                            <img id="mainProfileAvatarImg" src="{{ asset($activeAvatarPath) }}" 
+                                class="w-28 h-28 rounded-full border-4 border-gray-900 object-cover shadow-2xl transition transform group-hover:scale-105 group-hover:brightness-110">
+                            <div class="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center transition backdrop-blur-[2px]">
+                                <span class="text-white text-base">🔍</span>
+                                <span class="text-white text-[10px] font-bold drop-shadow">View</span>
+                            </div>
                         </div>
 
                         <div class="flex items-center gap-2">
@@ -310,9 +328,9 @@
                         </h4>
                         @if(count($avatarsGallery) > 0)
                             <div class="flex flex-wrap gap-3">
-                                @foreach($avatarsGallery as $avPath)
-                                    <div class="relative group border-2 {{ $user->avatar === $avPath ? 'border-blue-500 scale-105' : 'border-transparent' }} rounded-full overflow-hidden transition">
-                                        <img src="{{ asset($avPath) }}" onclick="selectAvatarFromGallery('{{ addslashes($avPath) }}')" class="w-14 h-14 rounded-full object-cover cursor-pointer hover:opacity-80 shadow-md">
+                                @foreach($avatarsGallery as $avIdx => $avPath)
+                                    <div class="relative group border-2 {{ $user->avatar === $avPath ? 'border-indigo-400 scale-105 shadow-lg' : 'border-transparent' }} rounded-full overflow-hidden transition">
+                                        <img src="{{ asset($avPath) }}" onclick="openTelegramAvatarViewer({{ $avIdx }})" class="w-14 h-14 rounded-full object-cover cursor-pointer hover:opacity-80 shadow-md">
                                     </div>
                                 @endforeach
                             </div>
@@ -1211,6 +1229,165 @@
             const seek = document.getElementById(`arkham-seek-${spiritId}`);
             if (seek) seek.value = 0;
         }
+
+        // TELEGRAM-STYLE PROFILE AVATAR VIEWER SCRIPT
+        const telegramAvatarsList = @json($avatarsList);
+        const currentActiveAvatarPath = @json($user->avatar ?: 'images/profile.jpg');
+        const isProfileOwner = @json($isProfileOwner);
+        let currentAvatarIndex = 0;
+
+        function openTelegramAvatarViewer(startIndex = 0) {
+            currentAvatarIndex = startIndex;
+            updateTelegramAvatarDisplay();
+            document.getElementById('telegramAvatarViewerModal').classList.remove('hidden');
+            document.addEventListener('keydown', handleTelegramAvatarKeyDown);
+        }
+
+        function closeTelegramAvatarViewer() {
+            document.getElementById('telegramAvatarViewerModal').classList.add('hidden');
+            document.removeEventListener('keydown', handleTelegramAvatarKeyDown);
+        }
+
+        function handleTelegramAvatarKeyDown(e) {
+            if (e.key === 'ArrowLeft') navigateTelegramAvatar(-1);
+            else if (e.key === 'ArrowRight') navigateTelegramAvatar(1);
+            else if (e.key === 'Escape') closeTelegramAvatarViewer();
+        }
+
+        function navigateTelegramAvatar(direction) {
+            currentAvatarIndex = (currentAvatarIndex + direction + telegramAvatarsList.length) % telegramAvatarsList.length;
+            updateTelegramAvatarDisplay();
+        }
+
+        function selectTelegramAvatarIndex(index) {
+            currentAvatarIndex = index;
+            updateTelegramAvatarDisplay();
+        }
+
+        function updateTelegramAvatarDisplay() {
+            const path = telegramAvatarsList[currentAvatarIndex];
+            const mainImg = document.getElementById('telegramAvatarMainImg');
+            const counter = document.getElementById('telegramAvatarCounter');
+            const setMainBtn = document.getElementById('setMainAvatarBtn');
+
+            if (mainImg) {
+                mainImg.style.opacity = '0.4';
+                mainImg.src = path.startsWith('http') || path.startsWith('/') ? path : '/' + path;
+                setTimeout(() => mainImg.style.opacity = '1', 80);
+            }
+
+            if (counter) {
+                counter.innerText = `${currentAvatarIndex + 1} of ${telegramAvatarsList.length}`;
+            }
+
+            // Highlight active thumbnail
+            telegramAvatarsList.forEach((_, idx) => {
+                const thumb = document.getElementById(`telegramThumb-${idx}`);
+                if (thumb) {
+                    if (idx === currentAvatarIndex) {
+                        thumb.className = 'w-14 h-14 rounded-xl object-cover border-2 border-indigo-400 scale-110 shadow-lg brightness-110';
+                    } else {
+                        thumb.className = 'w-14 h-14 rounded-xl object-cover border-2 border-white/20 opacity-60 hover:opacity-100 transition';
+                    }
+                }
+            });
+
+            // Owner main avatar status button
+            if (setMainBtn) {
+                const cleanPath = path.replace(/^\//, '');
+                const cleanActive = currentActiveAvatarPath.replace(/^\//, '');
+
+                if (cleanPath === cleanActive) {
+                    setMainBtn.innerHTML = `<span>✓</span><span>Active Main Profile Picture</span>`;
+                    setMainBtn.className = "px-4 py-2 bg-emerald-600/80 text-white rounded-xl text-xs font-bold shadow-lg flex items-center gap-1.5 border border-emerald-400/40 cursor-default";
+                    setMainBtn.disabled = true;
+                } else {
+                    setMainBtn.innerHTML = `<span>⭐</span><span>Set as Main Profile Picture</span>`;
+                    setMainBtn.className = "px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl text-xs font-bold shadow-lg transition flex items-center gap-1.5 border border-white/20 cursor-pointer";
+                    setMainBtn.disabled = false;
+                }
+            }
+        }
+
+        async function setTelegramAvatarAsMain() {
+            const path = telegramAvatarsList[currentAvatarIndex];
+            const formData = new FormData();
+            formData.append('avatar_path', path);
+
+            try {
+                const res = await fetch('/user/profile/select-avatar', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    if (window.showToast) window.showToast('Main Profile Picture updated!', 'success');
+                    location.reload();
+                } else {
+                    alert(data.message || 'Error setting main profile picture.');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Network error.');
+            }
+        }
     </script>
+
+    <!-- TELEGRAM-STYLE AVATAR LIGHTBOX VIEWER MODAL -->
+    <div id="telegramAvatarViewerModal" class="hidden fixed inset-0 bg-black/95 backdrop-blur-2xl z-50 flex flex-col justify-between p-4 md:p-6 animate-fade-in select-none">
+        
+        <!-- TOP TOOLBAR HEADER -->
+        <div class="flex items-center justify-between z-20 px-2 pt-2">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full border border-white/20 overflow-hidden bg-black/40 shadow">
+                    <img src="{{ asset($activeAvatarPath) }}" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white leading-tight">{{ $user->name }}</h3>
+                    <p id="telegramAvatarCounter" class="text-[11px] text-gray-400 font-mono">1 of {{ count($avatarsList) }}</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                @if($isProfileOwner)
+                    <button id="setMainAvatarBtn" onclick="setTelegramAvatarAsMain()" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl text-xs font-bold shadow-lg transition flex items-center gap-1.5 border border-white/20">
+                        <span>⭐</span>
+                        <span>Set as Main Profile Picture</span>
+                    </button>
+                @endif
+                <button onclick="closeTelegramAvatarViewer()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold flex items-center justify-center text-lg transition">✕</button>
+            </div>
+        </div>
+
+        <!-- MAIN VIEWPORT CONTAINER WITH NAVIGATION ARROWS -->
+        <div class="relative flex-1 flex items-center justify-center my-4 overflow-hidden">
+            <!-- PREV ARROW -->
+            <button onclick="navigateTelegramAvatar(-1)" class="absolute left-2 md:left-6 z-20 w-12 h-12 rounded-full bg-black/60 hover:bg-indigo-600/80 text-white font-bold flex items-center justify-center text-xl backdrop-blur-md border border-white/20 transition transform hover:scale-110 shadow-2xl">
+                ❮
+            </button>
+
+            <!-- MAIN IMAGE DISPLAY -->
+            <div class="relative max-w-4xl max-h-[70vh] flex items-center justify-center p-2">
+                <img id="telegramAvatarMainImg" src="{{ asset($activeAvatarPath) }}" class="max-w-full max-h-[68vh] object-contain rounded-2xl border border-white/20 shadow-[0_0_50px_rgba(0,0,0,0.8)] transition duration-300 transform scale-100">
+            </div>
+
+            <!-- NEXT ARROW -->
+            <button onclick="navigateTelegramAvatar(1)" class="absolute right-2 md:right-6 z-20 w-12 h-12 rounded-full bg-black/60 hover:bg-indigo-600/80 text-white font-bold flex items-center justify-center text-xl backdrop-blur-md border border-white/20 transition transform hover:scale-110 shadow-2xl">
+                ❯
+            </button>
+        </div>
+
+        <!-- BOTTOM THUMBNAILS STRIP CAROUSEL (TELEGRAM STYLE) -->
+        <div class="w-full flex items-center justify-center z-20 pb-2">
+            <div class="flex items-center space-x-3 overflow-x-auto p-2 max-w-2xl chat-scroll bg-black/60 border border-white/10 rounded-2xl backdrop-blur-md">
+                @foreach($avatarsList as $index => $avPath)
+                    <div onclick="selectTelegramAvatarIndex({{ $index }})" class="cursor-pointer shrink-0 transition transform hover:scale-105 group relative">
+                        <img id="telegramThumb-{{ $index }}" src="{{ asset($avPath) }}" class="w-14 h-14 rounded-xl object-cover border-2 border-white/20 group-hover:border-indigo-400 transition shadow">
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
 </body>
 </html>
