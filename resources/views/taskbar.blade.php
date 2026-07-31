@@ -229,3 +229,5 @@
         }
     </script>
 @endif
+<script src="{{ asset('js/rank-notifier.js') }}"></script>
+

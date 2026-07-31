@@ -153,6 +153,47 @@ class SandikaController extends Controller
     }
 
     /**
+     * Update Git Insight (Editable by user from profile).
+     */
+    public function updateGitInsight(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => 'unauthorized'], 401);
+        }
+
+        $request->validate([
+            'repo_url' => 'required|url',
+            'description' => 'required|string',
+        ]);
+
+        $userId = Auth::id();
+        $insight = DB::table('sandika_git_insights')
+            ->where('id', $id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if (!$insight) {
+            return response()->json(['status' => 'error', 'message' => 'Git Insight not found or permission denied.'], 404);
+        }
+
+        $isGithub = Str::contains($request->input('repo_url'), 'github.com');
+
+        DB::table('sandika_git_insights')
+            ->where('id', $id)
+            ->update([
+                'repo_url' => $request->input('repo_url'),
+                'description' => $request->input('description'),
+                'is_github_verified' => $isGithub,
+                'updated_at' => now(),
+            ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Git Insight updated cleanly!',
+        ]);
+    }
+
+    /**
      * Analyze Voice Log (+45 CP).
      */
     public function analyzeVoiceLog(Request $request)

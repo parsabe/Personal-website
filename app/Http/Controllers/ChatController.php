@@ -285,13 +285,20 @@ class ChatController extends Controller
                 'level' => 3
             ];
         }
-        $sandikaStoriesCount = \Illuminate\Support\Facades\DB::table('sandika_stories')->where('user_id', $user->id)->count();
-        $sandikaDictCount = \Illuminate\Support\Facades\DB::table('sandika_dictionary')->where('user_id', $user->id)->count();
-        $sandikaGitCount = \Illuminate\Support\Facades\DB::table('sandika_git_insights')->where('user_id', $user->id)->count();
-        $sandikaArkhamCount = \Illuminate\Support\Facades\DB::table('sandika_arkham_solves')->where('user_id', $user->id)->count();
+        // Sandika Detailed Records for Profile Display
+        $userStories = DB::table('sandika_stories')->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        $userDict = DB::table('sandika_dictionary')->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        $userGit = DB::table('sandika_git_insights')->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        $userArkham = DB::table('sandika_arkham_solves')->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        $userNigmaSolves = DB::table('nigma_user_solves')->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+
+        $sandikaStoriesCount = count($userStories);
+        $sandikaDictCount = count($userDict);
+        $sandikaGitCount = count($userGit);
+        $sandikaArkhamCount = count($userArkham);
 
         // Nigma Riddler Progress Metrics
-        $nigmaSolvedCount = \Illuminate\Support\Facades\DB::table('nigma_user_solves')->where('user_id', $user->id)->count();
+        $nigmaSolvedCount = count($userNigmaSolves);
         $nigmaTotalRiddles = 20;
 
         return view('pages.user_profile', compact(
@@ -307,7 +314,12 @@ class ChatController extends Controller
             'sandikaGitCount',
             'sandikaArkhamCount',
             'nigmaSolvedCount',
-            'nigmaTotalRiddles'
+            'nigmaTotalRiddles',
+            'userStories',
+            'userDict',
+            'userGit',
+            'userArkham',
+            'userNigmaSolves'
         ));
     }
 

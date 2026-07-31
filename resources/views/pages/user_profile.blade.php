@@ -11,6 +11,22 @@
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
     <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
     <style>
+        html, body {
+            overflow-y: auto !important;
+            scroll-behavior: smooth;
+        }
+        .chat-scroll {
+            overflow-y: auto !important;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+        }
+        .chat-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 9999px;
+        }
         .animate-tab-fade {
             animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
@@ -20,16 +36,16 @@
         }
     </style>
 </head>
-<body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-3 lg:p-8 min-h-screen relative overflow-x-hidden">
+<body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-2 sm:p-4 lg:p-6 min-h-screen relative overflow-y-auto">
 
     <!-- MAIN CONTAINER -->
-    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[88vh] z-10 transition-all duration-700 shadow-2xl border border-white/10 animate-page-zoom-in">
+    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden min-h-[90vh] h-auto z-10 transition-all duration-700 shadow-2xl border border-white/10 animate-page-zoom-in">
 
         @include('top-header-controls')
         @include('sidebar')
 
-        <!-- MAIN PROFILE CONTENT CONTAINER -->
-        <main class="flex-1 flex flex-col overflow-y-auto relative p-6 pt-12 lg:p-8 lg:pt-14 bg-black/30 gap-6 animate-page-slide-up">
+        <!-- MAIN PROFILE CONTENT CONTAINER WITH AUTOMATIC SCROLLING -->
+        <main class="flex-1 flex flex-col overflow-y-auto chat-scroll relative p-6 pt-12 lg:p-8 lg:pt-14 bg-black/30 gap-6 animate-page-slide-up max-h-[85vh] sm:max-h-[88vh]">
             
             <!-- HEADER COVER BANNER & AVATAR CARD -->
             <div class="relative w-full rounded-3xl overflow-hidden bg-black/50 border border-white/15 shadow-2xl">
@@ -104,10 +120,10 @@
                         <!-- INSTAGRAM-STYLE STATS COUNTERS (1. Posts -> 2. Followers -> 3. Following -> 4. Journals -> 5. CP -> 6. Riddles) -->
                         <div class="flex flex-wrap items-center gap-3 pt-2 border-t border-white/10 text-xs font-sans">
                             <!-- 1. POSTS -->
-                            <div class="px-4 py-2 rounded-2xl bg-indigo-950/80 border border-indigo-500/40 flex items-center gap-2 shadow-lg text-white font-bold">
+                            <button onclick="switchProfileTab('posts')" class="px-4 py-2 rounded-2xl bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105 active:scale-95">
                                 <span class="text-indigo-300 font-bold">📱</span>
                                 <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ count($posts) }}</strong> Posts</span>
-                            </div>
+                            </button>
 
                             <!-- 2. FOLLOWERS -->
                             <button onclick="openFollowersModal()" class="px-4 py-2 rounded-2xl bg-blue-900/90 hover:bg-blue-800 border border-blue-400/60 flex items-center gap-2 shadow-xl transition transform hover:scale-105 active:scale-95 cursor-pointer text-white font-bold">
@@ -121,23 +137,23 @@
                                 <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $followingCount }}</strong> Following</span>
                             </button>
 
-                            <!-- 4. JOURNALS -->
-                            <div class="px-4 py-2 rounded-2xl bg-pink-950/80 border border-pink-500/40 flex items-center gap-2 shadow-lg text-white font-bold">
+                            <!-- 4. JOURNALS (CLICKABLE) -->
+                            <button onclick="switchProfileTab('journals')" class="px-4 py-2 rounded-2xl bg-pink-950/80 hover:bg-pink-900 border border-pink-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105 active:scale-95">
                                 <span class="text-pink-300 font-bold">📔</span>
                                 <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ count($articles) }}</strong> {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Journale' : 'Journals' }}</span>
-                            </div>
+                            </button>
 
                             <!-- 5. SANDIKA CP -->
-                            <div onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105">
+                            <button onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105 active:scale-95">
                                 <img src="{{ asset($rankImg) }}" class="w-5 h-5 rounded-full object-cover border border-amber-400">
                                 <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $sandikaRank->xp }}</strong> CP</span>
-                            </div>
+                            </button>
 
                             <!-- 6. NIGMA RIDDLES -->
-                            <div onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105">
+                            <button onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105 active:scale-95">
                                 <span class="text-emerald-300 font-bold">🧩</span>
                                 <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $nigmaSolvedCount }}/{{ $nigmaTotalRiddles }}</strong> Riddles Solved</span>
-                            </div>
+                            </button>
                         </div>
             <!-- INSTAGRAM STORY HIGHLIGHTS & ARCHIVES TRAY -->
             <div class="p-5 rounded-3xl bg-black/40 border border-white/10 space-y-3">
@@ -369,7 +385,167 @@
                         </div>
                     </div>
 
-                    <!-- NIGMA RIDDLER PROGRESS CARD -->
+                    <!-- 1. 💻 GIT INSIGHTS (EDITABLE BY USER) -->
+                    <div class="p-6 rounded-3xl bg-black/50 border border-white/10 space-y-4">
+                        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                            <h4 class="font-extrabold text-white text-sm font-mono flex items-center gap-2">
+                                <span>💻 GIT INSIGHTS & REPOSITORIES LOGGED</span>
+                                <span class="px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-xs border border-indigo-500/40">Editable</span>
+                            </h4>
+                            <span class="text-xs text-gray-400 font-mono">{{ count($userGit) }} Contributed</span>
+                        </div>
+
+                        @if(count($userGit) > 0)
+                            <div class="space-y-3">
+                                @foreach($userGit as $g)
+                                    <div class="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2 text-xs">
+                                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                                            <a href="{{ $g->repo_url }}" target="_blank" class="font-bold text-emerald-400 hover:underline flex items-center gap-1.5 truncate max-w-md">
+                                                <span>🔗</span> {{ $g->repo_url }}
+                                            </a>
+                                            <div class="flex items-center gap-2 shrink-0">
+                                                <span class="text-[10px] font-mono text-amber-400 font-bold">+{{ $g->cp_awarded ?? 15 }} CP</span>
+                                                <button onclick="openEditGitInsightModal({{ $g->id }}, '{{ addslashes($g->repo_url) }}', '{{ addslashes(str_replace(["\r", "\n"], [' ', ' '], $g->description)) }}')" 
+                                                    class="px-3 py-1 bg-indigo-600/40 hover:bg-indigo-600 text-indigo-200 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1">
+                                                    <span>✏️</span> Edit Insight
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <p class="text-gray-300 leading-relaxed font-sans">{{ $g->description }}</p>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="p-4 text-center text-xs text-gray-400 font-mono italic bg-white/5 rounded-2xl">
+                                No Git insights logged yet. Visit Sandika Portal to log repositories!
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- 2. 👻 AMADEUS ARKHAM SPIRITS SOLVED (READ-ONLY WITH AUDIO PLAYERS) -->
+                    @php
+                        $solvedSpiritIds = $userArkham->pluck('spirit_id')->toArray();
+                    @endphp
+                    <div class="p-6 rounded-3xl bg-black/50 border border-white/10 space-y-4">
+                        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                            <h4 class="font-extrabold text-white text-sm font-mono flex items-center gap-2">
+                                <span>👻 AMADEUS ARKHAM SPIRITS SOLVED (AUDIO LOGS)</span>
+                            </h4>
+                            <span class="text-xs text-amber-400 font-mono font-bold">{{ count($solvedSpiritIds) }} / 10 Solved</span>
+                        </div>
+
+                        <div class="flex flex-col space-y-4 w-full">
+                            @for ($i = 1; $i <= 10; $i++)
+                                @php
+                                    $isSolved = in_array($i, $solvedSpiritIds);
+                                @endphp
+                                <div class="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-3 w-full">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 to-rose-600 flex items-center justify-center text-white font-mono font-bold text-xs shadow">
+                                                #{{ $i }}
+                                            </div>
+                                            <div>
+                                                <h5 class="text-xs font-bold text-white font-mono">Arkham Spirit Cipher #{{ $i }}</h5>
+                                                <span class="text-[10px] text-amber-400 font-mono">Reward: +20 CP + Audio Track</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            @if($isSolved)
+                                                <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-mono font-bold">
+                                                    ✅ Deciphered (+20 CP)
+                                                </span>
+                                            @else
+                                                <span class="px-3 py-1 rounded-full bg-gray-800 text-gray-400 border border-white/10 text-[10px] font-mono">
+                                                    🔒 Sealed Audio Log
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    @if($isSolved)
+                                        <!-- FULL AUDIO PLAYER FOR SOLVED SPIRITS -->
+                                        <div id="arkham-profile-audio-card-{{ $i }}" class="p-3 bg-gradient-to-r from-indigo-950/80 via-purple-950/80 to-black/80 border border-indigo-500/40 rounded-xl space-y-2">
+                                            <div class="flex items-center gap-3">
+                                                <button onclick="toggleArkhamAudio({{ $i }})" id="arkham-play-btn-{{ $i }}" class="w-9 h-9 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center font-bold text-xs shadow shrink-0">
+                                                    ▶
+                                                </button>
+                                                <div class="flex-1 space-y-1">
+                                                    <input type="range" id="arkham-seek-{{ $i }}" value="0" min="0" max="100" step="0.1" oninput="seekArkhamAudio({{ $i }}, this.value)" class="w-full h-1.5 bg-black/80 rounded-lg appearance-none cursor-pointer accent-indigo-400">
+                                                    <div class="flex justify-between text-[10px] text-gray-400 font-mono">
+                                                        <span id="arkham-time-curr-{{ $i }}">0:00</span>
+                                                        <span id="arkham-time-dur-{{ $i }}">0:00</span>
+                                                    </div>
+                                                </div>
+                                                <button onclick="replayArkhamAudio({{ $i }})" title="Replay Audio" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-bold shrink-0">
+                                                    🔄
+                                                </button>
+                                                <audio id="arkham-audio-player-{{ $i }}" src="{{ asset("audio/sandika/{$i}.mp3") }}" preload="metadata" ontimeupdate="updateArkhamAudioProgress({{ $i }})" onended="onArkhamAudioEnded({{ $i }})"></audio>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endfor
+                        </div>
+                    </div>
+
+                    <!-- 3. 📖 PUBLISHED STORIES HUB -->
+                    <div class="p-6 rounded-3xl bg-black/50 border border-white/10 space-y-4">
+                        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                            <h4 class="font-extrabold text-white text-sm font-mono flex items-center gap-2">
+                                <span>📖 PUBLISHED STORIES HUB</span>
+                            </h4>
+                            <span class="text-xs text-amber-400 font-mono">{{ count($userStories) }} Published</span>
+                        </div>
+
+                        @if(count($userStories) > 0)
+                            <div class="space-y-3">
+                                @foreach($userStories as $st)
+                                    <div class="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2 text-xs">
+                                        <div class="flex items-center justify-between">
+                                            <h5 class="font-bold text-white text-sm">{{ $st->title }}</h5>
+                                            <span class="text-[10px] font-mono text-amber-400 font-bold">+{{ $st->cp_awarded ?? 10 }} CP</span>
+                                        </div>
+                                        <p class="text-gray-300 leading-relaxed font-sans line-clamp-3">{{ $st->content }}</p>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="p-4 text-center text-xs text-gray-400 font-mono italic bg-white/5 rounded-2xl">
+                                No stories published yet.
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- 4. 📚 LEXICON DICTIONARY CONTRIBUTIONS -->
+                    <div class="p-6 rounded-3xl bg-black/50 border border-white/10 space-y-4">
+                        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                            <h4 class="font-extrabold text-white text-sm font-mono flex items-center gap-2">
+                                <span>📚 LEXICON DICTIONARY CONTRIBUTIONS</span>
+                            </h4>
+                            <span class="text-xs text-pink-400 font-mono">{{ count($userDict) }} Entries</span>
+                        </div>
+
+                        @if(count($userDict) > 0)
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                @foreach($userDict as $d)
+                                    <div class="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-1 text-xs">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-bold text-white uppercase font-mono">{{ $d->word }}</span>
+                                            <span class="px-2 py-0.5 rounded-md bg-indigo-600/30 text-indigo-300 text-[10px] font-mono uppercase font-bold">{{ $d->language ?? 'en' }}</span>
+                                        </div>
+                                        <p class="text-gray-300 leading-relaxed font-sans text-[11px]">{{ $d->definition }}</p>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="p-4 text-center text-xs text-gray-400 font-mono italic bg-white/5 rounded-2xl">
+                                No dictionary words contributed yet.
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- 5. NIGMA RIDDLER PROGRESS CARD -->
                     <div class="p-6 rounded-3xl bg-gradient-to-br from-emerald-950/40 via-black/60 to-cyan-950/40 border border-emerald-500/30 shadow-2xl space-y-5">
                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-emerald-500/20 pb-4">
                             <div class="flex items-center gap-3">
@@ -842,13 +1018,153 @@
                         <p id="archiveViewerCount" class="text-[10px] text-gray-400 font-mono">0 Story Media Items</p>
                     </div>
                 </div>
-                <button onclick="closeViewArchiveModal()" class="text-gray-400 hover:text-white text-base font-bold">✕</button>
+    <!-- EDIT GIT INSIGHT MODAL -->
+    <div id="editGitInsightModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-md shadow-2xl text-xs space-y-4 animate-scale-up">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <span>✏️ Edit Git Insight</span>
+                </h3>
+                <button onclick="closeEditGitInsightModal()" class="text-gray-400 hover:text-white text-base font-bold">✕</button>
             </div>
 
-            <div id="archiveViewerMediaContainer" class="w-full max-h-[60vh] overflow-y-auto chat-scroll space-y-3 p-2 bg-black/60 rounded-2xl border border-white/10">
-                <p class="text-center text-gray-400 italic py-6">No media in this archive.</p>
-            </div>
+            <form id="editGitInsightForm" onsubmit="submitUpdateGitInsight(event)" class="space-y-4">
+                @csrf
+                <input type="hidden" id="edit_git_insight_id">
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1">Repository URL</label>
+                    <input type="url" id="edit_git_repo_url" required placeholder="https://github.com/username/repo..." class="w-full bg-black/50 border border-white/20 rounded-xl px-3.5 py-2 text-white text-xs focus:outline-none focus:border-indigo-500 font-mono">
+                </div>
+
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1">Description / Key Insight</label>
+                    <textarea id="edit_git_description" required rows="4" placeholder="Description of repository insight..." class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-white text-xs focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 pt-3 border-t border-white/10">
+                    <button type="button" onclick="closeEditGitInsightModal()" class="px-4 py-2 bg-gray-800 text-gray-300 rounded-xl font-semibold">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg transition">Save Changes</button>
+                </div>
+            </form>
         </div>
     </div>
+
+    <script>
+        function openEditGitInsightModal(id, repoUrl, description) {
+            document.getElementById('edit_git_insight_id').value = id;
+            document.getElementById('edit_git_repo_url').value = repoUrl;
+            document.getElementById('edit_git_description').value = description;
+            document.getElementById('editGitInsightModal').classList.remove('hidden');
+        }
+
+        function closeEditGitInsightModal() {
+            document.getElementById('editGitInsightModal').classList.add('hidden');
+        }
+
+        async function submitUpdateGitInsight(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit_git_insight_id').value;
+            const repoUrl = document.getElementById('edit_git_repo_url').value;
+            const description = document.getElementById('edit_git_description').value;
+
+            try {
+                const res = await fetch(`/sandika/git/${id}/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ repo_url: repoUrl, description: description })
+                });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    if (window.showToast) window.showToast('Git Insight updated cleanly!', 'success');
+                    else alert(data.message);
+                    closeEditGitInsightModal();
+                    location.reload();
+                } else {
+                    alert(data.message || 'Error updating Git Insight.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Network error.');
+            }
+        }
+
+        // Profile Audio Player Script for Amadeus Arkham Solves
+        let activeProfileSpiritAudioId = null;
+
+        function toggleArkhamAudio(spiritId) {
+            const audio = document.getElementById(`arkham-audio-player-${spiritId}`);
+            const btn = document.getElementById(`arkham-play-btn-${spiritId}`);
+
+            if (!audio) return;
+
+            if (activeProfileSpiritAudioId && activeProfileSpiritAudioId !== spiritId) {
+                const prevAudio = document.getElementById(`arkham-audio-player-${activeProfileSpiritAudioId}`);
+                const prevBtn = document.getElementById(`arkham-play-btn-${activeProfileSpiritAudioId}`);
+                if (prevAudio) prevAudio.pause();
+                if (prevBtn) prevBtn.innerText = '▶';
+            }
+
+            if (audio.paused) {
+                audio.play().then(() => {
+                    if (btn) btn.innerText = '⏸';
+                    activeProfileSpiritAudioId = spiritId;
+                }).catch(err => console.log('Audio play permission:', err));
+            } else {
+                audio.pause();
+                if (btn) btn.innerText = '▶';
+            }
+        }
+
+        function seekArkhamAudio(spiritId, percent) {
+            const audio = document.getElementById(`arkham-audio-player-${spiritId}`);
+            if (audio && audio.duration) {
+                audio.currentTime = (percent / 100) * audio.duration;
+            }
+        }
+
+        function replayArkhamAudio(spiritId) {
+            const audio = document.getElementById(`arkham-audio-player-${spiritId}`);
+            if (audio) {
+                audio.currentTime = 0;
+                toggleArkhamAudio(spiritId);
+            }
+        }
+
+        function updateArkhamAudioProgress(spiritId) {
+            const audio = document.getElementById(`arkham-audio-player-${spiritId}`);
+            const seek = document.getElementById(`arkham-seek-${spiritId}`);
+            const timeCurr = document.getElementById(`arkham-time-curr-${spiritId}`);
+            const timeDur = document.getElementById(`arkham-time-dur-${spiritId}`);
+
+            if (!audio || isNaN(audio.duration)) return;
+
+            const current = audio.currentTime;
+            const duration = audio.duration;
+
+            if (seek) seek.value = (current / duration) * 100;
+
+            if (timeCurr) {
+                const mins = Math.floor(current / 60);
+                const secs = Math.floor(current % 60);
+                timeCurr.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+
+            if (timeDur) {
+                const mins = Math.floor(duration / 60);
+                const secs = Math.floor(duration % 60);
+                timeDur.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+        }
+
+        function onArkhamAudioEnded(spiritId) {
+            const btn = document.getElementById(`arkham-play-btn-${spiritId}`);
+            if (btn) btn.innerText = '▶';
+            const seek = document.getElementById(`arkham-seek-${spiritId}`);
+            if (seek) seek.value = 0;
+        }
+    </script>
 </body>
 </html>
