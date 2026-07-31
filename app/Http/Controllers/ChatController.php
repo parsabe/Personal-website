@@ -276,7 +276,39 @@ class ChatController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('pages.user_profile', compact('user', 'posts', 'articles', 'followersCount', 'followingCount', 'archives'));
+        // Sandika Progress Metrics
+        $sandikaRank = \App\Models\SandikaUserRank::where('user_id', $user->id)->first();
+        if (!$sandikaRank) {
+            $sandikaRank = (object)[
+                'xp' => 50,
+                'rank_title' => 'Captain ⚔️ (Verified)',
+                'level' => 3
+            ];
+        }
+        $sandikaStoriesCount = \Illuminate\Support\Facades\DB::table('sandika_stories')->where('user_id', $user->id)->count();
+        $sandikaDictCount = \Illuminate\Support\Facades\DB::table('sandika_dictionary')->where('user_id', $user->id)->count();
+        $sandikaGitCount = \Illuminate\Support\Facades\DB::table('sandika_git_insights')->where('user_id', $user->id)->count();
+        $sandikaArkhamCount = \Illuminate\Support\Facades\DB::table('sandika_arkham_solves')->where('user_id', $user->id)->count();
+
+        // Nigma Riddler Progress Metrics
+        $nigmaSolvedCount = \Illuminate\Support\Facades\DB::table('nigma_user_solves')->where('user_id', $user->id)->count();
+        $nigmaTotalRiddles = 20;
+
+        return view('pages.user_profile', compact(
+            'user',
+            'posts',
+            'articles',
+            'followersCount',
+            'followingCount',
+            'archives',
+            'sandikaRank',
+            'sandikaStoriesCount',
+            'sandikaDictCount',
+            'sandikaGitCount',
+            'sandikaArkhamCount',
+            'nigmaSolvedCount',
+            'nigmaTotalRiddles'
+        ));
     }
 
     /**

@@ -95,14 +95,15 @@ class BlogController extends Controller
      */
     private function generateArticleBladeFile(BlogPost $post)
     {
-        $dir = resource_path('views/pages/publications/articles');
-        if (!file_exists($dir)) {
-            mkdir($dir, 0755, true);
-        }
+        try {
+            $dir = resource_path('views/pages/publications/articles');
+            if (!file_exists($dir)) {
+                mkdir($dir, 0775, true);
+            }
 
-        $filePath = $dir . '/' . $post->slug . '.blade.php';
+            $filePath = $dir . '/' . $post->slug . '.blade.php';
 
-        $bladeContent = '<!DOCTYPE html>
+            $bladeContent = '<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -149,7 +150,10 @@ class BlogController extends Controller
 </body>
 </html>';
 
-        file_put_contents($filePath, $bladeContent);
+            @file_put_contents($filePath, $bladeContent);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to generate article blade file: ' . $e->getMessage());
+        }
     }
 
     /**

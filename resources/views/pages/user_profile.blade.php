@@ -57,13 +57,35 @@
                     </div>
 
                     <!-- USER INFO & STATS -->
-                    <div class="space-y-4">
+                    <div class="space-y-3">
                         <div>
-                            <h1 class="text-2xl lg:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                                <span>{{ $user->name }}</span>
-                                <span class="text-xs font-mono text-gray-400 font-normal">@({{ $user->username ?? 'user' }})</span>
-                            </h1>
-                            <p class="text-xs text-gray-300 pt-1 leading-relaxed max-w-2xl font-medium">
+                            <!-- NAME ROW: Name + Verified Blue Checkmark + Sandika Rank Badge -->
+                            <div class="flex flex-wrap items-center gap-2.5">
+                                <h1 class="text-2xl lg:text-3xl font-extrabold text-white tracking-tight">
+                                    {{ $user->name }}
+                                </h1>
+
+                                <!-- VERIFICATION BLUE CHECKMARK BADGE -->
+                                <span title="Verified Sandika Agent" class="inline-flex items-center justify-center text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]">
+                                    <svg class="w-6 h-6 fill-current text-blue-500" viewBox="0 0 24 24">
+                                        <path d="M22.5 12.5c0-1.58-.8-2.96-2.03-3.75.32-1.54-.15-3.17-1.28-4.3-1.13-1.13-2.76-1.6-4.3-1.28C14.1.44 12.72-.36 11.14-.36c-1.58 0-2.96.8-3.75 2.03-1.54-.32-3.17.15-4.3 1.28-1.13 1.13-1.6 2.76-1.28 4.3C.58 8.16-.22 9.54-.22 11.12c0 1.58.8 2.96 2.03 3.75-.32 1.54.15 3.17 1.28 4.3 1.13 1.13 2.76 1.6 4.3 1.28 1.28 1.23 2.66 2.03 4.24 2.03 1.58 0 2.96-.8 3.75-2.03 1.54.32 3.17-.15 4.3-1.28 1.13-1.13 1.6-2.76 1.28-4.3 1.23-1.28 2.03-2.66 2.03-4.24zm-12.5 4.5l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                                    </svg>
+                                </span>
+
+                                <!-- SANDIKA RANK LOGO BADGE -->
+                                <span class="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-rose-500/20 to-purple-500/20 border border-amber-500/40 text-amber-300 text-xs font-mono font-bold flex items-center gap-1.5 shadow-lg backdrop-blur-md">
+                                    <span>⚔️</span>
+                                    <span>{{ $sandikaRank->rank_title ?? 'Captain ⚔️ (Verified)' }}</span>
+                                </span>
+                            </div>
+
+                            <!-- USERNAME BELOW NAME -->
+                            <p class="text-sm font-mono text-gray-400 font-semibold pt-1">
+                                @({{ $user->username ?? 'user' }})
+                            </p>
+
+                            <!-- BIO BELOW USERNAME -->
+                            <p class="text-xs sm:text-sm text-gray-300 pt-2 leading-relaxed max-w-2xl font-medium">
                                 {{ $user->bio ?? 'No bio added yet.' }}
                             </p>
                         </div>
@@ -78,6 +100,16 @@
                             <div class="px-4 py-2 rounded-2xl bg-pink-950/80 border border-pink-500/40 flex items-center gap-2 shadow-lg text-white font-bold">
                                 <span class="text-pink-300 font-bold">📔</span>
                                 <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ count($articles) }}</strong> {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Journale' : 'Journals' }}</span>
+                            </div>
+
+                            <div onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105">
+                                <span class="text-amber-300 font-bold">⚔️</span>
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $sandikaRank->xp }}</strong> CP ({{ $sandikaRank->rank_title }})</span>
+                            </div>
+
+                            <div onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105">
+                                <span class="text-emerald-300 font-bold">🧩</span>
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $nigmaSolvedCount }}/{{ $nigmaTotalRiddles }}</strong> Riddles Solved</span>
                             </div>
 
                             <button onclick="openFollowersModal()" class="px-4 py-2 rounded-2xl bg-blue-900/90 hover:bg-blue-800 border border-blue-400/60 flex items-center gap-2 shadow-xl transition transform hover:scale-105 active:scale-95 cursor-pointer text-white font-bold">
@@ -127,7 +159,7 @@
                 </div>
             </div>
 
-            <!-- SEPARATED TAB BUTTONS (POSTS / JOURNALS / GALLERIES) -->
+            <!-- SEPARATED TAB BUTTONS (POSTS / JOURNALS / GALLERIES / PROGRESS) -->
             <div class="space-y-4">
                 <div class="flex items-center space-x-2 border-b border-white/10 pb-2 overflow-x-auto">
                     <button onclick="switchProfileTab('posts')" id="tabBtnPosts" class="px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-indigo-600 text-white shadow-lg border border-indigo-400/40">
@@ -138,6 +170,11 @@
                     <button onclick="switchProfileTab('journals')" id="tabBtnJournals" class="px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10">
                         <span>📔</span>
                         <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Veröffentlichte Journale' : 'Published Journals' }} ({{ count($articles) }})</span>
+                    </button>
+
+                    <button onclick="switchProfileTab('progress')" id="tabBtnProgress" class="px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10">
+                        <span>⚔️</span>
+                        <span>Sandika & Nigma {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Fortschritt' : 'Progress' }}</span>
                     </button>
 
                     <button onclick="switchProfileTab('galleries')" id="tabBtnGalleries" class="px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10">
@@ -255,6 +292,105 @@
                         @else
                             <p class="text-xs text-gray-400 italic">No saved cover headers yet.</p>
                         @endif
+                    </div>
+                </div>
+
+                <!-- 4. SANDIKA & NIGMA PROGRESS TAB CONTENT -->
+                <div id="tabContentProgress" class="hidden animate-tab-fade space-y-6">
+                    <!-- SANDIKA AGENT PROGRESS CARD -->
+                    <div class="p-6 rounded-3xl bg-gradient-to-br from-amber-950/40 via-black/60 to-purple-950/40 border border-amber-500/30 shadow-2xl space-y-5">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-amber-500/20 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-2xl shadow-lg">
+                                    ⚔️
+                                </div>
+                                <div>
+                                    <h3 class="font-extrabold text-white text-base tracking-wide flex items-center gap-2">
+                                        <span>Sandika Cyber Intelligence Matrix</span>
+                                    </h3>
+                                    <p class="text-xs text-amber-300 font-mono">Agent Rank: <strong>{{ $sandikaRank->rank_title }}</strong> (Level {{ $sandikaRank->level }})</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('sandika') }}" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-400 hover:to-rose-500 text-white font-bold rounded-2xl text-xs shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center gap-2 border border-white/20">
+                                <span>Launch Sandika Portal</span>
+                                <span>➔</span>
+                            </a>
+                        </div>
+
+                        <!-- CP PROGRESS BAR -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-mono">
+                                <span class="text-gray-300">Combat Power (CP / XP): <strong class="text-amber-400">{{ $sandikaRank->xp }} CP</strong></span>
+                                <span class="text-amber-400 font-bold">Level {{ $sandikaRank->level }}</span>
+                            </div>
+                            <div class="w-full h-3 bg-black/60 rounded-full overflow-hidden border border-amber-500/30 p-0.5">
+                                <div class="h-full bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 rounded-full transition-all duration-500" style="width: {{ min(100, max(15, ($sandikaRank->xp / 200) * 100)) }}%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- STATS GRID -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                            <div class="p-3.5 rounded-2xl bg-black/40 border border-white/10 space-y-1">
+                                <span class="text-amber-400 text-xs font-bold block">📖 Stories</span>
+                                <span class="text-xl font-extrabold text-white">{{ $sandikaStoriesCount }}</span>
+                                <span class="text-[10px] text-gray-400 block font-mono">Published</span>
+                            </div>
+                            <div class="p-3.5 rounded-2xl bg-black/40 border border-white/10 space-y-1">
+                                <span class="text-pink-400 text-xs font-bold block">📚 Lexicon</span>
+                                <span class="text-xl font-extrabold text-white">{{ $sandikaDictCount }}</span>
+                                <span class="text-[10px] text-gray-400 block font-mono">Words Contributed</span>
+                            </div>
+                            <div class="p-3.5 rounded-2xl bg-black/40 border border-white/10 space-y-1">
+                                <span class="text-indigo-400 text-xs font-bold block">💻 Git Insights</span>
+                                <span class="text-xl font-extrabold text-white">{{ $sandikaGitCount }}</span>
+                                <span class="text-[10px] text-gray-400 block font-mono">Repositories Logged</span>
+                            </div>
+                            <div class="p-3.5 rounded-2xl bg-black/40 border border-white/10 space-y-1">
+                                <span class="text-purple-400 text-xs font-bold block">👻 Arkham Solves</span>
+                                <span class="text-xl font-extrabold text-white">{{ $sandikaArkhamCount }}</span>
+                                <span class="text-[10px] text-gray-400 block font-mono">Spirits Exorcised</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NIGMA RIDDLER PROGRESS CARD -->
+                    <div class="p-6 rounded-3xl bg-gradient-to-br from-emerald-950/40 via-black/60 to-cyan-950/40 border border-emerald-500/30 shadow-2xl space-y-5">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-emerald-500/20 pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-2xl shadow-lg">
+                                    🧩
+                                </div>
+                                <div>
+                                    <h3 class="font-extrabold text-white text-base tracking-wide flex items-center gap-2">
+                                        <span>Nigma Cryptographic Archive</span>
+                                    </h3>
+                                    <p class="text-xs text-emerald-300 font-mono">Riddler Decryption Solves</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('nigma') }}" class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold rounded-2xl text-xs shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center gap-2 border border-white/20">
+                                <span>Enter Nigma Riddler Vault</span>
+                                <span>➔</span>
+                            </a>
+                        </div>
+
+                        <!-- NIGMA SOLVES PROGRESS BAR -->
+                        @php
+                            $nigmaPercent = round(($nigmaSolvedCount / max(1, $nigmaTotalRiddles)) * 100);
+                        @endphp
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-xs font-mono">
+                                <span class="text-gray-300">Decryption Progress: <strong class="text-emerald-400">{{ $nigmaSolvedCount }} of {{ $nigmaTotalRiddles }} Riddles Solved</strong></span>
+                                <span class="text-emerald-400 font-bold">{{ $nigmaPercent }}%</span>
+                            </div>
+                            <div class="w-full h-3 bg-black/60 rounded-full overflow-hidden border border-emerald-500/30 p-0.5">
+                                <div class="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 rounded-full transition-all duration-500" style="width: {{ max(5, $nigmaPercent) }}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-between text-xs font-mono">
+                            <span class="text-gray-300">Solving riddles in Nigma awards <strong class="text-emerald-300">+15 CP</strong> to your Sandika Agent rank!</span>
+                            <span class="text-emerald-400 font-bold">Total CP Earned: +{{ $nigmaSolvedCount * 15 }} CP</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -416,18 +552,22 @@
         function switchProfileTab(tab) {
             const btnPosts = document.getElementById('tabBtnPosts');
             const btnJournals = document.getElementById('tabBtnJournals');
+            const btnProgress = document.getElementById('tabBtnProgress');
             const btnGalleries = document.getElementById('tabBtnGalleries');
 
             const contentPosts = document.getElementById('tabContentPosts');
             const contentJournals = document.getElementById('tabContentJournals');
+            const contentProgress = document.getElementById('tabContentProgress');
             const contentGalleries = document.getElementById('tabContentGalleries');
 
             btnPosts.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10";
             btnJournals.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10";
+            if (btnProgress) btnProgress.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10";
             btnGalleries.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10";
 
             contentPosts.classList.add('hidden');
             contentJournals.classList.add('hidden');
+            if (contentProgress) contentProgress.classList.add('hidden');
             contentGalleries.classList.add('hidden');
 
             if (tab === 'posts') {
@@ -436,6 +576,9 @@
             } else if (tab === 'journals') {
                 btnJournals.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-pink-600 text-white shadow-lg border border-pink-400/40";
                 contentJournals.classList.remove('hidden');
+            } else if (tab === 'progress') {
+                if (btnProgress) btnProgress.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-amber-600 text-white shadow-lg border border-amber-400/40";
+                if (contentProgress) contentProgress.classList.remove('hidden');
             } else if (tab === 'galleries') {
                 btnGalleries.className = "px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-purple-600 text-white shadow-lg border border-purple-400/40";
                 contentGalleries.classList.remove('hidden');
