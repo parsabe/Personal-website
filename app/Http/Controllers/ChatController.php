@@ -269,8 +269,22 @@ class ChatController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $followersCount = UserFollow::where('following_id', $user->id)->count();
-        $followingCount = UserFollow::where('follower_id', $user->id)->count();
+        $followersUsers = UserFollow::where('following_id', $user->id)
+            ->with('follower:id,name,username,avatar,bio')
+            ->get()
+            ->pluck('follower')
+            ->filter()
+            ->values();
+
+        $followingUsers = UserFollow::where('follower_id', $user->id)
+            ->with('following:id,name,username,avatar,bio')
+            ->get()
+            ->pluck('following')
+            ->filter()
+            ->values();
+
+        $followersCount = count($followersUsers);
+        $followingCount = count($followingUsers);
 
         $archives = \App\Models\UserStoryArchive::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
@@ -307,6 +321,8 @@ class ChatController extends Controller
             'articles',
             'followersCount',
             'followingCount',
+            'followersUsers',
+            'followingUsers',
             'archives',
             'sandikaRank',
             'sandikaStoriesCount',

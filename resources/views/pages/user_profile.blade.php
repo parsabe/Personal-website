@@ -11,22 +11,6 @@
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
     <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
     <style>
-        html, body {
-            overflow-y: auto !important;
-            scroll-behavior: smooth;
-        }
-        .chat-scroll {
-            overflow-y: auto !important;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-        }
-        .chat-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-        .chat-scroll::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 9999px;
-        }
         .animate-tab-fade {
             animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
@@ -36,168 +20,164 @@
         }
     </style>
 </head>
-<body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-2 sm:p-4 lg:p-6 min-h-screen relative overflow-y-auto">
+<body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-3 lg:p-8 min-h-screen relative overflow-x-hidden">
 
     <!-- MAIN CONTAINER -->
-    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden min-h-[90vh] h-auto z-10 transition-all duration-700 shadow-2xl border border-white/10 animate-page-zoom-in">
+    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[88vh] z-10 transition-all duration-700 shadow-2xl border border-white/10 animate-page-zoom-in">
 
         @include('top-header-controls')
         @include('sidebar')
 
         <!-- MAIN PROFILE CONTENT CONTAINER -->
-        <main class="flex-1 flex flex-col relative p-4 sm:p-6 pt-10 lg:p-8 lg:pt-12 bg-black/30 gap-4 overflow-hidden h-[88vh]">
+        <main class="flex-1 flex flex-col overflow-y-auto relative p-6 pt-12 lg:p-8 lg:pt-14 bg-black/30 gap-6 animate-page-slide-up">
             
-            <!-- FIXED TOP PROFILE HEADER CONTAINER -->
-            <div class="space-y-4 shrink-0">
-                <!-- HEADER COVER BANNER & AVATAR CARD -->
-                <div class="relative w-full rounded-3xl overflow-hidden bg-black/50 border border-white/15 shadow-2xl">
-                    <!-- COVER BANNER -->
-                    <div class="w-full h-40 sm:h-48 relative bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900">
-                        @if($user->header_banner)
-                            <img id="mainProfileHeaderImg" src="{{ asset($user->header_banner) }}" class="w-full h-full object-cover">
-                        @endif
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
-                    </div>
-
-                    <!-- AVATAR & EDIT BUTTON HEADER -->
-                    <div class="px-6 pb-5 relative z-10">
-                        <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between -mt-14 sm:-mt-16 mb-3 gap-3">
-                            <div class="relative">
-                                <img id="mainProfileAvatarImg" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" 
-                                    class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-gray-900 object-cover shadow-2xl">
-                            </div>
-
-                            <div class="flex items-center gap-2">
-                                <button onclick="toggleProfileModal()" class="px-4 py-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-bold rounded-2xl text-xs shadow-xl transition transform hover:scale-105 active:scale-95 flex items-center gap-2 border border-white/20">
-                                    ⚙️ {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Profil-Einstellungen & Anpassen' : 'Profile Settings & Customizer' }}
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- USER INFO & STATS -->
-                        @php
-                            $rankTitle = strtolower($sandikaRank->rank_title ?? 'captain');
-                            if (str_contains($rankTitle, 'bossman')) {
-                                $rankImg = 'images/ranks/bossman.jpg';
-                            } elseif (str_contains($rankTitle, 'admiral')) {
-                                $rankImg = 'images/ranks/admiral.jpg';
-                            } elseif (str_contains($rankTitle, 'lieutenant')) {
-                                $rankImg = 'images/ranks/lieutenant.png';
-                            } elseif (str_contains($rankTitle, 'sergeant') || str_contains($rankTitle, 'sergent')) {
-                                $rankImg = 'images/ranks/sergent.jpg';
-                            } elseif (str_contains($rankTitle, 'captain')) {
-                                $rankImg = 'images/ranks/captain.jpg';
-                            } elseif (str_contains($rankTitle, 'soldier')) {
-                                $rankImg = 'images/ranks/soldier.jpg';
-                            } else {
-                                $rankImg = 'images/ranks/rookie.jpg';
-                            }
-                        @endphp
-                        <div class="space-y-2">
-                            <div>
-                                <!-- NAME ROW: Name + Verified Image + Rank Image Logo -->
-                                <div class="flex flex-wrap items-center gap-2.5">
-                                    <h1 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight">
-                                        {{ $user->name }}
-                                    </h1>
-
-                                    <!-- VERIFICATION IMAGE BADGE -->
-                                    <img src="{{ asset('images/ranks/verification.png') }}" class="w-6 h-6 sm:w-7 sm:h-7 object-contain inline-block drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" title="Verified Sandika Agent" alt="Verified">
-
-                                    <!-- SANDIKA RANK LOGO IMAGE -->
-                                    <img src="{{ asset($rankImg) }}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border-2 border-amber-400/80 shadow-lg inline-block transform hover:scale-110 transition" title="{{ $sandikaRank->rank_title ?? 'Sandika Rank' }}" alt="Rank Badge">
-                                </div>
-
-                                <!-- USERNAME BELOW NAME -->
-                                <p class="text-xs sm:text-sm font-mono text-gray-400 font-semibold pt-0.5">
-                                    @({{ $user->username ?? 'user' }})
-                                </p>
-
-                                <!-- BIO BELOW USERNAME -->
-                                <p class="text-xs text-gray-300 pt-1 leading-relaxed max-w-2xl font-medium">
-                                    {{ $user->bio ?? 'No bio added yet.' }}
-                                </p>
-                            </div>
-
-                            <!-- INSTAGRAM-STYLE STATS COUNTERS -->
-                            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-white/10 text-xs font-sans">
-                                <!-- 1. POSTS -->
-                                <button onclick="switchProfileTab('posts')" class="px-3 py-1.5 rounded-xl bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 flex items-center gap-1.5 shadow text-white font-bold cursor-pointer transition transform hover:scale-105 active:scale-95 text-xs">
-                                    <span class="text-indigo-300 font-bold">📱</span>
-                                    <span class="text-white"><strong class="text-white font-extrabold text-xs sm:text-sm">{{ count($posts) }}</strong> Posts</span>
-                                </button>
-
-                                <!-- 2. FOLLOWERS -->
-                                <button onclick="openFollowersModal()" class="px-3 py-1.5 rounded-xl bg-blue-900/90 hover:bg-blue-800 border border-blue-400/60 flex items-center gap-1.5 shadow transition transform hover:scale-105 active:scale-95 cursor-pointer text-white font-bold text-xs">
-                                    <span class="text-blue-300 font-bold">👥</span>
-                                    <span class="text-white"><strong class="text-white font-extrabold text-xs sm:text-sm">{{ $followersCount }}</strong> Followers</span>
-                                </button>
-
-                                <!-- 3. FOLLOWING -->
-                                <button onclick="openFollowingModal()" class="px-3 py-1.5 rounded-xl bg-purple-900/90 hover:bg-purple-800 border border-purple-400/60 flex items-center gap-1.5 shadow transition transform hover:scale-105 active:scale-95 cursor-pointer text-white font-bold text-xs">
-                                    <span class="text-purple-300 font-bold">✨</span>
-                                    <span class="text-white"><strong class="text-white font-extrabold text-xs sm:text-sm">{{ $followingCount }}</strong> Following</span>
-                                </button>
-
-                                <!-- 4. JOURNALS (CLICKABLE) -->
-                                <button onclick="switchProfileTab('journals')" class="px-3 py-1.5 rounded-xl bg-pink-950/80 hover:bg-pink-900 border border-pink-500/40 flex items-center gap-1.5 shadow text-white font-bold cursor-pointer transition transform hover:scale-105 active:scale-95 text-xs">
-                                    <span class="text-pink-300 font-bold">📔</span>
-                                    <span class="text-white"><strong class="text-white font-extrabold text-xs sm:text-sm">{{ count($articles) }}</strong> {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Journale' : 'Journals' }}</span>
-                                </button>
-
-                                <!-- 5. SANDIKA CP -->
-                                <button onclick="switchProfileTab('progress')" class="px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 flex items-center gap-1.5 shadow text-white font-bold cursor-pointer transition transform hover:scale-105 active:scale-95 text-xs">
-                                    <img src="{{ asset($rankImg) }}" class="w-4 h-4 rounded-full object-cover border border-amber-400">
-                                    <span class="text-white"><strong class="text-white font-extrabold text-xs sm:text-sm">{{ $sandikaRank->xp }}</strong> CP</span>
-                                </button>
-
-                                <!-- 6. NIGMA RIDDLES -->
-                                <button onclick="switchProfileTab('progress')" class="px-3 py-1.5 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 flex items-center gap-1.5 shadow text-white font-bold cursor-pointer transition transform hover:scale-105 active:scale-95 text-xs">
-                                    <span class="text-emerald-300 font-bold">🧩</span>
-                                    <span class="text-white"><strong class="text-white font-extrabold text-xs sm:text-sm">{{ $nigmaSolvedCount }}/{{ $nigmaTotalRiddles }}</strong> Riddles</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+            <!-- HEADER COVER BANNER & AVATAR CARD -->
+            <div class="relative w-full rounded-3xl overflow-hidden bg-black/50 border border-white/15 shadow-2xl">
+                <!-- COVER BANNER -->
+                <div class="w-full h-48 relative bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900">
+                    @if($user->header_banner)
+                        <img id="mainProfileHeaderImg" src="{{ asset($user->header_banner) }}" class="w-full h-full object-cover">
+                    @endif
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
                 </div>
 
-                <!-- INSTAGRAM STORY HIGHLIGHTS & ARCHIVES TRAY -->
-                <div class="p-3.5 sm:p-4 rounded-2xl bg-black/40 border border-white/10 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <h3 class="font-bold text-xs text-white flex items-center gap-2">
-                            <span>📸 {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Story-Archive & Highlights' : 'Story Highlights' }} ({{ count($archives) }})</span>
-                        </h3>
-                        <button onclick="openCreateArchiveModal()" class="px-3 py-1 bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-white font-bold rounded-xl text-[10px] shadow transition transform hover:scale-105 active:scale-95 flex items-center gap-1 border border-white/20">
-                            <span>➕ New</span>
-                        </button>
-                    </div>
-
-                    <div class="flex items-center space-x-3 overflow-x-auto pb-1 chat-scroll">
-                        <!-- + NEW ARCHIVE BUBBLE -->
-                        <div onclick="openCreateArchiveModal()" class="flex flex-col items-center space-y-1 cursor-pointer shrink-0 group">
-                            <div class="w-12 h-12 rounded-full border-2 border-dashed border-white/30 hover:border-pink-500 flex items-center justify-center bg-white/5 group-hover:bg-pink-500/20 transition">
-                                <span class="text-lg text-gray-300 group-hover:text-white font-bold">+</span>
-                            </div>
-                            <span class="text-[10px] font-semibold text-gray-400 group-hover:text-white transition">New</span>
+                <!-- AVATAR & EDIT BUTTON HEADER -->
+                <div class="px-6 pb-6 relative z-10">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between -mt-16 mb-4 gap-4">
+                        <div class="relative">
+                            <img id="mainProfileAvatarImg" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" 
+                                class="w-28 h-28 rounded-full border-4 border-gray-900 object-cover shadow-2xl">
                         </div>
 
-                        @forelse($archives as $arc)
-                            <div onclick="viewStoryArchive({{ json_encode($arc) }})" class="flex flex-col items-center space-y-1 cursor-pointer shrink-0 group relative">
-                                <div class="p-[2px] rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shadow-md group-hover:scale-105 transition">
-                                    <img src="{{ asset($arc->cover_image) }}" class="w-12 h-12 rounded-full object-cover border-2 border-gray-900">
-                                </div>
-                                <span class="text-[10px] font-semibold text-gray-200 truncate max-w-[65px]">{{ $arc->title }}</span>
-                                <button onclick="event.stopPropagation(); deleteStoryArchive({{ $arc->id }})" title="Delete Archive" class="absolute -top-1 -right-1 w-4 h-4 bg-rose-600 hover:bg-rose-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow">✕</button>
-                            </div>
-                        @empty
-                            <div class="flex-1 py-2 text-center text-[11px] text-gray-400 font-mono italic bg-white/5 rounded-xl border border-white/10">
-                                No Story Archives created yet.
-                            </div>
-                        @endforelse
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleProfileModal()" class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-bold rounded-2xl text-xs shadow-xl transition transform hover:scale-105 active:scale-95 flex items-center gap-2 border border-white/20">
+                                ⚙️ {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Profil-Einstellungen & Anpassen' : 'Profile Settings & Customizer' }}
+                            </button>
+                        </div>
                     </div>
+
+                    <!-- USER INFO & STATS -->
+                    @php
+                        $rankTitle = strtolower($sandikaRank->rank_title ?? 'captain');
+                        if (str_contains($rankTitle, 'bossman')) {
+                            $rankImg = 'images/ranks/bossman.jpg';
+                        } elseif (str_contains($rankTitle, 'admiral')) {
+                            $rankImg = 'images/ranks/admiral.jpg';
+                        } elseif (str_contains($rankTitle, 'lieutenant')) {
+                            $rankImg = 'images/ranks/lieutenant.png';
+                        } elseif (str_contains($rankTitle, 'sergeant') || str_contains($rankTitle, 'sergent')) {
+                            $rankImg = 'images/ranks/sergent.jpg';
+                        } elseif (str_contains($rankTitle, 'captain')) {
+                            $rankImg = 'images/ranks/captain.jpg';
+                        } elseif (str_contains($rankTitle, 'soldier')) {
+                            $rankImg = 'images/ranks/soldier.jpg';
+                        } else {
+                            $rankImg = 'images/ranks/rookie.jpg';
+                        }
+                    @endphp
+                    <div class="space-y-3">
+                        <div>
+                            <!-- NAME ROW: Name + Verified Image + Rank Image Logo -->
+                            <div class="flex flex-wrap items-center gap-2.5">
+                                <h1 class="text-2xl lg:text-3xl font-extrabold text-white tracking-tight">
+                                    {{ $user->name }}
+                                </h1>
+
+                                <!-- VERIFICATION IMAGE BADGE -->
+                                <img src="{{ asset('images/ranks/verification.png') }}" class="w-7 h-7 object-contain inline-block drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" title="Verified Sandika Agent" alt="Verified">
+
+                                <!-- SANDIKA RANK LOGO IMAGE -->
+                                <img src="{{ asset($rankImg) }}" class="w-8 h-8 rounded-full object-cover border-2 border-amber-400/80 shadow-lg inline-block transform hover:scale-110 transition" title="{{ $sandikaRank->rank_title ?? 'Sandika Rank' }}" alt="Rank Badge">
+                            </div>
+
+                            <!-- USERNAME BELOW NAME -->
+                            <p class="text-sm font-mono text-gray-400 font-semibold pt-1">
+                                @({{ $user->username ?? 'user' }})
+                            </p>
+
+                            <!-- BIO BELOW USERNAME -->
+                            <p class="text-xs sm:text-sm text-gray-300 pt-2 leading-relaxed max-w-2xl font-medium">
+                                {{ $user->bio ?? 'No bio added yet.' }}
+                            </p>
+                        </div>
+
+                        <!-- INSTAGRAM-STYLE STATS COUNTERS (1. Posts -> 2. Followers -> 3. Following -> 4. Journals -> 5. CP -> 6. Riddles) -->
+                        <div class="flex flex-wrap items-center gap-3 pt-2 border-t border-white/10 text-xs font-sans">
+                            <!-- 1. POSTS -->
+                            <button onclick="switchProfileTab('posts')" class="px-4 py-2 rounded-2xl bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105 active:scale-95">
+                                <span class="text-indigo-300 font-bold">📱</span>
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ count($posts) }}</strong> Posts</span>
+                            </button>
+
+                            <!-- 2. FOLLOWERS -->
+                            <button onclick="openFollowersModal()" class="px-4 py-2 rounded-2xl bg-blue-900/90 hover:bg-blue-800 border border-blue-400/60 flex items-center gap-2 shadow-xl transition transform hover:scale-105 active:scale-95 cursor-pointer text-white font-bold">
+                                <span class="text-blue-300 font-bold">👥</span>
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $followersCount }}</strong> Followers</span>
+                            </button>
+
+                            <!-- 3. FOLLOWING -->
+                            <button onclick="openFollowingModal()" class="px-4 py-2 rounded-2xl bg-purple-900/90 hover:bg-purple-800 border border-purple-400/60 flex items-center gap-2 shadow-xl transition transform hover:scale-105 active:scale-95 cursor-pointer text-white font-bold">
+                                <span class="text-purple-300 font-bold">✨</span>
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $followingCount }}</strong> Following</span>
+                            </button>
+
+                            <!-- 4. JOURNALS -->
+                            <button onclick="switchProfileTab('journals')" class="px-4 py-2 rounded-2xl bg-pink-950/80 hover:bg-pink-900 border border-pink-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105 active:scale-95">
+                                <span class="text-pink-300 font-bold">📔</span>
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ count($articles) }}</strong> {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Journale' : 'Journals' }}</span>
+                            </button>
+
+                            <!-- 5. SANDIKA CP -->
+                            <div onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105">
+                                <img src="{{ asset($rankImg) }}" class="w-5 h-5 rounded-full object-cover border border-amber-400">
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $sandikaRank->xp }}</strong> CP</span>
+                            </div>
+
+                            <!-- 6. NIGMA RIDDLES -->
+                            <div onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105">
+                                <span class="text-emerald-300 font-bold">🧩</span>
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $nigmaSolvedCount }}/{{ $nigmaTotalRiddles }}</strong> Riddles Solved</span>
+                            </div>
+                        </div>
+            <!-- INSTAGRAM STORY HIGHLIGHTS & ARCHIVES TRAY -->
+            <div class="p-5 rounded-3xl bg-black/40 border border-white/10 space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-xs text-white flex items-center gap-2">
+                        <span>📸 {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Story-Archive & Highlights' : 'Story Archives & Highlights' }} ({{ count($archives) }})</span>
+                    </h3>
+                    <button onclick="openCreateArchiveModal()" class="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-white font-bold rounded-xl text-[11px] shadow-lg transition transform hover:scale-105 active:scale-95 flex items-center gap-1 border border-white/20">
+                        <span>➕</span>
+                        <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Neues Archiv' : 'New Archive' }}</span>
+                    </button>
                 </div>
 
-                <!-- SEPARATED TAB BUTTONS (POSTS / JOURNALS / GALLERIES / PROGRESS) -->
+                <div class="flex items-center space-x-4 overflow-x-auto pb-2 chat-scroll">
+                    <!-- + NEW ARCHIVE BUBBLE -->
+                    <div onclick="openCreateArchiveModal()" class="flex flex-col items-center space-y-1 cursor-pointer shrink-0 group">
+                        <div class="w-16 h-16 rounded-full border-2 border-dashed border-white/30 hover:border-pink-500 flex items-center justify-center bg-white/5 group-hover:bg-pink-500/20 transition">
+                            <span class="text-xl text-gray-300 group-hover:text-white font-bold">+</span>
+                        </div>
+                        <span class="text-[11px] font-semibold text-gray-400 group-hover:text-white transition">New</span>
+                    </div>
+
+                    @forelse($archives as $arc)
+                        <div onclick="viewStoryArchive({{ json_encode($arc) }})" class="flex flex-col items-center space-y-1 cursor-pointer shrink-0 group relative">
+                            <div class="p-[2px] rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 shadow-md group-hover:scale-105 transition">
+                                <img src="{{ asset($arc->cover_image) }}" class="w-16 h-16 rounded-full object-cover border-2 border-gray-900">
+                            </div>
+                            <span class="text-[11px] font-semibold text-gray-200 truncate max-w-[70px]">{{ $arc->title }}</span>
+                            <button onclick="event.stopPropagation(); deleteStoryArchive({{ $arc->id }})" title="Delete Archive" class="absolute -top-1 -right-1 w-5 h-5 bg-rose-600 hover:bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition shadow">✕</button>
+                        </div>
+                    @empty
+                        <div class="flex-1 py-3 text-center text-xs text-gray-400 font-mono italic bg-white/5 rounded-2xl border border-white/10">
+                            No Story Archives created yet. Click "New Archive" to create your first Instagram-style Story Highlight!
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+
+            <!-- SEPARATED TAB BUTTONS (POSTS / JOURNALS / GALLERIES / PROGRESS) -->
+            <div class="space-y-4">
                 <div class="flex items-center space-x-2 border-b border-white/10 pb-2 overflow-x-auto">
                     <button onclick="switchProfileTab('posts')" id="tabBtnPosts" class="px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-indigo-600 text-white shadow-lg border border-indigo-400/40">
                         <span>📱</span>
@@ -219,10 +199,6 @@
                         <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Avatare & Banner Galerie' : 'Avatars & Headers' }}</span>
                     </button>
                 </div>
-            </div>
-
-            <!-- INDEPENDENTLY SCROLLABLE TAB CONTENT PANEL -->
-            <div class="flex-1 overflow-y-auto chat-scroll pr-1.5 pb-4 min-h-0 space-y-4">
 
                 <!-- 1. POSTS TAB CONTENT -->
                 <div id="tabContentPosts" class="animate-tab-fade space-y-4">
@@ -713,30 +689,64 @@
 
     <!-- FOLLOWERS MODAL -->
     <div id="followersModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-sm shadow-2xl text-xs space-y-4 animate-scale-up">
+        <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-md shadow-2xl text-xs space-y-4 animate-scale-up">
             <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                    <span>👥 Followers List ({{ $followersCount }})</span>
+                    <span>👥 Followers ({{ count($followersUsers) }})</span>
                 </h3>
-                <button onclick="closeFollowersModal()" class="text-gray-400 hover:text-white">✕</button>
+                <button onclick="closeFollowersModal()" class="text-gray-400 hover:text-white text-base font-bold">✕</button>
             </div>
-            <div id="followersListContainer" class="space-y-3 max-h-60 overflow-y-auto chat-scroll">
-                <p class="text-center text-gray-400 italic py-4">Loading followers...</p>
+            <div id="followersListContainer" class="space-y-3 max-h-80 overflow-y-auto chat-scroll p-1">
+                @forelse($followersUsers as $f)
+                    <div class="p-3 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-between gap-3 hover:border-indigo-500/40 transition">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <img src="{{ $f->avatar ? asset($f->avatar) : asset('images/profile.jpg') }}" class="w-11 h-11 rounded-full object-cover border border-white/20 shadow shrink-0">
+                            <div class="truncate">
+                                <h4 class="font-bold text-white text-xs truncate">{{ $f->name }}</h4>
+                                <p class="text-[11px] text-gray-400 font-mono truncate">@({{ $f->username ?? 'user' }})</p>
+                            </div>
+                        </div>
+                        <a href="/user/{{ $f->id }}/profile" class="px-3 py-1.5 bg-indigo-600/40 hover:bg-indigo-600 text-indigo-200 hover:text-white rounded-xl text-xs font-bold transition shrink-0">
+                            View Profile
+                        </a>
+                    </div>
+                @empty
+                    <div class="p-8 text-center text-xs font-mono text-gray-400 italic bg-white/5 rounded-2xl">
+                        No followers found.
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>
 
     <!-- FOLLOWING MODAL -->
     <div id="followingModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-sm shadow-2xl text-xs space-y-4 animate-scale-up">
+        <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-md shadow-2xl text-xs space-y-4 animate-scale-up">
             <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                    <span>✨ Following List ({{ $followingCount }})</span>
+                    <span>✨ Following ({{ count($followingUsers) }})</span>
                 </h3>
-                <button onclick="closeFollowingModal()" class="text-gray-400 hover:text-white">✕</button>
+                <button onclick="closeFollowingModal()" class="text-gray-400 hover:text-white text-base font-bold">✕</button>
             </div>
-            <div id="followingListContainer" class="space-y-3 max-h-60 overflow-y-auto chat-scroll">
-                <p class="text-center text-gray-400 italic py-4">Loading following list...</p>
+            <div id="followingListContainer" class="space-y-3 max-h-80 overflow-y-auto chat-scroll p-1">
+                @forelse($followingUsers as $fg)
+                    <div class="p-3 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-between gap-3 hover:border-purple-500/40 transition">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <img src="{{ $fg->avatar ? asset($fg->avatar) : asset('images/profile.jpg') }}" class="w-11 h-11 rounded-full object-cover border border-white/20 shadow shrink-0">
+                            <div class="truncate">
+                                <h4 class="font-bold text-white text-xs truncate">{{ $fg->name }}</h4>
+                                <p class="text-[11px] text-gray-400 font-mono truncate">@({{ $fg->username ?? 'user' }})</p>
+                            </div>
+                        </div>
+                        <a href="/user/{{ $fg->id }}/profile" class="px-3 py-1.5 bg-purple-600/40 hover:bg-purple-600 text-purple-200 hover:text-white rounded-xl text-xs font-bold transition shrink-0">
+                            Following
+                        </a>
+                    </div>
+                @empty
+                    <div class="p-8 text-center text-xs font-mono text-gray-400 italic bg-white/5 rounded-2xl">
+                        No following found.
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>
