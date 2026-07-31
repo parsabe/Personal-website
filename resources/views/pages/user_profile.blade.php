@@ -11,6 +11,10 @@
     <link rel="icon" href="{{ asset('images/profile.jpg') }}">
     <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
     <style>
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+        }
         .animate-tab-fade {
             animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
@@ -18,18 +22,38 @@
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Custom Profile Container Scrollbar */
+        .custom-profile-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(99, 102, 241, 0.6) rgba(0, 0, 0, 0.3);
+        }
+        .custom-profile-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-profile-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        .custom-profile-scroll::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.6);
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+        }
+        .custom-profile-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(168, 85, 247, 0.9);
+        }
     </style>
 </head>
-<body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-3 lg:p-8 min-h-screen relative overflow-x-hidden">
+<body class="text-gray-800 dark:text-gray-100 antialiased flex items-center justify-center p-3 lg:p-6 h-screen w-screen overflow-hidden relative">
 
     <!-- MAIN CONTAINER -->
-    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[88vh] z-10 transition-all duration-700 shadow-2xl border border-white/10 animate-page-zoom-in">
+    <div id="main-container" class="ios-glass relative w-full max-w-6xl flex flex-col md:flex-row rounded-[2.5rem] overflow-hidden h-[90vh] max-h-[920px] z-10 transition-all duration-700 shadow-2xl border border-white/10 animate-page-zoom-in">
 
         @include('top-header-controls')
         @include('sidebar')
 
-        <!-- MAIN PROFILE CONTENT CONTAINER -->
-        <main class="flex-1 flex flex-col overflow-y-auto relative p-6 pt-12 lg:p-8 lg:pt-14 bg-black/30 gap-6 animate-page-slide-up">
+        <!-- MAIN PROFILE CONTENT CONTAINER (INNER CONTAINER SCROLLING ONLY) -->
+        <main class="flex-1 min-h-0 h-full flex flex-col overflow-y-auto custom-profile-scroll relative p-6 pt-12 lg:p-8 lg:pt-14 bg-black/30 gap-6 animate-page-slide-up pb-32">
             
             <!-- HEADER COVER BANNER & AVATAR CARD -->
             <div class="relative w-full rounded-3xl overflow-hidden bg-black/50 border border-white/15 shadow-2xl">
