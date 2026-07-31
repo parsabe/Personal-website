@@ -121,25 +121,44 @@
                     $userLevel = is_object($rank) ? $rank->level : 3;
                     $userTitle = is_object($rank) ? $rank->rank_title : 'Captain ⚔️ (Verified)';
                     $userCp = is_object($rank) ? $rank->xp : 50;
+
+                    $rankTitleLower = strtolower($userTitle);
+                    if (str_contains($rankTitleLower, 'bossman')) {
+                        $sandikaRankImg = 'images/ranks/bossman.jpg';
+                    } elseif (str_contains($rankTitleLower, 'admiral')) {
+                        $sandikaRankImg = 'images/ranks/admiral.jpg';
+                    } elseif (str_contains($rankTitleLower, 'lieutenant')) {
+                        $sandikaRankImg = 'images/ranks/lieutenant.png';
+                    } elseif (str_contains($rankTitleLower, 'sergeant') || str_contains($rankTitleLower, 'sergent')) {
+                        $sandikaRankImg = 'images/ranks/sergent.jpg';
+                    } elseif (str_contains($rankTitleLower, 'captain')) {
+                        $sandikaRankImg = 'images/ranks/captain.jpg';
+                    } elseif (str_contains($rankTitleLower, 'soldier')) {
+                        $sandikaRankImg = 'images/ranks/soldier.jpg';
+                    } else {
+                        $sandikaRankImg = 'images/ranks/rookie.jpg';
+                    }
                 @endphp
                 <div class="sandika-rank-badge p-6 rounded-3xl backdrop-blur-xl flex flex-col md:flex-row items-center justify-between gap-6">
                     <div class="flex items-center gap-4">
-                        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-0.5 shadow-xl">
-                            <div class="w-full h-full bg-gray-900 rounded-full flex items-center justify-center text-2xl font-bold text-indigo-400">
-                                L<span id="user-level-val">{{ $userLevel }}</span>
-                            </div>
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 p-0.5 shadow-xl relative">
+                            <img src="{{ asset($sandikaRankImg) }}" class="w-full h-full rounded-full object-cover border-2 border-gray-900">
                         </div>
                         <div>
-                            <h2 id="user-title-val" class="text-lg font-bold text-white tracking-wide">
-                                {{ $userTitle }}
+                            <h2 id="user-title-val" class="text-lg font-bold text-white tracking-wide flex items-center gap-2">
+                                <span>{{ $userTitle }}</span>
+                                @if($userCp >= 50)
+                                    <img src="{{ asset('images/ranks/verification.png') }}" class="w-5 h-5 object-contain inline-block drop-shadow" title="Verified Sandika Agent">
+                                @endif
                             </h2>
-                            <p class="text-xs text-indigo-300">Contribution Points (CP): <span id="user-xp-val" class="font-bold text-white">{{ $userCp }} CP</span></p>
+                            <p class="text-xs text-indigo-300">Contribution Points (CP): <span id="user-xp-val" class="font-bold text-white">{{ $userCp }} CP</span> • Level {{ $userLevel }}</p>
                         </div>
                     </div>
 
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full text-xs font-semibold">
-                            {{ $userCp >= 50 ? '✅ Verified Agent' : '⏳ Verification Threshold (50 CP)' }}
+                        <span class="px-3.5 py-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full text-xs font-semibold flex items-center gap-2">
+                            <img src="{{ asset('images/ranks/verification.png') }}" class="w-4 h-4 object-contain">
+                            <span>{{ $userCp >= 50 ? 'Verified Agent' : 'Verification Threshold (50 CP)' }}</span>
                         </span>
                     </div>
                 </div>

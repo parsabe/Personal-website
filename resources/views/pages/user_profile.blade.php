@@ -57,26 +57,37 @@
                     </div>
 
                     <!-- USER INFO & STATS -->
+                    @php
+                        $rankTitle = strtolower($sandikaRank->rank_title ?? 'captain');
+                        if (str_contains($rankTitle, 'bossman')) {
+                            $rankImg = 'images/ranks/bossman.jpg';
+                        } elseif (str_contains($rankTitle, 'admiral')) {
+                            $rankImg = 'images/ranks/admiral.jpg';
+                        } elseif (str_contains($rankTitle, 'lieutenant')) {
+                            $rankImg = 'images/ranks/lieutenant.png';
+                        } elseif (str_contains($rankTitle, 'sergeant') || str_contains($rankTitle, 'sergent')) {
+                            $rankImg = 'images/ranks/sergent.jpg';
+                        } elseif (str_contains($rankTitle, 'captain')) {
+                            $rankImg = 'images/ranks/captain.jpg';
+                        } elseif (str_contains($rankTitle, 'soldier')) {
+                            $rankImg = 'images/ranks/soldier.jpg';
+                        } else {
+                            $rankImg = 'images/ranks/rookie.jpg';
+                        }
+                    @endphp
                     <div class="space-y-3">
                         <div>
-                            <!-- NAME ROW: Name + Verified Blue Checkmark + Sandika Rank Badge -->
+                            <!-- NAME ROW: Name + Verified Image + Rank Image Logo -->
                             <div class="flex flex-wrap items-center gap-2.5">
                                 <h1 class="text-2xl lg:text-3xl font-extrabold text-white tracking-tight">
                                     {{ $user->name }}
                                 </h1>
 
-                                <!-- VERIFICATION BLUE CHECKMARK BADGE -->
-                                <span title="Verified Sandika Agent" class="inline-flex items-center justify-center text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]">
-                                    <svg class="w-6 h-6 fill-current text-blue-500" viewBox="0 0 24 24">
-                                        <path d="M22.5 12.5c0-1.58-.8-2.96-2.03-3.75.32-1.54-.15-3.17-1.28-4.3-1.13-1.13-2.76-1.6-4.3-1.28C14.1.44 12.72-.36 11.14-.36c-1.58 0-2.96.8-3.75 2.03-1.54-.32-3.17.15-4.3 1.28-1.13 1.13-1.6 2.76-1.28 4.3C.58 8.16-.22 9.54-.22 11.12c0 1.58.8 2.96 2.03 3.75-.32 1.54.15 3.17 1.28 4.3 1.13 1.13 2.76 1.6 4.3 1.28 1.28 1.23 2.66 2.03 4.24 2.03 1.58 0 2.96-.8 3.75-2.03 1.54.32 3.17-.15 4.3-1.28 1.13-1.13 1.6-2.76 1.28-4.3 1.23-1.28 2.03-2.66 2.03-4.24zm-12.5 4.5l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
-                                    </svg>
-                                </span>
+                                <!-- VERIFICATION IMAGE BADGE -->
+                                <img src="{{ asset('images/ranks/verification.png') }}" class="w-7 h-7 object-contain inline-block drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" title="Verified Sandika Agent" alt="Verified">
 
-                                <!-- SANDIKA RANK LOGO BADGE -->
-                                <span class="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/20 via-rose-500/20 to-purple-500/20 border border-amber-500/40 text-amber-300 text-xs font-mono font-bold flex items-center gap-1.5 shadow-lg backdrop-blur-md">
-                                    <span>⚔️</span>
-                                    <span>{{ $sandikaRank->rank_title ?? 'Captain ⚔️ (Verified)' }}</span>
-                                </span>
+                                <!-- SANDIKA RANK LOGO IMAGE -->
+                                <img src="{{ asset($rankImg) }}" class="w-8 h-8 rounded-full object-cover border-2 border-amber-400/80 shadow-lg inline-block transform hover:scale-110 transition" title="{{ $sandikaRank->rank_title ?? 'Sandika Rank' }}" alt="Rank Badge">
                             </div>
 
                             <!-- USERNAME BELOW NAME -->
@@ -90,37 +101,43 @@
                             </p>
                         </div>
 
-                        <!-- SPECIAL HIGHLIGHTED STATS COUNTERS WITH HIGH CONTRAST TEXT -->
+                        <!-- INSTAGRAM-STYLE STATS COUNTERS (1. Posts -> 2. Followers -> 3. Following -> 4. Journals -> 5. CP -> 6. Riddles) -->
                         <div class="flex flex-wrap items-center gap-3 pt-2 border-t border-white/10 text-xs font-sans">
+                            <!-- 1. POSTS -->
                             <div class="px-4 py-2 rounded-2xl bg-indigo-950/80 border border-indigo-500/40 flex items-center gap-2 shadow-lg text-white font-bold">
                                 <span class="text-indigo-300 font-bold">📱</span>
                                 <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ count($posts) }}</strong> Posts</span>
                             </div>
 
-                            <div class="px-4 py-2 rounded-2xl bg-pink-950/80 border border-pink-500/40 flex items-center gap-2 shadow-lg text-white font-bold">
-                                <span class="text-pink-300 font-bold">📔</span>
-                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ count($articles) }}</strong> {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Journale' : 'Journals' }}</span>
-                            </div>
-
-                            <div onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105">
-                                <span class="text-amber-300 font-bold">⚔️</span>
-                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $sandikaRank->xp }}</strong> CP ({{ $sandikaRank->rank_title }})</span>
-                            </div>
-
-                            <div onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105">
-                                <span class="text-emerald-300 font-bold">🧩</span>
-                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $nigmaSolvedCount }}/{{ $nigmaTotalRiddles }}</strong> Riddles Solved</span>
-                            </div>
-
+                            <!-- 2. FOLLOWERS -->
                             <button onclick="openFollowersModal()" class="px-4 py-2 rounded-2xl bg-blue-900/90 hover:bg-blue-800 border border-blue-400/60 flex items-center gap-2 shadow-xl transition transform hover:scale-105 active:scale-95 cursor-pointer text-white font-bold">
                                 <span class="text-blue-300 font-bold">👥</span>
                                 <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $followersCount }}</strong> Followers</span>
                             </button>
 
+                            <!-- 3. FOLLOWING -->
                             <button onclick="openFollowingModal()" class="px-4 py-2 rounded-2xl bg-purple-900/90 hover:bg-purple-800 border border-purple-400/60 flex items-center gap-2 shadow-xl transition transform hover:scale-105 active:scale-95 cursor-pointer text-white font-bold">
                                 <span class="text-purple-300 font-bold">✨</span>
                                 <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $followingCount }}</strong> Following</span>
                             </button>
+
+                            <!-- 4. JOURNALS -->
+                            <div class="px-4 py-2 rounded-2xl bg-pink-950/80 border border-pink-500/40 flex items-center gap-2 shadow-lg text-white font-bold">
+                                <span class="text-pink-300 font-bold">📔</span>
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ count($articles) }}</strong> {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Journale' : 'Journals' }}</span>
+                            </div>
+
+                            <!-- 5. SANDIKA CP -->
+                            <div onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105">
+                                <img src="{{ asset($rankImg) }}" class="w-5 h-5 rounded-full object-cover border border-amber-400">
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $sandikaRank->xp }}</strong> CP</span>
+                            </div>
+
+                            <!-- 6. NIGMA RIDDLES -->
+                            <div onclick="switchProfileTab('progress')" class="px-4 py-2 rounded-2xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 flex items-center gap-2 shadow-lg text-white font-bold cursor-pointer transition transform hover:scale-105">
+                                <span class="text-emerald-300 font-bold">🧩</span>
+                                <span class="text-white"><strong class="text-white font-extrabold text-sm">{{ $nigmaSolvedCount }}/{{ $nigmaTotalRiddles }}</strong> Riddles Solved</span>
+                            </div>
                         </div>
             <!-- INSTAGRAM STORY HIGHLIGHTS & ARCHIVES TRAY -->
             <div class="p-5 rounded-3xl bg-black/40 border border-white/10 space-y-3">
@@ -301,12 +318,11 @@
                     <div class="p-6 rounded-3xl bg-gradient-to-br from-amber-950/40 via-black/60 to-purple-950/40 border border-amber-500/30 shadow-2xl space-y-5">
                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-amber-500/20 pb-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-2xl shadow-lg">
-                                    ⚔️
-                                </div>
+                                <img src="{{ asset($rankImg) }}" class="w-12 h-12 rounded-full border-2 border-amber-400/80 object-cover shadow-xl">
                                 <div>
                                     <h3 class="font-extrabold text-white text-base tracking-wide flex items-center gap-2">
                                         <span>Sandika Cyber Intelligence Matrix</span>
+                                        <img src="{{ asset('images/ranks/verification.png') }}" class="w-5 h-5 object-contain inline-block drop-shadow" title="Verified Sandika Agent">
                                     </h3>
                                     <p class="text-xs text-amber-300 font-mono">Agent Rank: <strong>{{ $sandikaRank->rank_title }}</strong> (Level {{ $sandikaRank->level }})</p>
                                 </div>
