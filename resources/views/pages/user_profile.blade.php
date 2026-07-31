@@ -113,7 +113,12 @@
                                 <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
                                     {{ $user->name }}
                                 </h1>
-                                <img src="{{ asset('images/ranks/verification.png') }}" class="w-6 h-6 object-contain inline-block drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" title="Verified Sandika Agent" alt="Verified">
+                                @if($user->email === 'parsabe99@gmail.com')
+                                    <!-- OWNER GREEN VERIFIED CHECKMARK BADGE -->
+                                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500 text-white font-bold text-xs shadow-[0_0_12px_rgba(16,185,129,0.8)] border border-emerald-300" title="Verified Bossman Owner • Ancient Persian Heritage">✓</span>
+                                @else
+                                    <img src="{{ asset('images/ranks/verification.png') }}" class="w-6 h-6 object-contain inline-block drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" title="Verified Sandika Agent" alt="Verified">
+                                @endif
                                 <img src="{{ asset($rankImg) }}" class="w-7 h-7 rounded-full object-cover border-2 border-amber-400/80 shadow inline-block" title="{{ $sandikaRank->rank_title ?? 'Sandika Rank' }}" alt="Rank Badge">
                             </div>
                             <p class="text-xs font-mono text-gray-400 font-semibold pt-0.5">
