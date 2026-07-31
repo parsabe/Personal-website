@@ -71,12 +71,23 @@ export function selectChatUser(userIdOrObj) {
     const avatarElem = document.getElementById('activeContactAvatar');
     const statusElem = document.getElementById('activeContactStatus');
     const dotElem = document.getElementById('activeContactDot');
+    const callBtn = document.getElementById('btnCallUser');
 
     if (nameElem) nameElem.textContent = userObj.name;
     if (userElem) userElem.textContent = `@${userObj.username || 'user'}`;
     if (avatarElem) avatarElem.src = userObj.avatar_url || '/images/profile.jpg';
     if (statusElem) statusElem.innerHTML = '<span class="text-emerald-400">Online &bull; Direct Message</span>';
     if (dotElem) dotElem.className = 'absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse';
+
+    if (callBtn) {
+        if (userObj.is_me) {
+            callBtn.classList.add('hidden');
+            callBtn.classList.remove('flex');
+        } else {
+            callBtn.classList.remove('hidden');
+            callBtn.classList.add('flex');
+        }
+    }
 
     // Restore window if minimized
     if (window.restoreMacWindow) window.restoreMacWindow();
@@ -91,10 +102,16 @@ export function backToUserDirectory() {
     const directoryScreen = document.getElementById('userDirectoryScreen');
     const chatScreen = document.getElementById('activeChatScreen');
     const backBtn = document.getElementById('btnBackToUsers');
+    const callBtn = document.getElementById('btnCallUser');
 
     if (chatScreen) chatScreen.classList.add('hidden');
     if (directoryScreen) directoryScreen.classList.remove('hidden');
     if (backBtn) backBtn.classList.add('hidden');
+
+    if (callBtn) {
+        callBtn.classList.add('hidden');
+        callBtn.classList.remove('flex');
+    }
 
     // Reset Header UI
     const nameElem = document.getElementById('activeContactName');
