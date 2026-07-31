@@ -22,25 +22,29 @@
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Custom Profile Container Scrollbar */
+        /* Custom Profile Container Scrollbar & Smooth Touch/Wheel Scrolling */
         .custom-profile-scroll {
+            overflow-y: scroll !important;
+            -webkit-overflow-scrolling: touch !important;
+            touch-action: pan-y !important;
             scrollbar-width: thin;
-            scrollbar-color: rgba(99, 102, 241, 0.6) rgba(0, 0, 0, 0.3);
+            scrollbar-color: rgba(129, 140, 248, 0.7) rgba(0, 0, 0, 0.4);
         }
         .custom-profile-scroll::-webkit-scrollbar {
-            width: 8px;
+            width: 10px !important;
+            display: block !important;
         }
         .custom-profile-scroll::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 10px;
         }
         .custom-profile-scroll::-webkit-scrollbar-thumb {
-            background: rgba(99, 102, 241, 0.6);
+            background: linear-gradient(to bottom, #6366f1, #a855f7);
             border-radius: 10px;
-            border: 2px solid rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(0, 0, 0, 0.3);
         }
         .custom-profile-scroll::-webkit-scrollbar-thumb:hover {
-            background: rgba(168, 85, 247, 0.9);
+            background: linear-gradient(to bottom, #818cf8, #c084fc);
         }
     </style>
 </head>
@@ -53,7 +57,7 @@
         @include('sidebar')
 
         <!-- MAIN PROFILE CONTENT CONTAINER (INNER CONTAINER SCROLLING ONLY) -->
-        <main class="flex-1 min-h-0 h-full flex flex-col overflow-y-auto custom-profile-scroll relative p-6 pt-12 lg:p-8 lg:pt-14 bg-black/30 gap-6 animate-page-slide-up pb-32">
+        <main id="profile-scroll-area" class="flex-1 min-h-0 h-full flex flex-col custom-profile-scroll relative p-6 pt-12 lg:p-8 lg:pt-14 bg-black/30 space-y-6 pb-36">
             
             <!-- HEADER COVER BANNER & AVATAR CARD -->
             <div class="relative w-full rounded-3xl overflow-hidden bg-black/50 border border-white/15 shadow-2xl">
