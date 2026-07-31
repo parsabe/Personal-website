@@ -769,23 +769,34 @@
         async function saveProfileSettings(e) {
             if (e && e.preventDefault) e.preventDefault();
             const form = document.getElementById('profileForm');
+            if (!form) return;
             const formData = new FormData(form);
 
             try {
                 const res = await fetch('/chat/profile', {
                     method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
+                    headers: { 
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    },
                     body: formData
                 });
                 const data = await res.json();
-                if (data.status === 'success') {
+                if (res.ok && data.status === 'success') {
                     if (window.showToast) window.showToast(data.message || 'Profile settings saved!', 'success');
+                    else alert(data.message || 'Profile settings saved!');
                     setTimeout(() => location.reload(), 600);
                 } else {
-                    if (window.showToast) window.showToast(data.message || 'Error saving settings.', 'error');
+                    let errMsg = data.message || 'Error saving profile settings.';
+                    if (data.errors) {
+                        errMsg = Object.values(data.errors).flat().join('\n');
+                    }
+                    if (window.showToast) window.showToast(errMsg, 'error');
+                    else alert(errMsg);
                 }
             } catch (err) {
                 console.error(err);
+                alert('Network error while saving settings.');
             }
         }
 
