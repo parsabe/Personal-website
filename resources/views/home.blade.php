@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -94,7 +94,7 @@
                             Contact me
                         </a>
                         <a href="/chat"
-                            class="px-8 py-3.5 ios-glass text-gray-900 dark:text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition transform border border-white/20 active:scale-95 flex items-center gap-2">
+                            class="px-8 py-3.5 bg-black/40 hover:bg-black/60 text-white font-bold rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 transition transform border border-white/20 active:scale-95 flex items-center gap-2">
                             <span>💬 Social Chat & Portal</span>
                         </a>
                     </div>

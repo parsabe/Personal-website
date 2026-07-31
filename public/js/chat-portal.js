@@ -235,10 +235,10 @@ export async function fetchUsers() {
         const response = await fetch('/chat/users');
         const data = await response.json();
         if (data.status === 'success') {
-            allUsersList = data.users.filter(u => !u.is_me);
+            allUsersList = data.users || [];
 
             renderUsersGrid(allUsersList);
-            renderMacChatDock(allUsersList);
+            renderMacChatDock(allUsersList.filter(u => !u.is_me));
         }
     } catch (err) {
         console.error(err);
@@ -250,7 +250,7 @@ export function renderUsersGrid(users) {
     const grid = document.getElementById('mainUsersGrid');
     if (!grid) return;
 
-    if (users.length === 0) {
+    if (!users || users.length === 0) {
         grid.innerHTML = '<div class="col-span-full text-center py-10 text-xs text-gray-400 font-mono">No members found.</div>';
         return;
     }
@@ -264,7 +264,10 @@ export function renderUsersGrid(users) {
                     <span class="unread-badge-${u.id} hidden absolute -top-1 -right-1 w-5 h-5 bg-rose-600 text-white rounded-full text-[10px] font-bold flex items-center justify-center border border-gray-900 animate-bounce">🔴</span>
                 </div>
                 <div class="overflow-hidden flex-1">
-                    <h3 class="font-bold text-sm text-white truncate group-hover:text-blue-400 transition-colors">${escapeHtml(u.name)}</h3>
+                    <h3 class="font-bold text-sm text-white truncate group-hover:text-blue-400 transition-colors flex items-center gap-1.5">
+                        <span>${escapeHtml(u.name)}</span>
+                        ${u.is_me ? '<span class="px-1.5 py-0.2 bg-blue-600/70 text-white rounded text-[9px] font-mono font-bold">(You)</span>' : ''}
+                    </h3>
                     <p class="text-xs text-gray-400 truncate">@${escapeHtml(u.username)}</p>
                 </div>
             </div>
@@ -272,7 +275,7 @@ export function renderUsersGrid(users) {
             <p class="text-xs text-gray-300 line-clamp-2 min-h-[32px]">${escapeHtml(u.bio || 'Member')}</p>
 
             <button class="w-full py-2 bg-blue-600/40 border border-blue-400/40 text-blue-300 font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-md">
-                <span>💬 Start Direct Chat</span>
+                <span>💬 ${u.is_me ? 'Chat / Note to Self' : 'Start Direct Chat'}</span>
             </button>
         </div>
     `).join('');
@@ -710,8 +713,21 @@ export function toggleEmojiPicker() { document.getElementById('emojiPicker')?.cl
 export function toggleGifPicker() { document.getElementById('gifPicker')?.classList.toggle('hidden'); }
 export function toggleScheduleModal() { document.getElementById('scheduleModal')?.classList.toggle('hidden'); }
 
-export function startAudioCall() { document.getElementById('audioCallModal')?.classList.remove('hidden'); }
-export function endAudioCall() { document.getElementById('audioCallModal')?.classList.add('hidden'); }
+export function startAudioCall() {
+    const modal = document.getElementById('audioCallModal');
+    if (!modal) return;
+    const callStatus = document.getElementById('callStatus');
+    const targetName = selectedRecipient ? selectedRecipient.name : 'Parsa Besharat';
+    if (callStatus) {
+        callStatus.innerText = `Calling ${targetName}... (Ringing)`;
+    }
+    modal.classList.remove('hidden');
+    playNotificationSound();
+}
+
+export function endAudioCall() {
+    document.getElementById('audioCallModal')?.classList.add('hidden');
+}
 
 export function changeTheme(t) {
     const el = document.getElementById('chatBoxContainer');

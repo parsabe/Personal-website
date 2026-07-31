@@ -126,7 +126,7 @@
                             <!-- 1. POSTS -->
                             <button onclick="switchProfileTab('posts')" class="flex flex-col items-center group cursor-pointer">
                                 <span class="text-base sm:text-lg font-bold text-white group-hover:text-indigo-400 transition">{{ count($posts) }}</span>
-                                <span class="text-xs text-gray-300 font-medium">Beiträge</span>
+                                <span class="text-xs text-gray-300 font-medium">Posts</span>
                             </button>
 
                             <!-- 2. FOLLOWERS -->
@@ -196,7 +196,7 @@
                 <div class="flex items-center space-x-2 border-b border-white/10 pb-2 overflow-x-auto">
                     <button onclick="switchProfileTab('posts')" id="tabBtnPosts" class="px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-indigo-600 text-white shadow-lg border border-indigo-400/40">
                         <span>📱</span>
-                        <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Beiträge' : 'Posts' }} ({{ count($posts) }})</span>
+                        <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Posts' : 'Beiträge' }} ({{ count($posts) }})</span>
                     </button>
 
                     <button onclick="switchProfileTab('journals')" id="tabBtnJournals" class="px-4 py-2 rounded-2xl text-xs font-bold transition flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 border border-white/10">

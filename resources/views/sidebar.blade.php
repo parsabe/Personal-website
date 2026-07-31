@@ -14,11 +14,11 @@
 </div>
 
 <aside id="sidebar"
-    class="fixed inset-y-0 left-0 z-50 w-64 transform -translate-x-full md:translate-x-0 md:static flex flex-col border-r border-white/20 dark:border-white/10 bg-white/95 dark:bg-gray-900/95 md:bg-transparent md:dark:bg-transparent backdrop-blur-xl md:backdrop-blur-none p-6 lg:p-8 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none h-full">
+    class="fixed inset-y-0 left-0 z-50 w-64 transform -translate-x-full md:translate-x-0 md:static flex flex-col border-r border-white/20 dark:border-white/10 bg-gray-950/95 dark:bg-gray-950/95 md:bg-transparent md:dark:bg-transparent backdrop-blur-2xl md:backdrop-blur-none p-6 lg:p-8 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none h-full text-white">
 
     <!-- Mobile Close Button -->
     <button onclick="toggleSidebar()"
-        class="md:hidden absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+        class="md:hidden absolute top-4 right-4 p-2 text-white hover:text-gray-300 bg-white/10 hover:bg-white/20 rounded-full transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -27,9 +27,9 @@
     <div class="flex flex-col items-center mb-8 mt-8 md:mt-0">
         <img src="{{ asset('images/profile.jpg') }}" alt="Parsa Besharat"
             class="w-24 h-24 rounded-full border-[3px] border-white/40 shadow-lg mb-3 object-cover object-[50%_25%] aspect-square">
-        <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white drop-shadow-md">Parsa
+        <h2 class="text-2xl font-bold tracking-tight text-white drop-shadow-md">Parsa
             Besharat</h2>
-        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Researcher - AI Engineer</p>
+        <p class="text-sm font-medium text-gray-300">Researcher - AI Engineer</p>
     </div>
 
     <nav class="flex-1 overflow-y-auto min-h-0 space-y-4 pr-2 sidebar-scroll">
@@ -93,7 +93,7 @@
 
         @foreach($sections as $category => $items)
             <div class="space-y-1">
-                <div class="px-3 pt-2 pb-1 text-[10px] uppercase tracking-wider font-mono font-bold text-gray-500 dark:text-gray-400">
+                <div class="px-3 pt-2 pb-1 text-[10px] uppercase tracking-wider font-mono font-bold text-gray-400">
                     {{ $isDe ? ($deMap[$category] ?? $category) : $category }}
                 </div>
                 @foreach($items as $item)
@@ -105,8 +105,8 @@
                     @endphp
 
                     <a href="{{ $href }}"
-                        class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all duration-300 font-semibold text-xs text-gray-800 dark:text-gray-200 hover:shadow-sm hover:bg-white/40 dark:hover:bg-black/40 
-                                    {{ $isActive ? 'bg-white/50 dark:bg-black/50 shadow-md border border-white/20 dark:border-white/10 text-indigo-600 dark:text-indigo-400 font-bold' : 'border border-transparent' }}">
+                        class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl transition-all duration-300 font-semibold text-xs text-gray-200 hover:text-white hover:shadow-sm hover:bg-white/20 
+                                    {{ $isActive ? 'bg-indigo-600/80 text-white font-bold shadow-md border border-indigo-400/40' : 'border border-transparent' }}">
 
                         <span class="text-base">{{ $item['icon'] }}</span>
                         {{ $displayName }}

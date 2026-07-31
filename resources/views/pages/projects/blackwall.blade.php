@@ -31,24 +31,24 @@
         <main class="flex-1 flex flex-col overflow-hidden relative p-4 pt-12 lg:p-6 lg:pt-14 justify-between bg-black/40 backdrop-blur-xl animate-page-slide-up">
 
             <!-- HEADER BAR -->
-            <div class="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-white/10 shrink-0">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-600 via-rose-700 to-black p-0.5 shadow-xl">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-red-600 via-rose-700 to-black p-0.5 shadow-xl shrink-0">
                         <div class="w-full h-full bg-black/90 rounded-[14px] flex items-center justify-center text-lg">
                             🛡️
                         </div>
                     </div>
                     <div>
-                        <h1 class="text-base font-bold text-white tracking-wider flex items-center gap-2">
+                        <h1 class="text-sm sm:text-base font-bold text-white tracking-wider flex flex-wrap items-center gap-1.5">
                             <span>BLACKWALL AI CORE</span>
-                            <span class="px-2 py-0.5 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-[10px] font-mono font-bold">PROMETHEUS SEC</span>
+                            <span class="px-2 py-0.5 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-[9px] sm:text-[10px] font-mono font-bold">PROMETHEUS SEC</span>
                         </h1>
-                        <p class="text-xs text-gray-400 font-mono">Neural Defense Matrix & AI Query Inspection Engine</p>
+                        <p class="text-[11px] sm:text-xs text-gray-400 font-mono leading-tight">Neural Defense Matrix & AI Query Inspection Engine</p>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2 font-mono text-xs">
-                    <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 font-bold">
+                <div class="flex items-center gap-2 font-mono text-xs shrink-0 self-end sm:self-auto">
+                    <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 font-bold text-[10px] sm:text-xs">
                         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Security Active
                     </span>
                 </div>
