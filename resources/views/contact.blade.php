@@ -151,55 +151,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-                @if(session('success'))
-                    <div
-                        class="mb-6 p-4 rounded-xl bg-green-100/80 dark:bg-green-900/50 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 backdrop-blur-sm">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('contact') }}" class="space-y-5">
-                    @csrf
-                    <div class="group">
-                        <label for="name"
-                            class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 ml-1">Name</label>
-                        <input type="text" id="name" name="name" required
-                            class="w-full px-5 py-3.5 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all text-gray-900 dark:text-white placeholder-gray-500 backdrop-blur-sm hover:bg-white/60 dark:hover:bg-black/30">
-                    </div>
-
-                    <div class="group">
-                        <label for="email"
-                            class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 ml-1">Email
-                            address</label>
-                        <input type="email" id="email" name="email" required
-                            class="w-full px-5 py-3.5 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all text-gray-900 dark:text-white placeholder-gray-500 backdrop-blur-sm hover:bg-white/60 dark:hover:bg-black/30">
-                    </div>
-
-                    <div class="group">
-                        <label for="message"
-                            class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 ml-1">Message</label>
-                        <textarea id="message" name="message" rows="5" required
-                            class="w-full px-5 py-3.5 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all text-gray-900 dark:text-white placeholder-gray-500 backdrop-blur-sm hover:bg-white/60 dark:hover:bg-black/30 resize-none"></textarea>
-                    </div>
-
-                    <button type="submit"
-                        class="w-full py-4 px-6 bg-gradient-to-r from-orange-500 to-pink-600 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 border border-white/20 mt-2">
-                        Send Message
-                    </button>
-                </form>
             </div>
         </main>
 
