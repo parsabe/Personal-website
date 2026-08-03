@@ -115,8 +115,7 @@ export function selectChatUser(userIdOrObj) {
 
     previousMessagesHash = '';
     lastMessageCount = 0;
-    requestAnimationFrame(() => scrollToBottom(true));
-    fetchMessages().then(() => scrollToBottom(true));
+    fetchMessages();
 }
 
 // Back to User Directory List Screen
@@ -149,39 +148,6 @@ export function backToUserDirectory() {
         profileBtnText.textContent = 'My Profile';
     }
     if (statusElem) statusElem.textContent = 'Select a user below to start chatting';
-}
-
-// Multi-stage Scroll to Bottom Helper for Guaranteed Latest Message View
-export function scrollToBottom(instant = true) {
-    const stream = document.getElementById('messageStream');
-    if (!stream) return;
-
-    const scrollFunc = () => {
-        if (!stream) return;
-        const lastMsg = stream.lastElementChild;
-        if (lastMsg) {
-            lastMsg.scrollIntoView({ block: 'end', behavior: instant ? 'auto' : 'smooth' });
-        } else {
-            const prevBehavior = stream.style.scrollBehavior;
-            if (instant) stream.style.scrollBehavior = 'auto';
-            stream.scrollTop = stream.scrollHeight + 999999;
-            if (instant) stream.style.scrollBehavior = prevBehavior;
-        }
-    };
-
-    scrollFunc();
-
-    requestAnimationFrame(() => {
-        scrollFunc();
-        requestAnimationFrame(() => {
-            scrollFunc();
-        });
-    });
-
-    setTimeout(scrollFunc, 50);
-    setTimeout(scrollFunc, 150);
-    setTimeout(scrollFunc, 350);
-    setTimeout(scrollFunc, 700);
 }
 
 // Fetch Messages & Notifications
@@ -217,10 +183,9 @@ export async function fetchMessages() {
                 return; // On directory screen
             }
 
-            const currentHash = data.messages.map(m => `${m.id}:${(m.message || '').length}:${m.reactions ? m.reactions.map(r => r.emoji + r.count).join(',') : ''}`).join('|');
+            const currentHash = JSON.stringify(data.messages.map(m => ({ id: m.id, msg: m.message, file: m.file_url, reactions: m.reactions })));
             if (currentHash !== previousMessagesHash) {
-                const isInitialLoad = !previousMessagesHash;
-                const wasAtBottom = (stream.scrollHeight - stream.scrollTop) <= (stream.clientHeight + 200);
+                const wasAtBottom = stream.scrollHeight - stream.scrollTop <= stream.clientHeight + 100;
 
                 if (data.messages.length === 0) {
                     stream.innerHTML = `<div class="text-center py-16 text-gray-400 text-xs font-mono">No messages yet with ${escapeHtml(selectedRecipient.name)}. Start chatting below!</div>`;
@@ -237,8 +202,8 @@ export async function fetchMessages() {
                         }
                     }
 
-                    if (isInitialLoad || wasAtBottom || isNewMessageAdded) {
-                        scrollToBottom(true);
+                    if (wasAtBottom || isNewMessageAdded) {
+                        stream.scrollTop = stream.scrollHeight;
                     }
                 }
                 lastMessageCount = data.messages.length;
@@ -262,11 +227,11 @@ export function renderMessageBubble(msg) {
     } else if (msg.type === 'image' || (msg.mime_type && msg.mime_type.startsWith('image/'))) {
         contentHtml = `
             ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
-            <img src="${fileUrl}" onload="if(window.chatPortal) window.chatPortal.scrollToBottom(true)" class="max-w-xs max-h-60 rounded-2xl border border-white/10 cursor-pointer hover:opacity-90 transition transform hover:scale-105 shadow-lg object-cover" onclick="window.open('${fileUrl}', '_blank')">`;
+            <img src="${fileUrl}" class="max-w-xs max-h-60 rounded-2xl border border-white/10 cursor-pointer hover:opacity-90 transition transform hover:scale-105 shadow-lg object-cover" onclick="window.open('${fileUrl}', '_blank')">`;
     } else if (msg.type === 'gif') {
         contentHtml = `
             ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
-            <img src="${fileUrl}" onload="if(window.chatPortal) window.chatPortal.scrollToBottom(true)" class="max-w-xs max-h-48 rounded-2xl border border-white/10 shadow-lg">`;
+            <img src="${fileUrl}" class="max-w-xs max-h-48 rounded-2xl border border-white/10 shadow-lg">`;
     } else if (msg.type === 'voice') {
         contentHtml = `
             ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
@@ -663,9 +628,7 @@ export async function dispatchMessage() {
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': getCsrfToken() },
             body: JSON.stringify(payload)
         });
-        previousMessagesHash = '';
-        await fetchMessages();
-        scrollToBottom(true);
+        fetchMessages();
     } catch (err) {
         console.error(err);
     }
@@ -1640,7 +1603,6 @@ export async function pasteFromClipboard() {
 
 // Global Namespace Export for HTML Inline Attributes
 window.chatPortal = {
-    scrollToBottom,
     selectChatUser,
     backToUserDirectory,
     filterUsersDirectory,

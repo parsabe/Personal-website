@@ -21,7 +21,6 @@
 .animate-toast { animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .animate-pulse-glow { animation: pulseGlow 3s infinite ease-in-out; }
 
-.chat-scroll { scroll-behavior: smooth; }
 .chat-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
 .chat-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 9999px; }
 
