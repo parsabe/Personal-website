@@ -11,6 +11,7 @@ class ChatMessage extends Model
 
     protected $fillable = [
         'user_id',
+        'recipient_id',
         'sender_name',
         'username',
         'message',
@@ -33,6 +34,11 @@ class ChatMessage extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function recipient()
+    {
+        return $this->belongsTo(User::class, 'recipient_id');
     }
 
     public function reactions()
