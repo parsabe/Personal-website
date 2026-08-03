@@ -33,30 +33,6 @@
         </div>
     @endif
 
-    <!-- SOCIAL OAUTH LOGIN BUTTONS (GOOGLE, FACEBOOK, APPLE) -->
-    <div class="space-y-2 mb-6">
-        <label class="block text-xs font-bold uppercase tracking-wider text-gray-300 text-center mb-2">Or Continue With Social Account</label>
-        <div class="grid grid-cols-3 gap-2">
-            <a href="{{ route('social.redirect', 'google') }}" class="py-2.5 px-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl flex items-center justify-center gap-1.5 text-xs font-bold text-white transition transform hover:scale-105">
-                <span>🌐</span>
-                <span>Google</span>
-            </a>
-            <a href="{{ route('social.redirect', 'facebook') }}" class="py-2.5 px-3 bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/40 rounded-2xl flex items-center justify-center gap-1.5 text-xs font-bold text-blue-200 transition transform hover:scale-105">
-                <span>📘</span>
-                <span>Facebook</span>
-            </a>
-            <a href="{{ route('social.redirect', 'apple') }}" class="py-2.5 px-3 bg-black/60 hover:bg-black/80 border border-white/30 rounded-2xl flex items-center justify-center gap-1.5 text-xs font-bold text-white transition transform hover:scale-105">
-                <span>🍎</span>
-                <span>Apple</span>
-            </a>
-        </div>
-        <div class="relative flex py-3 items-center">
-            <div class="flex-grow border-t border-white/10"></div>
-            <span class="flex-shrink mx-3 text-[10px] uppercase font-mono text-gray-400">Or Login With Email</span>
-            <div class="flex-grow border-t border-white/10"></div>
-        </div>
-    </div>
-
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
 

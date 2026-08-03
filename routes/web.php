@@ -26,12 +26,8 @@ Route::get('/lang/{locale}', function ($locale) {
 })->name('lang.switch');
 
 // Contact Form Routes (Moved here so ContactController handles them)
-Route::get('/contact', [ContactController::class, 'index'])->name('contact'); // Re-added the name('contact') so your navbar doesn't break!
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store']);
-
-// Social OAuth Authentication Routes (Google, Facebook, Apple)
-Route::get('/auth/{provider}', [App\Http\Controllers\SocialAuthController::class, 'redirectToProvider'])->name('social.redirect');
-Route::get('/auth/{provider}/callback', [App\Http\Controllers\SocialAuthController::class, 'handleProviderCallback'])->name('social.callback');
 
 
 
