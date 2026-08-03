@@ -36,6 +36,51 @@ class ChatController extends Controller
         $recipientId = $request->query('recipient_id');
         $myId = Auth::id();
 
+        // Unread message counts per user and unread messages list for notifications (queried BEFORE marking delivered)
+        $unreadCounts = [];
+        $unreadMessages = [];
+        if ($myId) {
+            try {
+                $unreadCounts = ChatMessage::select('user_id', DB::raw('count(*) as total'))
+                    ->where('recipient_id', $myId)
+                    ->whereNull('delivered_at')
+                    ->where(function ($q) {
+                        $q->whereNull('scheduled_at')
+                          ->orWhere('scheduled_at', '<=', now());
+                    })
+                    ->groupBy('user_id')
+                    ->pluck('total', 'user_id')
+                    ->toArray();
+
+                $unreadMessages = ChatMessage::where('recipient_id', $myId)
+                    ->whereNull('delivered_at')
+                    ->where(function ($q) {
+                        $q->whereNull('scheduled_at')
+                          ->orWhere('scheduled_at', '<=', now());
+                    })
+                    ->with('user:id,name,first_name,last_name,username,avatar')
+                    ->orderBy('created_at', 'desc')
+                    ->take(10)
+                    ->get()
+                    ->map(function ($m) {
+                        return [
+                            'id' => $m->id,
+                            'user_id' => $m->user_id,
+                            'sender_name' => $m->sender_name,
+                            'username' => $m->username,
+                            'message' => $m->message,
+                            'type' => $m->type,
+                            'file_path' => $m->file_path ? asset($m->file_path) : null,
+                            'avatar_url' => $m->user ? $m->user->avatar_url : asset('images/default-avatar.svg'),
+                            'created_at' => $m->created_at->format('H:i'),
+                        ];
+                    });
+            } catch (\Exception $e) {
+                $unreadCounts = [];
+                $unreadMessages = [];
+            }
+        }
+
         // Mark incoming messages from recipientId to myId as delivered/read when user opens/polls the chat
         if ($recipientId && $myId) {
             ChatMessage::where('user_id', $recipientId)
@@ -95,51 +140,6 @@ class ChatController extends Controller
                 'is_me' => $myId ? ($m->user_id === $myId) : false,
             ];
         });
-
-        // Unread message counts per user and unread messages list for notifications
-        $unreadCounts = [];
-        $unreadMessages = [];
-        if ($myId) {
-            try {
-                $unreadCounts = ChatMessage::select('user_id', DB::raw('count(*) as total'))
-                    ->where('recipient_id', $myId)
-                    ->whereNull('delivered_at')
-                    ->where(function ($q) {
-                        $q->whereNull('scheduled_at')
-                          ->orWhere('scheduled_at', '<=', now());
-                    })
-                    ->groupBy('user_id')
-                    ->pluck('total', 'user_id')
-                    ->toArray();
-
-                $unreadMessages = ChatMessage::where('recipient_id', $myId)
-                    ->whereNull('delivered_at')
-                    ->where(function ($q) {
-                        $q->whereNull('scheduled_at')
-                          ->orWhere('scheduled_at', '<=', now());
-                    })
-                    ->with('user:id,name,first_name,last_name,username,avatar')
-                    ->orderBy('created_at', 'desc')
-                    ->take(10)
-                    ->get()
-                    ->map(function ($m) {
-                        return [
-                            'id' => $m->id,
-                            'user_id' => $m->user_id,
-                            'sender_name' => $m->sender_name,
-                            'username' => $m->username,
-                            'message' => $m->message,
-                            'type' => $m->type,
-                            'file_path' => $m->file_path ? asset($m->file_path) : null,
-                            'avatar_url' => $m->user ? $m->user->avatar_url : asset('images/default-avatar.svg'),
-                            'created_at' => $m->created_at->format('H:i'),
-                        ];
-                    });
-            } catch (\Exception $e) {
-                $unreadCounts = [];
-                $unreadMessages = [];
-            }
-        }
 
         return response()->json([
             'status' => 'success',

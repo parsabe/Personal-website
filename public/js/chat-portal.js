@@ -79,10 +79,20 @@ export function selectChatUser(userIdOrObj) {
     const dotElem = document.getElementById('activeContactDot');
     const callBtn = document.getElementById('btnCallUser');
 
-    if (nameElem) nameElem.textContent = userObj.name;
-    if (userElem) userElem.textContent = `@${userObj.username || 'user'}`;
-    if (avatarElem) avatarElem.src = userObj.avatar_url || '/images/default-avatar.svg';
-    if (statusElem) statusElem.innerHTML = '<span class="text-emerald-400">Online &bull; Direct Message</span>';
+    if (userObj.is_me) {
+        if (nameElem) nameElem.textContent = '📌 Saved Messages';
+        if (userElem) userElem.textContent = '@notes';
+        if (avatarElem) avatarElem.src = userObj.avatar_url || '/images/default-avatar.svg';
+        if (statusElem) statusElem.innerHTML = '<span class="text-amber-400 font-semibold">Personal Storage & Notes</span>';
+        if (chatInput) chatInput.placeholder = 'Save notes, links, photos, files or voice notes...';
+    } else {
+        if (nameElem) nameElem.textContent = userObj.name;
+        if (userElem) userElem.textContent = `@${userObj.username || 'user'}`;
+        if (avatarElem) avatarElem.src = userObj.avatar_url || '/images/default-avatar.svg';
+        if (statusElem) statusElem.innerHTML = '<span class="text-emerald-400">Online &bull; Direct Message</span>';
+        if (chatInput) chatInput.placeholder = `Message ${userObj.name}...`;
+    }
+
     if (dotElem) dotElem.className = 'absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse';
 
     if (callBtn) {
@@ -300,6 +310,8 @@ export async function toggleReaction(msgId, emoji) {
     }
 }
 
+let previousUsersHash = '';
+
 // Fetch Users List & Render Main Directory & macOS Chat Dock
 export async function fetchUsers() {
     try {
@@ -308,15 +320,19 @@ export async function fetchUsers() {
         if (data.status === 'success') {
             allUsersList = data.users || [];
 
-            renderUsersGrid(allUsersList);
-            renderMacChatDock(allUsersList);
+            const usersHash = JSON.stringify(allUsersList);
+            if (usersHash !== previousUsersHash) {
+                previousUsersHash = usersHash;
+                renderUsersGrid(allUsersList);
+                renderMacChatDock(allUsersList);
+            }
         }
     } catch (err) {
         console.error(err);
     }
 }
 
-// Render Users Grid on Main Directory Screen
+// Render Users Grid on Main Directory Screen (Saved Messages Pinned #1)
 export function renderUsersGrid(users) {
     const grid = document.getElementById('mainUsersGrid');
     if (!grid) return;
@@ -326,30 +342,57 @@ export function renderUsersGrid(users) {
         return;
     }
 
-    grid.innerHTML = users.map(u => `
-        <div onclick="window.selectChatUser(${u.id})" class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-blue-600/20 hover:border-blue-400/50 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl group space-y-3">
-            <div class="flex items-center space-x-3">
-                <div class="relative shrink-0">
-                    <img src="${u.avatar_url}" class="w-12 h-12 rounded-full border-2 border-white/20 object-cover shadow-md group-hover:scale-105 transition-transform">
-                    <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse"></span>
-                    <span class="unread-badge-${u.id} hidden absolute -top-1 -right-1 w-5 h-5 bg-rose-600 text-white rounded-full text-[10px] font-bold flex items-center justify-center border border-gray-900 animate-bounce">🔴</span>
-                </div>
-                <div class="overflow-hidden flex-1">
-                    <h3 class="font-bold text-sm text-white truncate group-hover:text-blue-400 transition-colors flex items-center gap-1.5">
-                        <span>${escapeHtml(u.name)}</span>
-                        ${u.is_me ? '<span class="px-1.5 py-0.2 bg-blue-600/70 text-white rounded text-[9px] font-mono font-bold">(You)</span>' : ''}
-                    </h3>
-                    <p class="text-xs text-gray-400 truncate">@${escapeHtml(u.username)}</p>
-                </div>
-            </div>
+    // Always sort so Saved Messages (u.is_me) is pinned at index 0
+    const sortedUsers = [...users].sort((a, b) => (b.is_me ? 1 : 0) - (a.is_me ? 1 : 0));
 
-            <p class="text-xs text-gray-300 line-clamp-2 min-h-[32px]">${escapeHtml(u.bio || 'Member')}</p>
+    grid.innerHTML = sortedUsers.map(u => {
+        if (u.is_me) {
+            return `
+                <div onclick="window.selectChatUser(${u.id})" class="col-span-full p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-indigo-600/20 to-purple-600/20 border border-amber-400/40 hover:border-amber-400/80 cursor-pointer transition-all duration-300 transform hover:-translate-y-0.5 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 group">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="relative shrink-0">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-2xl shadow-lg border border-white/20 group-hover:scale-105 transition-transform">
+                                📌
+                            </div>
+                            <span class="unread-badge-${u.id} hidden absolute -top-1 -right-1 w-5 h-5 bg-rose-600 text-white rounded-full text-[10px] font-bold flex items-center justify-center border border-gray-900 animate-bounce">🔴</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm text-white flex items-center gap-2 group-hover:text-amber-300 transition-colors">
+                                <span>📌 Saved Messages</span>
+                                <span class="px-2 py-0.5 bg-amber-500/30 text-amber-300 border border-amber-400/40 rounded-full text-[9px] font-mono font-bold">PINNED</span>
+                            </h3>
+                            <p class="text-xs text-gray-300">Your personal cloud storage, notes to self & bookmarks</p>
+                        </div>
+                    </div>
+                    <div class="px-4 py-2 bg-amber-500/30 border border-amber-400/50 text-amber-200 font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 group-hover:bg-amber-500 group-hover:text-white transition-all shadow-md shrink-0">
+                        <span>🔖 Open Storage</span>
+                    </div>
+                </div>`;
+        }
 
-            <button class="w-full py-2 bg-blue-600/40 border border-blue-400/40 text-blue-300 font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-md">
-                <span>💬 ${u.is_me ? 'Chat / Note to Self' : 'Start Direct Chat'}</span>
-            </button>
-        </div>
-    `).join('');
+        return `
+            <div onclick="window.selectChatUser(${u.id})" class="p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-blue-600/20 hover:border-blue-400/50 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl group space-y-3">
+                <div class="flex items-center space-x-3">
+                    <div class="relative shrink-0">
+                        <img src="${u.avatar_url}" class="w-12 h-12 rounded-full border-2 border-white/20 object-cover shadow-md group-hover:scale-105 transition-transform">
+                        <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse"></span>
+                        <span class="unread-badge-${u.id} hidden absolute -top-1 -right-1 w-5 h-5 bg-rose-600 text-white rounded-full text-[10px] font-bold flex items-center justify-center border border-gray-900 animate-bounce">🔴</span>
+                    </div>
+                    <div class="overflow-hidden flex-1">
+                        <h3 class="font-bold text-sm text-white truncate group-hover:text-blue-400 transition-colors">
+                            ${escapeHtml(u.name)}
+                        </h3>
+                        <p class="text-xs text-gray-400 truncate">@${escapeHtml(u.username)}</p>
+                    </div>
+                </div>
+
+                <p class="text-xs text-gray-300 line-clamp-2 min-h-[32px]">${escapeHtml(u.bio || 'Member')}</p>
+
+                <button class="w-full py-2 bg-blue-600/40 border border-blue-400/40 text-blue-300 font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-md">
+                    <span>💬 Start Direct Chat</span>
+                </button>
+            </div>`;
+    }).join('');
 }
 
 // Live Search Filter for Users Directory
@@ -792,23 +835,64 @@ export async function submitStory(e) {
     }
 }
 
+let globalAudioCtx = null;
+
+function getAudioContext() {
+    if (!globalAudioCtx) {
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtxClass) {
+            globalAudioCtx = new AudioCtxClass();
+        }
+    }
+    if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
+        globalAudioCtx.resume().catch(() => {});
+    }
+    return globalAudioCtx;
+}
+
+if (typeof window !== 'undefined') {
+    window.addEventListener('click', () => getAudioContext(), { passive: true });
+    window.addEventListener('keydown', () => getAudioContext(), { passive: true });
+    window.addEventListener('touchstart', () => getAudioContext(), { passive: true });
+}
+
 // Audio Chime & Toast Notifications
 export function playNotificationSound() {
-    if (!document.getElementById('soundToggle')?.checked) return;
+    const toggle = document.getElementById('soundToggle');
+    if (toggle && !toggle.checked) return;
+
     try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
-        gain.gain.setValueAtTime(0.15, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.3);
-    } catch (e) {}
+        const ctx = getAudioContext();
+        if (ctx) {
+            const now = ctx.currentTime;
+            const osc1 = ctx.createOscillator();
+            const osc2 = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc1.type = 'sine';
+            osc2.type = 'sine';
+
+            osc1.frequency.setValueAtTime(587.33, now); // D5
+            osc1.frequency.exponentialRampToValueAtTime(880, now + 0.1); // A5
+
+            osc2.frequency.setValueAtTime(880, now + 0.1);
+            osc2.frequency.exponentialRampToValueAtTime(1174.66, now + 0.22); // D6
+
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc1.start(now);
+            osc1.stop(now + 0.12);
+            osc2.start(now + 0.1);
+            osc2.stop(now + 0.28);
+        }
+    } catch (e) {
+        console.warn('Notification sound error:', e);
+    }
 }
 
 export function showToastNotification(msg, type = 'success') {
