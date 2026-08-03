@@ -85,6 +85,9 @@ class ChatController extends Controller
                 'message' => $m->message,
                 'type' => $m->type,
                 'file_path' => $m->file_path ? asset($m->file_path) : null,
+                'file_url' => $m->file_path ? asset($m->file_path) : null,
+                'file_name' => $m->file_name ?: ($m->file_path ? basename($m->file_path) : null),
+                'file_size' => $m->formatted_file_size,
                 'avatar_url' => $m->user ? $m->user->avatar_url : asset('images/default-avatar.svg'),
                 'created_at' => $m->created_at->format('H:i'),
                 'created_at_human' => $m->created_at->diffForHumans(),
@@ -151,10 +154,23 @@ class ChatController extends Controller
      */
     public function fetchUsers()
     {
+        $myId = Auth::id();
+        $chattedUserIds = [];
+
+        if ($myId) {
+            $sentTo = ChatMessage::where('user_id', $myId)
+                ->whereNotNull('recipient_id')
+                ->pluck('recipient_id');
+            $receivedFrom = ChatMessage::where('recipient_id', $myId)
+                ->pluck('user_id');
+
+            $chattedUserIds = $sentTo->concat($receivedFrom)->unique()->filter()->values()->toArray();
+        }
+
         $users = User::select('id', 'name', 'first_name', 'last_name', 'username', 'email', 'avatar', 'bio', 'social_links')
             ->orderBy('id', 'asc')
             ->get()
-            ->map(function ($u) {
+            ->map(function ($u) use ($myId, $chattedUserIds) {
                 return [
                     'id' => $u->id,
                     'name' => trim($u->first_name . ' ' . $u->last_name) ?: $u->name,
@@ -163,11 +179,16 @@ class ChatController extends Controller
                     'avatar_url' => $u->avatar_url,
                     'bio' => $u->bio ?? 'Member',
                     'social_links' => $u->social_links ?? [],
-                    'is_me' => $u->id === Auth::id(),
+                    'is_me' => $u->id === $myId,
+                    'has_chatted' => in_array($u->id, $chattedUserIds),
                 ];
             });
 
-        return response()->json(['status' => 'success', 'users' => $users]);
+        return response()->json([
+            'status' => 'success',
+            'users' => $users,
+            'chatted_user_ids' => $chattedUserIds
+        ]);
     }
 
     /**
@@ -185,6 +206,8 @@ class ChatController extends Controller
             'recipient_id' => 'nullable|exists:users,id',
             'scheduled_at' => 'nullable|date',
             'file_url' => 'nullable|string',
+            'file_name' => 'nullable|string',
+            'file_size' => 'nullable',
         ]);
 
         $user = Auth::user();
@@ -199,6 +222,8 @@ class ChatController extends Controller
             'message' => $request->input('message'),
             'type' => $request->input('type'),
             'file_path' => $request->input('file_url'),
+            'file_name' => $request->input('file_name'),
+            'file_size' => $request->input('file_size'),
             'scheduled_at' => $isScheduled ? $request->input('scheduled_at') : null,
             'delivered_at' => null, // null means unread by recipient
         ];

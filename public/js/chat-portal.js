@@ -95,6 +95,11 @@ export function selectChatUser(userIdOrObj) {
         }
     }
 
+    const profileBtnText = document.getElementById('btnHeaderProfileText');
+    if (profileBtnText) {
+        profileBtnText.textContent = userObj.is_me ? 'My Profile' : `${userObj.name}'s Profile`;
+    }
+
     // Restore window if minimized
     if (window.restoreMacWindow) window.restoreMacWindow();
 
@@ -128,6 +133,10 @@ export function backToUserDirectory() {
 
     if (nameElem) nameElem.textContent = 'Members Directory';
     if (userElem) userElem.textContent = '(@all)';
+    const profileBtnText = document.getElementById('btnHeaderProfileText');
+    if (profileBtnText) {
+        profileBtnText.textContent = 'My Profile';
+    }
     if (statusElem) statusElem.textContent = 'Select a user below to start chatting';
 }
 
@@ -199,26 +208,38 @@ export async function fetchMessages() {
 // Render Message Bubble
 export function renderMessageBubble(msg) {
     let contentHtml = '';
+    const fileUrl = msg.file_url || msg.file_path || '';
+    const fileName = msg.file_name || (fileUrl ? fileUrl.split('/').pop() : 'Attachment');
+    const fileSize = msg.file_size || '';
 
     if (msg.type === 'text') {
-        contentHtml = `<p class="whitespace-pre-wrap">${escapeHtml(msg.message || '')}</p>`;
+        contentHtml = `<p class="whitespace-pre-wrap leading-relaxed">${escapeHtml(msg.message || '')}</p>`;
     } else if (msg.type === 'image' || (msg.mime_type && msg.mime_type.startsWith('image/'))) {
-        contentHtml = `<img src="${msg.file_url}" class="max-w-xs max-h-60 rounded-2xl border border-white/10 cursor-pointer hover:opacity-90 transition transform hover:scale-105" onclick="window.open('${msg.file_url}', '_blank')">`;
-    } else if (msg.type === 'gif') {
-        contentHtml = `<img src="${msg.file_url}" class="max-w-xs max-h-48 rounded-2xl border border-white/10">`;
-    } else if (msg.type === 'voice') {
-        contentHtml = `<div class="flex items-center space-x-2"><span class="text-lg">🎙️</span><audio controls src="${msg.file_url}" class="h-8 w-48 sm:w-60"></audio></div>`;
-    } else if (msg.type === 'video') {
-        contentHtml = `<video controls src="${msg.file_url}" class="max-w-xs max-h-60 rounded-2xl border border-white/10"></video>`;
-    } else if (msg.type === 'file') {
         contentHtml = `
-            <div class="flex items-center space-x-3 p-2.5 bg-black/20 rounded-2xl border border-white/10">
+            ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
+            <img src="${fileUrl}" class="max-w-xs max-h-60 rounded-2xl border border-white/10 cursor-pointer hover:opacity-90 transition transform hover:scale-105 shadow-lg object-cover" onclick="window.open('${fileUrl}', '_blank')">`;
+    } else if (msg.type === 'gif') {
+        contentHtml = `
+            ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
+            <img src="${fileUrl}" class="max-w-xs max-h-48 rounded-2xl border border-white/10 shadow-lg">`;
+    } else if (msg.type === 'voice') {
+        contentHtml = `
+            ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
+            <div class="flex items-center space-x-2"><span class="text-lg">🎙️</span><audio controls src="${fileUrl}" class="h-8 w-48 sm:w-60"></audio></div>`;
+    } else if (msg.type === 'video') {
+        contentHtml = `
+            ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
+            <video controls src="${fileUrl}" class="max-w-xs max-h-60 rounded-2xl border border-white/10 shadow-lg"></video>`;
+    } else if (msg.type === 'file' || fileUrl) {
+        contentHtml = `
+            ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
+            <div class="flex items-center space-x-3 p-3 bg-black/30 rounded-2xl border border-white/15 shadow-inner">
                 <span class="text-2xl">📄</span>
-                <div class="overflow-hidden">
-                    <p class="font-semibold text-xs truncate max-w-[180px]">${escapeHtml(msg.file_name || 'Attachment')}</p>
-                    <p class="text-[10px] text-gray-400">${msg.file_size || ''}</p>
+                <div class="overflow-hidden flex-1">
+                    <p class="font-bold text-xs truncate max-w-[180px] text-white">${escapeHtml(fileName)}</p>
+                    ${fileSize ? `<p class="text-[10px] text-gray-400 font-mono">${fileSize}</p>` : ''}
                 </div>
-                <a href="${msg.file_url}" download class="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 rounded-xl text-[10px] font-bold text-white">Download</a>
+                <a href="${fileUrl}" target="_blank" download class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 rounded-xl text-[10px] font-bold text-white shadow transition">Download</a>
             </div>`;
     }
 
@@ -247,7 +268,7 @@ export function renderMessageBubble(msg) {
     return `
         <div class="flex ${alignClass} mb-2 animate-scale-up">
             <div class="flex items-start space-x-2 max-w-[88%] sm:max-w-md">
-                ${!msg.is_me ? `<img src="${msg.avatar_url}" class="w-8 h-8 rounded-full border border-white/20 object-cover mt-1">` : ''}
+                ${!msg.is_me ? `<img src="${msg.avatar_url}" onclick="window.chatPortal.openPublicProfileModal(${msg.user_id})" class="w-8 h-8 rounded-full border border-white/20 object-cover mt-1 cursor-pointer hover:scale-110 transition shadow-md" title="View ${escapeHtml(msg.sender_name)}'s Profile">` : ''}
                 <div>
                     <div class="p-3 rounded-2xl ${bgClass} shadow-md text-xs">
                         <div class="flex items-center justify-between text-[10px] opacity-75 mb-1 space-x-3">
@@ -288,7 +309,7 @@ export async function fetchUsers() {
             allUsersList = data.users || [];
 
             renderUsersGrid(allUsersList);
-            renderMacChatDock(allUsersList.filter(u => !u.is_me));
+            renderMacChatDock(allUsersList);
         }
     } catch (err) {
         console.error(err);
@@ -342,12 +363,20 @@ export function filterUsersDirectory() {
     renderUsersGrid(filtered);
 }
 
-// Render Users in macOS Dock Bar at Bottom
+// Render Users in macOS Dock Bar at Bottom (Only users with active chat history)
 export function renderMacChatDock(users) {
     const dockContainer = document.getElementById('mac-chat-users-dock');
     if (!dockContainer) return;
 
-    dockContainer.innerHTML = users.map(u => `
+    // Filter to only non-me users who have active chat history (has_chatted = true)
+    const activeChatUsers = (users || []).filter(u => !u.is_me && u.has_chatted);
+
+    if (activeChatUsers.length === 0) {
+        dockContainer.innerHTML = '';
+        return;
+    }
+
+    dockContainer.innerHTML = activeChatUsers.map(u => `
         <button onclick="window.selectChatUser(${u.id})" title="Chat with ${escapeHtml(u.name)}" 
            class="taskbar-user-item p-1.5 rounded-2xl hover:bg-white/15 transition-all group relative flex items-center justify-center">
             <div class="relative">
@@ -595,6 +624,8 @@ export async function handleFileSelect(event) {
                         body: JSON.stringify({
                             type: res.type || type,
                             file_url: res.file_url,
+                            file_name: res.file_name || file.name,
+                            file_size: file.size,
                             recipient_id: selectedRecipient ? selectedRecipient.id : null,
                             scheduled_at: selectedScheduledTime
                         })
@@ -842,40 +873,53 @@ export function switchGateTab(tab) {
 }
 
 export function toggleContactsSidebar() { document.getElementById('contactsSidebar')?.classList.toggle('hidden'); }
+export function viewActiveContactProfile() {
+    if (selectedRecipient && !selectedRecipient.is_me) {
+        openPublicProfileModal(selectedRecipient.id);
+    } else {
+        toggleProfileModal();
+    }
+}
+
 export function toggleProfileModal() { document.getElementById('profileModal')?.classList.toggle('hidden'); }
 export function toggleAddStoryModal() { document.getElementById('addStoryModal')?.classList.toggle('hidden'); }
 export function toggleSettingsModal() { document.getElementById('settingsModal')?.classList.toggle('hidden'); }
-export function toggleEmojiPicker() { document.getElementById('emojiPicker')?.classList.toggle('hidden'); }
-export function toggleGifPicker() { document.getElementById('gifPicker')?.classList.toggle('hidden'); }
-export function toggleScheduleModal() { document.getElementById('scheduleModal')?.classList.toggle('hidden'); }
-
-export function startAudioCall() {
-    const modal = document.getElementById('audioCallModal');
-    if (!modal) return;
-    const callStatus = document.getElementById('callStatus');
-    const targetName = selectedRecipient ? selectedRecipient.name : 'Parsa Besharat';
-    if (callStatus) {
-        callStatus.innerText = `Calling ${targetName}... (Ringing)`;
+export function updateInputControlsState() {
+    const input = document.getElementById('chatInput');
+    const scheduleBtn = document.getElementById('btnScheduleMsg');
+    const hasText = input && input.value.trim().length > 0;
+    if (scheduleBtn) {
+        if (hasText) {
+            scheduleBtn.disabled = false;
+            scheduleBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'text-gray-400');
+            scheduleBtn.classList.add('text-amber-300', 'hover:text-amber-200', 'cursor-pointer');
+            scheduleBtn.title = 'Schedule Message';
+        } else {
+            scheduleBtn.disabled = true;
+            scheduleBtn.classList.add('opacity-50', 'cursor-not-allowed', 'text-gray-400');
+            scheduleBtn.classList.remove('text-amber-300', 'hover:text-amber-200', 'cursor-pointer');
+            scheduleBtn.title = 'Type a message first to schedule';
+        }
     }
-    modal.classList.remove('hidden');
-    playNotificationSound();
 }
 
-export function endAudioCall() {
-    document.getElementById('audioCallModal')?.classList.add('hidden');
-}
-
-export function changeTheme(t) {
-    const el = document.getElementById('chatBoxContainer');
-    if (!el) return;
-    el.classList.remove('theme-cyberpunk', 'theme-emerald', 'theme-sunset', 'theme-light');
-    if (t !== 'sapphire') el.classList.add(`theme-${t}`);
+export function toggleScheduleModal() {
+    const input = document.getElementById('chatInput');
+    const text = input ? input.value.trim() : '';
+    if (!text && document.getElementById('scheduleModal')?.classList.contains('hidden')) {
+        showToastNotification('Please type a message first before scheduling.', 'warning');
+        return;
+    }
+    document.getElementById('scheduleModal')?.classList.toggle('hidden');
 }
 
 export function addEmoji(e) { 
     const input = document.getElementById('chatInput');
-    if (input) input.value += e; 
-    toggleEmojiPicker(); 
+    if (input) {
+        input.value += e;
+        input.focus();
+        updateInputControlsState();
+    }
 }
 
 export async function sendGif(url) {
@@ -1219,6 +1263,26 @@ export async function openPublicProfileModal(userId) {
             document.getElementById('publicUserHandle').innerText = '@' + postsData.user.username;
             document.getElementById('publicAvatarImg').src = postsData.user.avatar_url;
 
+            const headerImg = document.getElementById('publicHeaderBanner');
+            if (headerImg) {
+                if (postsData.user.header_url) {
+                    headerImg.src = postsData.user.header_url;
+                    headerImg.classList.remove('hidden');
+                } else {
+                    headerImg.classList.add('hidden');
+                }
+            }
+
+            const bioElem = document.getElementById('publicUserBio');
+            if (bioElem) {
+                bioElem.innerText = postsData.user.bio || 'No bio added yet.';
+            }
+
+            const fullProfileLink = document.getElementById('publicFullProfilePageBtn');
+            if (fullProfileLink) {
+                fullProfileLink.href = `/user/${userId}/profile`;
+            }
+
             const feed = document.getElementById('publicUserPostsFeed');
             if (feed) {
                 if (!postsData.posts || postsData.posts.length === 0) {
@@ -1465,11 +1529,13 @@ window.chatPortal = {
     switchGateTab,
     toggleContactsSidebar,
     toggleProfileModal,
+    viewActiveContactProfile,
     toggleAddStoryModal,
     toggleSettingsModal,
     toggleEmojiPicker,
     toggleGifPicker,
     toggleScheduleModal,
+    updateInputControlsState,
     startAudioCall,
     endAudioCall,
     changeTheme,

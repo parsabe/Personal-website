@@ -99,13 +99,13 @@
                             <span>← Back</span>
                         </button>
                         
-                        <div id="activeContactHeader" class="flex items-center space-x-3">
+                        <div id="activeContactHeader" onclick="viewActiveContactProfile()" class="flex items-center space-x-3 cursor-pointer group" title="Click to view profile">
                             <div class="relative">
-                                <img id="activeContactAvatar" src="{{ $user->avatar_url }}" class="w-10 h-10 rounded-full border border-white/20 object-cover shadow-md">
+                                <img id="activeContactAvatar" src="{{ $user->avatar_url }}" class="w-10 h-10 rounded-full border border-white/20 object-cover shadow-md group-hover:scale-105 transition-transform">
                                 <span id="activeContactDot" class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse"></span>
                             </div>
                             <div>
-                                <h1 class="text-sm font-bold text-white flex items-center gap-1.5">
+                                <h1 class="text-sm font-bold text-white flex items-center gap-1.5 group-hover:text-blue-400 transition-colors">
                                     <span id="activeContactName">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Mitglieder-Verzeichnis' : 'Members Directory' }}</span>
                                     <span id="activeContactUsername" class="text-xs font-normal text-gray-400">(@all)</span>
                                 </h1>
@@ -119,8 +119,8 @@
                         <button id="btnCallUser" onclick="startAudioCall()" class="hidden px-3 py-1.5 rounded-full bg-blue-600/80 hover:bg-blue-600 text-white text-xs font-semibold items-center space-x-1 shadow-md transition transform hover:scale-105 active:scale-95">
                             📞 <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Anrufen' : 'Call' }}</span>
                         </button>
-                        <button onclick="toggleProfileModal()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold flex items-center space-x-1 transition transform hover:scale-105 active:scale-95">
-                            👤 <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Mein Profil' : 'My Profile' }}</span>
+                        <button id="btnHeaderProfile" onclick="viewActiveContactProfile()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold flex items-center space-x-1 transition transform hover:scale-105 active:scale-95">
+                            👤 <span id="btnHeaderProfileText">My Profile</span>
                         </button>
                     </div>
                 </header>
@@ -191,7 +191,7 @@
                                     </label>
                                     <button type="button" onclick="startVoiceRecording()" class="p-1.5 hover:bg-white/10 rounded-full text-gray-300 hover:text-rose-400 transition transform hover:scale-110" title="Record Voice Note">🎙️</button>
                                     <button type="button" onclick="openVideoNoteModal()" class="p-1.5 hover:bg-white/10 rounded-full text-gray-300 hover:text-emerald-400 transition transform hover:scale-110" title="Record Video Note">📹</button>
-                                    <button type="button" onclick="toggleScheduleModal()" class="p-1.5 hover:bg-white/10 rounded-full text-gray-300 hover:text-amber-300 transition transform hover:scale-110" title="Schedule Message">⏱️</button>
+                                    <button id="btnScheduleMsg" type="button" onclick="toggleScheduleModal()" class="p-1.5 rounded-full text-gray-400 opacity-50 cursor-not-allowed transition transform hover:scale-110" title="Type a message first to schedule" disabled>⏱️</button>
                                 </div>
 
                                 <div id="scheduledNotice" class="hidden text-amber-300 font-mono text-[11px] flex items-center gap-1">
@@ -202,6 +202,7 @@
 
                             <div class="flex items-center space-x-2">
                                 <textarea id="chatInput" rows="1" placeholder="Type a message..."
+                                    oninput="updateInputControlsState()"
                                     onkeydown="handleKeyPress(event)"
                                     class="flex-1 bg-white/5 border border-white/15 rounded-2xl px-4 py-2.5 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-blue-500 resize-none chat-scroll transition duration-200"></textarea>
                                 
@@ -477,9 +478,14 @@
 
                 <div class="flex items-end justify-between -mt-10 px-2 relative z-10">
                     <img id="publicAvatarImg" src="" class="w-20 h-20 rounded-full border-4 border-gray-900 object-cover shadow-2xl">
-                    <button id="publicFollowBtn" onclick="toggleFollowUserPublic()" class="px-5 py-2 rounded-xl text-xs font-bold shadow-lg transition bg-blue-600 hover:bg-blue-500 text-white">
-                        + Follow
-                    </button>
+                    <div class="flex items-center space-x-2">
+                        <a id="publicFullProfilePageBtn" href="#" target="_blank" class="px-3 py-2 rounded-xl text-xs font-bold shadow-lg transition bg-white/10 hover:bg-white/20 text-gray-200 flex items-center gap-1">
+                            🔗 Full Profile
+                        </a>
+                        <button id="publicFollowBtn" onclick="toggleFollowUserPublic()" class="px-4 py-2 rounded-xl text-xs font-bold shadow-lg transition bg-blue-600 hover:bg-blue-500 text-white">
+                            + Follow
+                        </button>
+                    </div>
                 </div>
 
                 <!-- USER INFO -->
@@ -679,14 +685,81 @@
         </div>
     </div>
 
-    <!-- EMOJI PICKER -->
-    <div id="emojiPicker" class="hidden fixed bottom-24 left-10 md:left-72 z-50 p-3 bg-gray-900 border border-white/20 rounded-2xl shadow-2xl w-64 max-h-48 overflow-y-auto chat-scroll grid grid-cols-6 gap-2 text-xl animate-scale-up">
-        <button onclick="addEmoji('😊')">😊</button><button onclick="addEmoji('😂')">😂</button>
-        <button onclick="addEmoji('🔥')">🔥</button><button onclick="addEmoji('❤️')">❤️</button>
-        <button onclick="addEmoji('👍')">👍</button><button onclick="addEmoji('🎉')">🎉</button>
-        <button onclick="addEmoji('🚀')">🚀</button><button onclick="addEmoji('💡')">💡</button>
-        <button onclick="addEmoji('😎')">😎</button><button onclick="addEmoji('🙏')">🙏</button>
-        <button onclick="addEmoji('💯')">💯</button><button onclick="addEmoji('✨')">✨</button>
+    <!-- EMOJI PICKER MODAL -->
+    <div id="emojiPicker" class="hidden fixed bottom-24 left-6 md:left-72 z-50 p-3.5 bg-gray-900/95 border border-white/20 rounded-3xl shadow-2xl w-80 max-h-80 flex flex-col space-y-2.5 animate-scale-up backdrop-blur-xl">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+            <span class="text-xs font-bold text-gray-200 flex items-center gap-1.5">
+                <span>😊 Emojis Library</span>
+            </span>
+            <button onclick="toggleEmojiPicker()" class="text-gray-400 hover:text-white text-xs font-bold px-1.5 py-0.5 rounded-lg hover:bg-white/10">✕</button>
+        </div>
+        <div id="emojiPickerGrid" class="flex-1 overflow-y-auto chat-scroll grid grid-cols-7 gap-1.5 text-xl p-1 max-h-56">
+            <!-- Smileys & Emotions -->
+            <button type="button" onclick="addEmoji('😊')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">😊</button>
+            <button type="button" onclick="addEmoji('😂')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">😂</button>
+            <button type="button" onclick="addEmoji('🤣')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🤣</button>
+            <button type="button" onclick="addEmoji('😍')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">😍</button>
+            <button type="button" onclick="addEmoji('🥰')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🥰</button>
+            <button type="button" onclick="addEmoji('😎')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">😎</button>
+            <button type="button" onclick="addEmoji('🤩')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🤩</button>
+            <button type="button" onclick="addEmoji('🥳')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🥳</button>
+            <button type="button" onclick="addEmoji('😏')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">😏</button>
+            <button type="button" onclick="addEmoji('😜')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">😜</button>
+            <button type="button" onclick="addEmoji('🤔')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🤔</button>
+            <button type="button" onclick="addEmoji('🧐')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🧐</button>
+            <button type="button" onclick="addEmoji('🤯')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🤯</button>
+            <button type="button" onclick="addEmoji('😭')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">😭</button>
+            <button type="button" onclick="addEmoji('😱')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">😱</button>
+            <button type="button" onclick="addEmoji('😈')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">😈</button>
+
+            <!-- Gestures & Hands -->
+            <button type="button" onclick="addEmoji('👍')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">👍</button>
+            <button type="button" onclick="addEmoji('👎')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">👎</button>
+            <button type="button" onclick="addEmoji('👏')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">👏</button>
+            <button type="button" onclick="addEmoji('🙌')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🙌</button>
+            <button type="button" onclick="addEmoji('🙏')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🙏</button>
+            <button type="button" onclick="addEmoji('🤝')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🤝</button>
+            <button type="button" onclick="addEmoji('✌️')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">✌️</button>
+            <button type="button" onclick="addEmoji('🤞')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🤞</button>
+            <button type="button" onclick="addEmoji('🤟')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🤟</button>
+            <button type="button" onclick="addEmoji('👌')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">👌</button>
+            <button type="button" onclick="addEmoji('🤌')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🤌</button>
+            <button type="button" onclick="addEmoji('👈')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">👈</button>
+            <button type="button" onclick="addEmoji('👉')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">👉</button>
+            <button type="button" onclick="addEmoji('💪')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">💪</button>
+
+            <!-- Hearts & Symbols -->
+            <button type="button" onclick="addEmoji('❤️')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">❤️</button>
+            <button type="button" onclick="addEmoji('💖')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">💖</button>
+            <button type="button" onclick="addEmoji('💙')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">💙</button>
+            <button type="button" onclick="addEmoji('💜')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">💜</button>
+            <button type="button" onclick="addEmoji('🖤')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🖤</button>
+            <button type="button" onclick="addEmoji('🤍')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🤍</button>
+            <button type="button" onclick="addEmoji('🔥')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🔥</button>
+            <button type="button" onclick="addEmoji('✨')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">✨</button>
+            <button type="button" onclick="addEmoji('🌟')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🌟</button>
+            <button type="button" onclick="addEmoji('💯')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">💯</button>
+            <button type="button" onclick="addEmoji('🎉')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🎉</button>
+            <button type="button" onclick="addEmoji('🚀')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🚀</button>
+            <button type="button" onclick="addEmoji('💡')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">💡</button>
+            <button type="button" onclick="addEmoji('👑')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">👑</button>
+
+            <!-- Tech, Activities & Fun -->
+            <button type="button" onclick="addEmoji('💎')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">💎</button>
+            <button type="button" onclick="addEmoji('🎯')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🎯</button>
+            <button type="button" onclick="addEmoji('🏆')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🏆</button>
+            <button type="button" onclick="addEmoji('💰')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">💰</button>
+            <button type="button" onclick="addEmoji('🤖')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🤖</button>
+            <button type="button" onclick="addEmoji('💻')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">💻</button>
+            <button type="button" onclick="addEmoji('📱')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">📱</button>
+            <button type="button" onclick="addEmoji('🎮')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🎮</button>
+            <button type="button" onclick="addEmoji('☕')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">☕</button>
+            <button type="button" onclick="addEmoji('🍺')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🍺</button>
+            <button type="button" onclick="addEmoji('🍕')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🍕</button>
+            <button type="button" onclick="addEmoji('🍟')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🍟</button>
+            <button type="button" onclick="addEmoji('🍔')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">🍔</button>
+            <button type="button" onclick="addEmoji('⚔️')" class="hover:scale-125 transition p-1 rounded hover:bg-white/10">⚔️</button>
+        </div>
     </div>
 
     <!-- GIF PICKER -->
