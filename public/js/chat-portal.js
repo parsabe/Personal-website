@@ -115,7 +115,8 @@ export function selectChatUser(userIdOrObj) {
 
     previousMessagesHash = '';
     lastMessageCount = 0;
-    fetchMessages();
+    requestAnimationFrame(() => scrollToBottom(true));
+    fetchMessages().then(() => scrollToBottom(true));
 }
 
 // Back to User Directory List Screen
@@ -148,6 +149,34 @@ export function backToUserDirectory() {
         profileBtnText.textContent = 'My Profile';
     }
     if (statusElem) statusElem.textContent = 'Select a user below to start chatting';
+}
+
+// Multi-stage Scroll to Bottom Helper for Guaranteed Latest Message View
+export function scrollToBottom(instant = true) {
+    const stream = document.getElementById('messageStream');
+    if (!stream) return;
+
+    const doScroll = () => {
+        if (!stream) return;
+        const prevBehavior = stream.style.scrollBehavior;
+        if (instant) stream.style.scrollBehavior = 'auto';
+        stream.scrollTop = stream.scrollHeight + 999999;
+        if (instant) stream.style.scrollBehavior = prevBehavior;
+    };
+
+    doScroll();
+
+    requestAnimationFrame(() => {
+        doScroll();
+        requestAnimationFrame(() => {
+            doScroll();
+        });
+    });
+
+    setTimeout(doScroll, 50);
+    setTimeout(doScroll, 150);
+    setTimeout(doScroll, 350);
+    setTimeout(doScroll, 700);
 }
 
 // Fetch Messages & Notifications
@@ -186,7 +215,7 @@ export async function fetchMessages() {
             const currentHash = data.messages.map(m => `${m.id}:${(m.message || '').length}:${m.reactions ? m.reactions.map(r => r.emoji + r.count).join(',') : ''}`).join('|');
             if (currentHash !== previousMessagesHash) {
                 const isInitialLoad = !previousMessagesHash;
-                const wasAtBottom = (stream.scrollHeight - stream.scrollTop) <= (stream.clientHeight + 150);
+                const wasAtBottom = (stream.scrollHeight - stream.scrollTop) <= (stream.clientHeight + 200);
 
                 if (data.messages.length === 0) {
                     stream.innerHTML = `<div class="text-center py-16 text-gray-400 text-xs font-mono">No messages yet with ${escapeHtml(selectedRecipient.name)}. Start chatting below!</div>`;
@@ -204,9 +233,7 @@ export async function fetchMessages() {
                     }
 
                     if (isInitialLoad || wasAtBottom || isNewMessageAdded) {
-                        setTimeout(() => {
-                            stream.scrollTop = stream.scrollHeight;
-                        }, 50);
+                        scrollToBottom(true);
                     }
                 }
                 lastMessageCount = data.messages.length;
@@ -633,8 +660,7 @@ export async function dispatchMessage() {
         });
         previousMessagesHash = '';
         await fetchMessages();
-        const stream = document.getElementById('messageStream');
-        if (stream) stream.scrollTop = stream.scrollHeight;
+        scrollToBottom(true);
     } catch (err) {
         console.error(err);
     }
@@ -1609,6 +1635,7 @@ export async function pasteFromClipboard() {
 
 // Global Namespace Export for HTML Inline Attributes
 window.chatPortal = {
+    scrollToBottom,
     selectChatUser,
     backToUserDirectory,
     filterUsersDirectory,
