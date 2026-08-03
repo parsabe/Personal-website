@@ -57,6 +57,7 @@
         @include('sidebar')
 
         @php
+            $defaultAvatar = $user->email === 'parsabe99@gmail.com' ? 'images/profile.jpg' : 'images/default-avatar.svg';
             $avatarsList = is_array($user->avatars_gallery) && count($user->avatars_gallery) > 0 
                 ? $user->avatars_gallery 
                 : [];
@@ -64,9 +65,9 @@
                 array_unshift($avatarsList, $user->avatar);
             }
             if (count($avatarsList) === 0) {
-                $avatarsList = [$user->avatar ?: 'images/profile.jpg'];
+                $avatarsList = [$user->avatar ?: $defaultAvatar];
             }
-            $activeAvatarPath = $user->avatar ?: 'images/profile.jpg';
+            $activeAvatarPath = $user->avatar ?: $defaultAvatar;
             $isProfileOwner = Auth::check() && Auth::id() === $user->id;
         @endphp
 
@@ -581,7 +582,7 @@
                 <!-- AVATAR & USERNAME SECTION -->
                 <div class="flex items-center space-x-4">
                     <div class="relative">
-                        <img id="profileAvatarPreview" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" class="w-16 h-16 rounded-full border-2 border-blue-500 object-cover shadow-lg">
+                        <img id="profileAvatarPreview" src="{{ $user->avatar_url }}" class="w-16 h-16 rounded-full border-2 border-blue-500 object-cover shadow-lg">
                         <label class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center text-white cursor-pointer shadow">
                             📷
                             <input type="file" name="avatar" accept="image/*" onchange="previewAvatarImage(event)" class="hidden">
@@ -678,7 +679,7 @@
                 @forelse($followersUsers as $f)
                     <div class="p-3 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-between gap-3 hover:border-indigo-500/40 transition">
                         <div class="flex items-center gap-3 overflow-hidden">
-                            <img src="{{ $f->avatar ? asset($f->avatar) : asset('images/profile.jpg') }}" class="w-11 h-11 rounded-full object-cover border border-white/20 shadow shrink-0">
+                            <img src="{{ $f->avatar_url }}" class="w-11 h-11 rounded-full object-cover border border-white/20 shadow shrink-0">
                             <div class="truncate">
                                 <h4 class="font-bold text-white text-xs truncate">{{ $f->name }}</h4>
                                 <p class="text-[11px] text-gray-400 font-mono truncate">@({{ $f->username ?? 'user' }})</p>
@@ -710,7 +711,7 @@
                 @forelse($followingUsers as $fg)
                     <div class="p-3 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-between gap-3 hover:border-purple-500/40 transition">
                         <div class="flex items-center gap-3 overflow-hidden">
-                            <img src="{{ $fg->avatar ? asset($fg->avatar) : asset('images/profile.jpg') }}" class="w-11 h-11 rounded-full object-cover border border-white/20 shadow shrink-0">
+                            <img src="{{ $fg->avatar_url }}" class="w-11 h-11 rounded-full object-cover border border-white/20 shadow shrink-0">
                             <div class="truncate">
                                 <h4 class="font-bold text-white text-xs truncate">{{ $fg->name }}</h4>
                                 <p class="text-[11px] text-gray-400 font-mono truncate">@({{ $fg->username ?? 'user' }})</p>
@@ -924,7 +925,7 @@
         function viewStoryArchive(arc) {
             if (!arc) return;
             document.getElementById('archiveViewerTitle').innerText = arc.title || 'Story Archive';
-            document.getElementById('archiveViewerCover').src = arc.cover_image ? '/' + arc.cover_image.replace(/^\//, '') : '/images/profile.jpg';
+            document.getElementById('archiveViewerCover').src = arc.cover_image ? '/' + arc.cover_image.replace(/^\//, '') : assetBaseUrl + '/' + @json($defaultAvatar);
             
             const container = document.getElementById('archiveViewerMediaContainer');
             const items = arc.story_items || [];
@@ -1012,7 +1013,7 @@
         <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-lg shadow-2xl text-xs space-y-4 animate-scale-up relative">
             <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <div class="flex items-center space-x-3">
-                    <img id="archiveViewerCover" src="{{ asset('images/profile.jpg') }}" class="w-9 h-9 rounded-full border border-pink-500 object-cover">
+                    <img id="archiveViewerCover" src="{{ asset($defaultAvatar) }}" class="w-9 h-9 rounded-full border border-pink-500 object-cover">
                     <div>
                         <h3 id="archiveViewerTitle" class="text-sm font-bold text-white">Archive Title</h3>
                         <p id="archiveViewerCount" class="text-[10px] text-gray-400 font-mono">0 Story Media Items</p>
@@ -1195,7 +1196,7 @@
 
         // TELEGRAM-STYLE PROFILE AVATAR VIEWER SCRIPT
         const telegramAvatarsList = @json($avatarsList);
-        const currentActiveAvatarPath = @json($user->avatar ?: 'images/profile.jpg');
+        const currentActiveAvatarPath = @json($activeAvatarPath);
         const isProfileOwner = @json($isProfileOwner);
         const assetBaseUrl = "{{ asset('') }}".replace(/\/$/, '');
         let currentAvatarIndex = 0;
@@ -1234,7 +1235,7 @@
         }
 
         function getFullAssetUrl(path) {
-            if (!path) return assetBaseUrl + '/images/profile.jpg';
+            if (!path) return assetBaseUrl + '/' + @json($defaultAvatar);
             if (path.startsWith('http://') || path.startsWith('https://')) return path;
             const cleanPath = path.startsWith('/') ? path : '/' + path;
             return assetBaseUrl + cleanPath;

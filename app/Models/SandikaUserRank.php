@@ -30,7 +30,7 @@ class SandikaUserRank extends Model
     {
         $rank = self::firstOrCreate(
             ['user_id' => $userId],
-            ['xp' => 0, 'rank_title' => 'Rookie', 'level' => 1]
+            ['xp' => 0, 'rank_title' => 'Rookie 🔰', 'level' => 1]
         );
 
         $rank->xp += $points;
@@ -45,10 +45,10 @@ class SandikaUserRank extends Model
         }
 
         // Sandika Rank Tier Rules
-        if ($cp >= 2000) {
+        if ($cp >= 4000) {
             $rank->rank_title = 'Bossman 👑';
             $rank->level = 7;
-        } elseif ($cp >= 4000) {
+        } elseif ($cp >= 2000) {
             $rank->rank_title = 'Admiral ⚓';
             $rank->level = 6;
         } elseif ($cp >= 150) {
@@ -58,7 +58,7 @@ class SandikaUserRank extends Model
             $rank->rank_title = 'Sergeant 🎖️';
             $rank->level = 4;
         } elseif ($cp >= 50) {
-            $rank->rank_title = 'Captain ⚔️ (Verified)';
+            $rank->rank_title = 'Captain ⚔️';
             $rank->level = 3;
         } elseif ($cp >= 20) {
             $rank->rank_title = 'Soldier 🛡️';

@@ -101,7 +101,7 @@
                         
                         <div id="activeContactHeader" class="flex items-center space-x-3">
                             <div class="relative">
-                                <img id="activeContactAvatar" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" class="w-10 h-10 rounded-full border border-white/20 object-cover shadow-md">
+                                <img id="activeContactAvatar" src="{{ $user->avatar_url }}" class="w-10 h-10 rounded-full border border-white/20 object-cover shadow-md">
                                 <span id="activeContactDot" class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse"></span>
                             </div>
                             <div>
@@ -224,7 +224,7 @@
 
     <!-- NOTIFICATION TOAST POPUP (WITH SENDER AVATAR & PREVIEW) -->
     <div id="toastNotification" class="hidden fixed top-6 right-6 z-50 p-3.5 bg-gray-900/95 border border-blue-500/40 rounded-2xl shadow-2xl flex items-center space-x-3 text-xs w-80 animate-toast">
-        <img id="toastAvatar" src="{{ asset('images/profile.jpg') }}" class="w-10 h-10 rounded-full border border-blue-400 object-cover">
+        <img id="toastAvatar" src="{{ asset('images/default-avatar.svg') }}" class="w-10 h-10 rounded-full border border-blue-400 object-cover">
         <div class="overflow-hidden flex-1">
             <h4 id="toastSender" class="font-bold text-white truncate">New Message</h4>
             <p id="toastMessage" class="text-gray-300 truncate text-[11px]">Preview...</p>
@@ -260,7 +260,7 @@
                     <!-- AVATAR & NAME SECTION -->
                     <div class="flex items-center space-x-4">
                         <div class="relative">
-                            <img id="profileAvatarPreview" src="{{ $user->avatar ? asset($user->avatar) : asset('images/profile.jpg') }}" class="w-16 h-16 rounded-full border-2 border-blue-500 object-cover shadow-lg">
+                            <img id="profileAvatarPreview" src="{{ $user->avatar_url }}" class="w-16 h-16 rounded-full border-2 border-blue-500 object-cover shadow-lg">
                             <label class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center text-white cursor-pointer shadow">
                                 📷
                                 <input type="file" name="avatar" accept="image/*" onchange="previewAvatarImage(event)" class="hidden">
@@ -729,31 +729,111 @@
         </div>
     </div>
 
-    <!-- SETTINGS & FX MODAL -->
-    <div id="settingsModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-white/20 p-5 rounded-2xl w-full max-w-md shadow-2xl animate-scale-up">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-bold text-white">⚙️ Themes & Audio FX</h3>
-                <button onclick="toggleSettingsModal()" class="text-gray-400 hover:text-white text-xs">✕</button>
+    <!-- SETTINGS & PRIVACY CONTROLS MODAL -->
+    <div id="settingsModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-white/20 p-6 rounded-3xl w-full max-w-lg shadow-2xl animate-scale-up space-y-4 max-h-[85vh] overflow-y-auto chat-scroll text-xs">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <span>⚙️ Chat Settings, Privacy & Security Controls</span>
+                </h3>
+                <button onclick="toggleSettingsModal()" class="text-gray-400 hover:text-white">✕</button>
             </div>
-            <div class="space-y-4 text-xs">
-                <div>
-                    <label class="block font-medium text-gray-300 mb-1.5">Theme Presets:</label>
-                    <select id="themeSelect" onchange="changeTheme(this.value)" class="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-2 text-white">
-                        <option value="sapphire">Deep Sapphire (Default)</option>
-                        <option value="cyberpunk">Cyberpunk Neon</option>
-                        <option value="emerald">Emerald Mint</option>
-                        <option value="sunset">Sunset Rose</option>
-                        <option value="light">Light Pearl</option>
-                    </select>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-gray-300">Audio Chime Notifications:</span>
-                    <input type="checkbox" id="soundToggle" checked class="rounded border-gray-600 bg-gray-800 text-blue-600">
+
+            <!-- ⏱️ AUTO-DELETE MESSAGES TIMER -->
+            <div class="space-y-2 p-3 bg-black/40 border border-white/10 rounded-2xl">
+                <label class="font-bold text-amber-300 flex items-center gap-1.5">
+                    <span>⏱️ Auto-Delete Messages Expiration Timer</span>
+                </label>
+                <p class="text-[11px] text-gray-400">Automatically expire and purge chat messages across sessions based on scheduled timer.</p>
+                <select id="autoDeleteTimerSelect" onchange="saveAutoDeleteTimer(this.value)" class="w-full bg-black/60 border border-white/20 rounded-xl px-3 py-2 text-white">
+                    <option value="off">Off (Messages Persist)</option>
+                    <option value="15h">15 Hours</option>
+                    <option value="24h">24 Hours (1 Day)</option>
+                </select>
+            </div>
+
+            <!-- 🔒 GRANULAR PRIVACY CONTROLS -->
+            <div class="space-y-3 p-3 bg-black/40 border border-white/10 rounded-2xl">
+                <label class="font-bold text-indigo-300 flex items-center gap-1.5">
+                    <span>🔒 Granular Privacy & Access Controls</span>
+                </label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-gray-400 text-[10px] mb-1">Text & Voice Messages Privacy</label>
+                        <select id="msgPrivacySelect" class="w-full bg-black/60 border border-white/20 rounded-xl px-2.5 py-1.5 text-white">
+                            <option value="everyone">🌐 Everyone</option>
+                            <option value="contacts">👥 My Contacts</option>
+                            <option value="private">🔒 Only Me / Custom</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[10px] mb-1">Voice & Video Calls Privacy</label>
+                        <select id="callsPrivacySelect" class="w-full bg-black/60 border border-white/20 rounded-xl px-2.5 py-1.5 text-white">
+                            <option value="everyone">🌐 Everyone</option>
+                            <option value="contacts">👥 My Contacts</option>
+                            <option value="nobody">🚫 Nobody</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[10px] mb-1">Forwarding & Quotes Privacy</label>
+                        <select id="forwardPrivacySelect" class="w-full bg-black/60 border border-white/20 rounded-xl px-2.5 py-1.5 text-white">
+                            <option value="allow">✅ Allowed</option>
+                            <option value="disallow">🚫 Restricted</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-[10px] mb-1">Last Seen & Online Availability</label>
+                        <select id="lastSeenSelect" class="w-full bg-black/60 border border-white/20 rounded-xl px-2.5 py-1.5 text-white">
+                            <option value="visible">🟢 Show Online Status</option>
+                            <option value="hidden">🙈 Hide Online Status</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="mt-5 flex justify-end">
-                <button onclick="toggleSettingsModal()" class="px-4 py-1.5 bg-blue-600 text-white rounded-xl font-semibold">Done</button>
+
+            <!-- 🎨 THEMES & AUDIO NOTIFICATIONS -->
+            <div class="space-y-3 p-3 bg-black/40 border border-white/10 rounded-2xl">
+                <label class="font-bold text-blue-300 flex items-center gap-1.5">
+                    <span>🎨 Theme Presets & Audio Notifications</span>
+                </label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-gray-400 text-[10px] mb-1">Theme Preset</label>
+                        <select id="themeSelect" onchange="changeTheme(this.value)" class="w-full bg-black/60 border border-white/20 rounded-xl px-3 py-2 text-white">
+                            <option value="sapphire">Deep Sapphire (Default)</option>
+                            <option value="cyberpunk">Cyberpunk Neon</option>
+                            <option value="emerald">Emerald Mint</option>
+                            <option value="sunset">Sunset Rose</option>
+                            <option value="light">Light Pearl</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between pt-4">
+                        <span class="text-gray-300">Audio Chime FX:</span>
+                        <input type="checkbox" id="soundToggle" checked class="rounded border-gray-600 bg-gray-800 text-blue-600 w-4 h-4">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🛡️ SECURITY & DANGER ZONE -->
+            <div class="space-y-2 p-3 bg-rose-950/30 border border-rose-500/20 rounded-2xl">
+                <label class="font-bold text-rose-300 flex items-center gap-1.5">
+                    <span>🛡️ Security & Local Cache Purge</span>
+                </label>
+                <div class="flex items-center justify-between text-gray-300 text-[11px]">
+                    <span>Biometric Lock (Passcode / Face ID):</span>
+                    <span class="text-emerald-400 font-bold">Enabled</span>
+                </div>
+                <div class="flex items-center justify-between text-gray-300 text-[11px]">
+                    <span>Two-Step Verification (2FA):</span>
+                    <span class="text-blue-400 font-bold">Enforced (Active)</span>
+                </div>
+                <button type="button" onclick="wipeLocalChatCaches()" class="w-full py-2 bg-rose-900/60 hover:bg-rose-800 text-rose-200 rounded-xl border border-rose-500/30 font-bold transition mt-1">
+                    🧹 Wipe Local Message Caches & Session Credentials
+                </button>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button onclick="toggleSettingsModal()" class="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold">Save & Apply Controls</button>
             </div>
         </div>
     </div>

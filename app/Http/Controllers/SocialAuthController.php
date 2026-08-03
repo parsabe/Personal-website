@@ -66,7 +66,7 @@ class SocialAuthController extends Controller
         $providerName = $providerNames[$provider] ?? 'Social Member';
         $dummyEmail = strtolower($provider) . '_user_' . rand(100, 999) . '@parsabe.com';
         $dummyId = 'oauth_' . $provider . '_' . time();
-        $dummyAvatar = 'images/profile.jpg';
+        $dummyAvatar = null;
 
         return $this->loginOrCreateSocialUser($providerName, $dummyEmail, $provider, $dummyId, $dummyAvatar);
     }
@@ -93,6 +93,7 @@ class SocialAuthController extends Controller
                 'username' => $username,
                 'first_name' => explode(' ', $name)[0] ?? $name,
                 'last_name' => explode(' ', $name)[1] ?? '',
+                'avatar' => $avatar,
                 'password' => Hash::make(Str::random(16)),
                 'provider_name' => $provider,
                 'provider_id' => $providerId,
@@ -101,8 +102,8 @@ class SocialAuthController extends Controller
                 'post_privacy' => 'public',
             ]);
 
-            // Award starting Sandika CPs for new social registration
-            SandikaUserRank::addXp($user->id, 20);
+            // Initialize default Sandika Rank (0 XP - Rookie)
+            SandikaUserRank::addXp($user->id, 0);
         } else {
             // Update provider info if needed
             $user->provider_name = $provider;

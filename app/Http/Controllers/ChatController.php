@@ -36,6 +36,14 @@ class ChatController extends Controller
         $recipientId = $request->query('recipient_id');
         $myId = Auth::id();
 
+        // Mark incoming messages from recipientId to myId as delivered/read when user opens/polls the chat
+        if ($recipientId && $myId) {
+            ChatMessage::where('user_id', $recipientId)
+                ->where('recipient_id', $myId)
+                ->whereNull('delivered_at')
+                ->update(['delivered_at' => now()]);
+        }
+
         $query = ChatMessage::where(function ($q) {
             $q->whereNull('scheduled_at')
               ->orWhere('scheduled_at', '<=', now());
@@ -47,7 +55,11 @@ class ChatController extends Controller
                     $sub->where('user_id', $myId)->where('recipient_id', $recipientId);
                 })->orWhere(function ($sub) use ($myId, $recipientId) {
                     $sub->where('user_id', $recipientId)->where('recipient_id', $myId);
-                })->orWhereNull('recipient_id');
+                });
+            });
+        } elseif ($myId) {
+            $query->where(function ($q) use ($myId) {
+                $q->where('user_id', $myId)->orWhere('recipient_id', $myId)->orWhereNull('recipient_id');
             });
         }
 
@@ -73,7 +85,7 @@ class ChatController extends Controller
                 'message' => $m->message,
                 'type' => $m->type,
                 'file_path' => $m->file_path ? asset($m->file_path) : null,
-                'avatar_url' => $m->user && $m->user->avatar ? asset($m->user->avatar) : asset('images/profile.jpg'),
+                'avatar_url' => $m->user ? $m->user->avatar_url : asset('images/default-avatar.svg'),
                 'created_at' => $m->created_at->format('H:i'),
                 'created_at_human' => $m->created_at->diffForHumans(),
                 'reactions' => $reactionsGrouped,
@@ -81,23 +93,57 @@ class ChatController extends Controller
             ];
         });
 
-        // Unread message counts per user
+        // Unread message counts per user and unread messages list for notifications
         $unreadCounts = [];
+        $unreadMessages = [];
         if ($myId) {
             try {
-                $counts = ChatMessage::select('user_id', DB::raw('count(*) as total'))
+                $unreadCounts = ChatMessage::select('user_id', DB::raw('count(*) as total'))
                     ->where('recipient_id', $myId)
                     ->whereNull('delivered_at')
+                    ->where(function ($q) {
+                        $q->whereNull('scheduled_at')
+                          ->orWhere('scheduled_at', '<=', now());
+                    })
                     ->groupBy('user_id')
                     ->pluck('total', 'user_id')
                     ->toArray();
-                $unreadCounts = $counts;
+
+                $unreadMessages = ChatMessage::where('recipient_id', $myId)
+                    ->whereNull('delivered_at')
+                    ->where(function ($q) {
+                        $q->whereNull('scheduled_at')
+                          ->orWhere('scheduled_at', '<=', now());
+                    })
+                    ->with('user:id,name,first_name,last_name,username,avatar')
+                    ->orderBy('created_at', 'desc')
+                    ->take(10)
+                    ->get()
+                    ->map(function ($m) {
+                        return [
+                            'id' => $m->id,
+                            'user_id' => $m->user_id,
+                            'sender_name' => $m->sender_name,
+                            'username' => $m->username,
+                            'message' => $m->message,
+                            'type' => $m->type,
+                            'file_path' => $m->file_path ? asset($m->file_path) : null,
+                            'avatar_url' => $m->user ? $m->user->avatar_url : asset('images/default-avatar.svg'),
+                            'created_at' => $m->created_at->format('H:i'),
+                        ];
+                    });
             } catch (\Exception $e) {
                 $unreadCounts = [];
+                $unreadMessages = [];
             }
         }
 
-        return response()->json(['status' => 'success', 'messages' => $messages, 'unread_counts' => $unreadCounts]);
+        return response()->json([
+            'status' => 'success',
+            'messages' => $messages,
+            'unread_counts' => $unreadCounts,
+            'unread_messages' => $unreadMessages
+        ]);
     }
 
     /**
@@ -114,7 +160,7 @@ class ChatController extends Controller
                     'name' => trim($u->first_name . ' ' . $u->last_name) ?: $u->name,
                     'username' => $u->username ?? Str::slug($u->name),
                     'email' => $u->email,
-                    'avatar_url' => $u->avatar ? asset($u->avatar) : asset('images/profile.jpg'),
+                    'avatar_url' => $u->avatar_url,
                     'bio' => $u->bio ?? 'Member',
                     'social_links' => $u->social_links ?? [],
                     'is_me' => $u->id === Auth::id(),
@@ -154,7 +200,7 @@ class ChatController extends Controller
             'type' => $request->input('type'),
             'file_path' => $request->input('file_url'),
             'scheduled_at' => $isScheduled ? $request->input('scheduled_at') : null,
-            'delivered_at' => $isScheduled ? null : now(),
+            'delivered_at' => null, // null means unread by recipient
         ];
 
         $msg = ChatMessage::create($msgData);
@@ -307,9 +353,9 @@ class ChatController extends Controller
             }
         } elseif (!$sandikaRank) {
             $sandikaRank = (object)[
-                'xp' => 50,
-                'rank_title' => 'Captain ⚔️ (Verified)',
-                'level' => 3
+                'xp' => 0,
+                'rank_title' => 'Rookie 🔰',
+                'level' => 1
             ];
         }
         // Sandika Detailed Records for Profile Display
@@ -389,7 +435,7 @@ class ChatController extends Controller
         $archive = \App\Models\UserStoryArchive::create([
             'user_id' => $user->id,
             'title' => $request->input('title'),
-            'cover_image' => $coverImagePath ?: 'images/profile.jpg',
+            'cover_image' => $coverImagePath ?: ($user->email === 'parsabe99@gmail.com' ? 'images/profile.jpg' : 'images/default-avatar.svg'),
             'visibility' => $request->input('visibility', 'public'),
             'story_items' => $storyItems,
         ]);
@@ -565,7 +611,7 @@ class ChatController extends Controller
             'user' => [
                 'name' => trim($user->first_name . ' ' . $user->last_name) ?: $user->name,
                 'username' => $user->username,
-                'avatar_url' => asset($user->avatar ?: 'images/profile.jpg'),
+                'avatar_url' => $user->avatar_url,
                 'header_url' => $user->header_banner ? asset($user->header_banner) : null,
                 'bio' => $user->bio,
                 'social_links' => $user->social_links,
@@ -708,7 +754,7 @@ class ChatController extends Controller
                     'user_id' => $userId,
                     'user_name' => trim(($s->user->first_name . ' ' . $s->user->last_name)) ?: $s->user->name,
                     'username' => $s->user->username ?? Str::slug($s->user->name),
-                    'avatar_url' => $s->user->avatar ? asset($s->user->avatar) : asset('images/profile.jpg'),
+                    'avatar_url' => $s->user ? $s->user->avatar_url : asset('images/default-avatar.svg'),
                     'stories' => [],
                 ];
             }
@@ -1052,7 +1098,7 @@ class ChatController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'username' => $user->username,
-                'avatar_url' => $user->avatar ? asset($user->avatar) : asset('images/profile.jpg'),
+                'avatar_url' => $user->avatar_url,
                 'header_url' => $user->header_banner ? asset($user->header_banner) : null,
                 'avatars_gallery' => array_values(array_unique($avatarsGallery)),
                 'headers_gallery' => array_values(array_unique($headersGallery)),
@@ -1106,7 +1152,7 @@ class ChatController extends Controller
                 'id' => $c->id,
                 'user_name' => $c->user ? $c->user->name : 'Member',
                 'username' => $c->user ? $c->user->username : 'user',
-                'avatar_url' => $c->user && $c->user->avatar ? asset($c->user->avatar) : asset('images/profile.jpg'),
+                'avatar_url' => $c->user ? $c->user->avatar_url : asset('images/default-avatar.svg'),
                 'comment' => $c->comment,
                 'created_at' => $c->created_at->diffForHumans(),
             ];
@@ -1117,7 +1163,7 @@ class ChatController extends Controller
             'user_id' => $p->user_id,
             'user_name' => $p->user ? (trim(($p->user->first_name . ' ' . $p->user->last_name)) ?: $p->user->name) : 'User',
             'username' => $p->user ? ($p->user->username ?? Str::slug($p->user->name)) : 'user',
-            'avatar_url' => $p->user && $p->user->avatar ? asset($p->user->avatar) : asset('images/profile.jpg'),
+            'avatar_url' => $p->user ? $p->user->avatar_url : asset('images/default-avatar.svg'),
             'content' => $p->content,
             'media_url' => $p->media_url ? asset($p->media_url) : null,
             'media_type' => $p->media_type,
@@ -1258,7 +1304,7 @@ class ChatController extends Controller
                 'id' => $comment->id,
                 'user_name' => Auth::user()->name,
                 'username' => Auth::user()->username ?? 'user',
-                'avatar_url' => Auth::user()->avatar ? asset(Auth::user()->avatar) : asset('images/profile.jpg'),
+                'avatar_url' => Auth::user()->avatar_url,
                 'comment' => $comment->comment,
                 'created_at' => $comment->created_at->diffForHumans(),
             ]
@@ -1278,5 +1324,82 @@ class ChatController extends Controller
         $post->delete();
 
         return response()->json(['status' => 'success', 'message' => 'Post deleted successfully.']);
+    }
+
+    /**
+     * Delete a single message (two-way deletion for sender and recipient).
+     */
+    public function deleteMessage($id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => 'unauthorized'], 401);
+        }
+
+        $userId = Auth::id();
+        $message = \App\Models\ChatMessage::where('id', $id)
+            ->where(function ($query) use ($userId) {
+                $query->where('user_id', $userId)
+                      ->orWhere('recipient_id', $userId);
+            })
+            ->first();
+
+        if (!$message) {
+            return response()->json(['status' => 'error', 'message' => 'Message not found or permission denied.'], 404);
+        }
+
+        $message->delete();
+
+        return response()->json(['status' => 'success', 'message' => 'Message deleted for both users.']);
+    }
+
+    /**
+     * Erase entire chat history between authenticated user and recipient.
+     */
+    public function clearChatHistory(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => 'unauthorized'], 401);
+        }
+
+        $userId = Auth::id();
+        $recipientId = $request->input('recipient_id');
+
+        if (!$recipientId) {
+            return response()->json(['status' => 'error', 'message' => 'Recipient ID is required.'], 422);
+        }
+
+        \App\Models\ChatMessage::where(function ($q) use ($userId, $recipientId) {
+            $q->where('user_id', $userId)->where('recipient_id', $recipientId);
+        })->orWhere(function ($q) use ($userId, $recipientId) {
+            $q->where('user_id', $recipientId)->where('recipient_id', $userId);
+        })->delete();
+
+        return response()->json(['status' => 'success', 'message' => 'Chat history erased successfully.']);
+    }
+
+    /**
+     * Toggle Block / Unblock user.
+     */
+    public function toggleBlockUser(Request $request, $id)
+    {
+        if (!Auth::check()) {
+            return response()->json(['status' => 'unauthorized'], 401);
+        }
+
+        $blockedList = is_array(session('blocked_users', [])) ? session('blocked_users', []) : [];
+
+        if (in_array((int)$id, $blockedList)) {
+            $blockedList = array_diff($blockedList, [(int)$id]);
+            $isBlocked = false;
+            $msg = 'User unblocked.';
+        } else {
+            $blockedList[] = (int)$id;
+            $isBlocked = true;
+            $msg = 'User blocked.';
+        }
+
+        session(['blocked_users' => array_values($blockedList)]);
+
+        return response()->json(['status' => 'success', 'is_blocked' => $isBlocked, 'message' => $msg]);
     }
 }

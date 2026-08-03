@@ -152,6 +152,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/posts/{id}/bookmark', [App\Http\Controllers\ChatController::class, 'toggleBookmarkUserPost'])->name('user.posts.bookmark');
     Route::post('/user/posts/{id}/comment', [App\Http\Controllers\ChatController::class, 'addPostComment'])->name('user.posts.comment');
     Route::post('/user/posts/{id}/delete', [App\Http\Controllers\ChatController::class, 'deleteUserPost'])->name('user.posts.delete');
+    // Chat Deletion & Erasing & Block Routes
+    Route::post('/chat/messages/{id}/delete', [App\Http\Controllers\ChatController::class, 'deleteMessage'])->name('chat.message.delete');
+    Route::post('/chat/messages/clear', [App\Http\Controllers\ChatController::class, 'clearChatHistory'])->name('chat.history.clear');
+    Route::post('/user/{id}/block', [App\Http\Controllers\ChatController::class, 'toggleBlockUser'])->name('user.block.toggle');
 });
 
 // ==========================================

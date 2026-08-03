@@ -18,6 +18,9 @@ let lastMessageCount = 0;
 let selectedRecipient = null;
 let allUsersList = [];
 
+let knownNotifiedMsgIds = new Set();
+let previousMessagesHash = '';
+
 // Initialize on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
     const isAuth = document.body.dataset.authenticated === 'true';
@@ -26,7 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchMessages();
         setInterval(() => {
             fetchMessages();
-        }, 2500);
+        }, 2000);
+        setInterval(() => {
+            fetchUsers();
+        }, 10000);
     }
 
     // Auto-open Profile Settings modal if action=profile in query params
@@ -43,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 export function selectChatUser(userIdOrObj) {
     let userObj = typeof userIdOrObj === 'object' ? userIdOrObj : allUsersList.find(u => u.id == userIdOrObj);
     if (!userObj && typeof userIdOrObj === 'number') {
-        userObj = { id: userIdOrObj, name: `User #${userIdOrObj}`, username: `user${userIdOrObj}`, avatar_url: '/images/profile.jpg' };
+        userObj = { id: userIdOrObj, name: `User #${userIdOrObj}`, username: `user${userIdOrObj}`, avatar_url: '/images/default-avatar.svg' };
     }
     if (!userObj) return;
 
@@ -75,7 +81,7 @@ export function selectChatUser(userIdOrObj) {
 
     if (nameElem) nameElem.textContent = userObj.name;
     if (userElem) userElem.textContent = `@${userObj.username || 'user'}`;
-    if (avatarElem) avatarElem.src = userObj.avatar_url || '/images/profile.jpg';
+    if (avatarElem) avatarElem.src = userObj.avatar_url || '/images/default-avatar.svg';
     if (statusElem) statusElem.innerHTML = '<span class="text-emerald-400">Online &bull; Direct Message</span>';
     if (dotElem) dotElem.className = 'absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-gray-900 animate-pulse';
 
@@ -92,6 +98,8 @@ export function selectChatUser(userIdOrObj) {
     // Restore window if minimized
     if (window.restoreMacWindow) window.restoreMacWindow();
 
+    previousMessagesHash = '';
+    lastMessageCount = 0;
     fetchMessages();
 }
 
@@ -131,6 +139,20 @@ export async function fetchMessages() {
         const data = await response.json();
 
         if (data.status === 'success') {
+            // Always update unread badges across Dock & Members list regardless of selected recipient
+            updateUnreadBadges(data.unread_counts || {});
+
+            // Handle unread messages notifications (toasts & sound)
+            if (data.unread_messages && data.unread_messages.length > 0) {
+                data.unread_messages.forEach(msg => {
+                    if (!knownNotifiedMsgIds.has(msg.id)) {
+                        knownNotifiedMsgIds.add(msg.id);
+                        playNotificationSound();
+                        showToastNotification(msg);
+                    }
+                });
+            }
+
             const stream = document.getElementById('messageStream');
             if (!stream) return;
 
@@ -139,28 +161,38 @@ export async function fetchMessages() {
             if (loader) loader.remove();
 
             if (!selectedRecipient) {
-                return; // Wait for user selection
+                return; // On directory screen
             }
 
-            if (data.messages.length === 0) {
-                stream.innerHTML = `<div class="text-center py-16 text-gray-400 text-xs animate-fade-in font-mono">No messages yet with ${escapeHtml(selectedRecipient.name)}. Start chatting below!</div>`;
-            } else {
-                stream.innerHTML = data.messages.map(msg => renderMessageBubble(msg)).join('');
+            const currentHash = JSON.stringify(data.messages.map(m => m.id + (m.message || '') + (m.reactions ? m.reactions.length : 0)));
+            if (currentHash !== previousMessagesHash) {
+                const wasAtBottom = stream.scrollHeight - stream.scrollTop <= stream.clientHeight + 100;
 
-                if (lastMessageCount > 0 && data.messages.length > lastMessageCount) {
-                    const newestMsg = data.messages[data.messages.length - 1];
-                    if (!newestMsg.is_me) {
-                        playNotificationSound();
+                if (data.messages.length === 0) {
+                    stream.innerHTML = `<div class="text-center py-16 text-gray-400 text-xs animate-fade-in font-mono">No messages yet with ${escapeHtml(selectedRecipient.name)}. Start chatting below!</div>`;
+                } else {
+                    const isNewMessageAdded = data.messages.length > lastMessageCount;
+                    stream.innerHTML = data.messages.map(msg => renderMessageBubble(msg)).join('');
+
+                    if (isNewMessageAdded) {
+                        const newest = data.messages[data.messages.length - 1];
+                        if (!newest.is_me && !knownNotifiedMsgIds.has(newest.id)) {
+                            knownNotifiedMsgIds.add(newest.id);
+                            playNotificationSound();
+                            showToastNotification(newest);
+                        }
+                    }
+
+                    if (wasAtBottom || isNewMessageAdded) {
+                        stream.scrollTop = stream.scrollHeight;
                     }
                 }
                 lastMessageCount = data.messages.length;
+                previousMessagesHash = currentHash;
             }
-
-            // Update unread badges across Dock & Members list
-            updateUnreadBadges(data.unread_counts || {});
         }
     } catch (err) {
-        console.error(err);
+        console.error('fetchMessages error:', err);
     }
 }
 
@@ -204,6 +236,7 @@ export function renderMessageBubble(msg) {
             <button onclick="window.chatPortal.toggleReaction(${msg.id}, '🔥')" class="hover:scale-125 transition text-xs">🔥</button>
             <button onclick="window.chatPortal.toggleReaction(${msg.id}, '😂')" class="hover:scale-125 transition text-xs">😂</button>
             <button onclick="window.chatPortal.toggleReaction(${msg.id}, '🚀')" class="hover:scale-125 transition text-xs">🚀</button>
+            <button onclick="window.chatPortal.deleteSingleMessage(${msg.id})" class="hover:scale-125 transition text-xs text-rose-400 hover:text-rose-300 ml-1.5" title="Delete for both users">🗑️</button>
         </div>`;
 
     const alignClass = msg.is_me ? 'justify-end' : 'justify-start';
@@ -550,8 +583,27 @@ export async function handleFileSelect(event) {
     xhr.upload.onprogress = e => {
         if (e.lengthComputable) showUploadProgress(true, Math.round((e.loaded / e.total) * 100));
     };
-    xhr.onload = () => {
+    xhr.onload = async () => {
         showUploadProgress(false, 100);
+        if (xhr.status === 200) {
+            try {
+                const res = JSON.parse(xhr.responseText);
+                if (res.status === 'success') {
+                    await fetch('/chat/send', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': getCsrfToken() },
+                        body: JSON.stringify({
+                            type: res.type || type,
+                            file_url: res.file_url,
+                            recipient_id: selectedRecipient ? selectedRecipient.id : null,
+                            scheduled_at: selectedScheduledTime
+                        })
+                    });
+                }
+            } catch (err) {
+                console.error('File send error:', err);
+            }
+        }
         clearSchedule();
         fetchMessages();
     };
@@ -580,7 +632,27 @@ export function stopAndSendVoiceRecording() {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('type', 'voice');
-        await fetch('/chat/upload', { method: 'POST', headers: { 'X-CSRF-TOKEN': getCsrfToken() }, body: formData });
+
+        showUploadProgress(true, 50);
+        try {
+            const res = await fetch('/chat/upload', { method: 'POST', headers: { 'X-CSRF-TOKEN': getCsrfToken() }, body: formData });
+            const uploadData = await res.json();
+            showUploadProgress(false, 100);
+
+            if (uploadData.status === 'success') {
+                await fetch('/chat/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': getCsrfToken() },
+                    body: JSON.stringify({
+                        type: 'voice',
+                        file_url: uploadData.file_url,
+                        recipient_id: selectedRecipient ? selectedRecipient.id : null
+                    })
+                });
+            }
+        } catch (e) {
+            console.error('Voice send error:', e);
+        }
         document.getElementById('voiceRecorderBar')?.classList.add('hidden');
         fetchMessages();
     };
@@ -627,7 +699,27 @@ export function stopVideoRecording() {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('type', 'video');
-        await fetch('/chat/upload', { method: 'POST', headers: { 'X-CSRF-TOKEN': getCsrfToken() }, body: formData });
+
+        showUploadProgress(true, 50);
+        try {
+            const res = await fetch('/chat/upload', { method: 'POST', headers: { 'X-CSRF-TOKEN': getCsrfToken() }, body: formData });
+            const uploadData = await res.json();
+            showUploadProgress(false, 100);
+
+            if (uploadData.status === 'success') {
+                await fetch('/chat/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': getCsrfToken() },
+                    body: JSON.stringify({
+                        type: 'video',
+                        file_url: uploadData.file_url,
+                        recipient_id: selectedRecipient ? selectedRecipient.id : null
+                    })
+                });
+            }
+        } catch (e) {
+            console.error('Video send error:', e);
+        }
         closeVideoNoteModal();
         fetchMessages();
     };
@@ -689,18 +781,45 @@ export function playNotificationSound() {
 }
 
 export function showToastNotification(msg, type = 'success') {
-    const messageText = typeof msg === 'string' ? msg : (msg.message || (msg.type ? msg.type + ' attachment' : 'Notification received'));
-    if (window.showToast) {
-        window.showToast(messageText, type);
+    const toast = document.getElementById('toastNotification');
+    if (!toast) return;
+
+    let messageText = '';
+    let senderName = 'New Message';
+    let avatarUrl = '/images/default-avatar.svg';
+    let senderUserId = null;
+
+    if (typeof msg === 'object' && msg !== null) {
+        senderName = msg.sender_name || 'New Message';
+        avatarUrl = msg.avatar_url || '/images/default-avatar.svg';
+        senderUserId = msg.user_id || null;
+        messageText = msg.message || (msg.type ? `Sent a ${msg.type} attachment` : 'New notification received');
     } else {
-        const toast = document.getElementById('toastNotification');
-        if (!toast) return;
-        if (msg.avatar_url && document.getElementById('toastAvatar')) document.getElementById('toastAvatar').src = msg.avatar_url;
-        if (msg.sender_name && document.getElementById('toastSender')) document.getElementById('toastSender').innerText = msg.sender_name;
-        if (document.getElementById('toastMessage')) document.getElementById('toastMessage').innerText = messageText;
-        toast.classList.remove('hidden');
-        setTimeout(hideToastNotification, 4500);
+        messageText = String(msg);
     }
+
+    const avatarElem = document.getElementById('toastAvatar');
+    const senderElem = document.getElementById('toastSender');
+    const msgElem = document.getElementById('toastMessage');
+
+    if (avatarElem) avatarElem.src = avatarUrl;
+    if (senderElem) senderElem.textContent = senderName;
+    if (msgElem) msgElem.textContent = messageText;
+
+    if (senderUserId) {
+        toast.onclick = (e) => {
+            if (e.target.tagName === 'BUTTON') return;
+            selectChatUser(senderUserId);
+            hideToastNotification();
+        };
+        toast.classList.add('cursor-pointer');
+    } else {
+        toast.onclick = null;
+        toast.classList.remove('cursor-pointer');
+    }
+
+    toast.classList.remove('hidden');
+    setTimeout(hideToastNotification, 5000);
 }
 
 export function hideToastNotification() {
@@ -1195,6 +1314,120 @@ export function escapeHtml(t) {
     return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); 
 }
 
+// Two-Way Single Message Deletion
+export async function deleteSingleMessage(msgId) {
+    if (!confirm('Are you sure you want to delete this message for both users?')) return;
+    try {
+        const response = await fetch(`/chat/messages/${msgId}/delete`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': getCsrfToken(),
+                'Accept': 'application/json'
+            }
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            const bubble = document.getElementById(`msg-bubble-${msgId}`);
+            if (bubble) bubble.remove();
+            fetchMessages();
+        } else {
+            alert(data.message || 'Failed to delete message.');
+        }
+    } catch (e) {
+        console.error('Delete message error:', e);
+    }
+}
+
+// Clear Entire Chat History
+export async function confirmClearChatHistory() {
+    if (!selectedRecipient) return;
+    if (!confirm(`Are you sure you want to erase all chat history with ${selectedRecipient.name}?`)) return;
+    try {
+        const response = await fetch('/chat/messages/clear', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken(),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ recipient_id: selectedRecipient.id })
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            const stream = document.getElementById('messageStream');
+            if (stream) stream.innerHTML = '<div class="text-center py-16 text-gray-400 text-xs font-mono">Chat history erased.</div>';
+        }
+    } catch (e) {
+        console.error('Clear chat error:', e);
+    }
+}
+
+// Block / Unblock User
+export async function toggleBlockSelectedUser() {
+    if (!selectedRecipient) return;
+    try {
+        const response = await fetch(`/user/${selectedRecipient.id}/block`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': getCsrfToken(),
+                'Accept': 'application/json'
+            }
+        });
+        const data = await response.json();
+        if (data.status === 'success') {
+            alert(data.message);
+            const btnText = document.getElementById('blockUserBtnText');
+            if (btnText) btnText.textContent = data.is_blocked ? 'Unblock' : 'Block';
+        }
+    } catch (e) {
+        console.error('Block user error:', e);
+    }
+}
+
+// Auto-Delete Timer Settings
+export function saveAutoDeleteTimer(val) {
+    localStorage.setItem('chat_auto_delete_timer', val);
+    showToastNotification('Auto-Delete Timer', `Messages auto-expiration set to: ${val}`);
+}
+
+// Wipe Local Chat Caches
+export function wipeLocalChatCaches() {
+    if (confirm('Wipe all local message caches and session storage?')) {
+        localStorage.clear();
+        sessionStorage.clear();
+        alert('Local chat caches and session data wiped.');
+        window.location.reload();
+    }
+}
+
+// Location Marker Attachment
+export function attachLocationMarker() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+            const lat = pos.coords.latitude.toFixed(4);
+            const lng = pos.coords.longitude.toFixed(4);
+            const input = document.getElementById('chatInput');
+            if (input) input.value += ` 📍 Location: https://maps.google.com/?q=${lat},${lng}`;
+        }, () => {
+            const input = document.getElementById('chatInput');
+            if (input) input.value += ` 📍 Location: https://maps.google.com/?q=50.9181,13.3411`;
+        });
+    }
+}
+
+// Paste from Clipboard
+export async function pasteFromClipboard() {
+    try {
+        const text = await navigator.clipboard.readText();
+        const input = document.getElementById('chatInput');
+        if (input && text) {
+            input.value += (input.value ? ' ' : '') + text;
+        }
+    } catch (e) {
+        console.log('Clipboard paste not allowed or empty.');
+    }
+}
+
 // Global Namespace Export for HTML Inline Attributes
 window.chatPortal = {
     selectChatUser,
@@ -1259,6 +1492,13 @@ window.chatPortal = {
     openDeleteAccountModal,
     closeDeleteAccountModal,
     submitAccountDeletion,
+    deleteSingleMessage,
+    confirmClearChatHistory,
+    toggleBlockSelectedUser,
+    saveAutoDeleteTimer,
+    wipeLocalChatCaches,
+    attachLocationMarker,
+    pasteFromClipboard,
     escapeHtml
 };
 

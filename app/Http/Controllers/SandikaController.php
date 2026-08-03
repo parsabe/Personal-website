@@ -21,7 +21,7 @@ class SandikaController extends Controller
         if ($user) {
             $rank = SandikaUserRank::firstOrCreate(
                 ['user_id' => $user->id],
-                ['xp' => 50, 'rank_title' => 'Captain ⚔️ (Verified)', 'level' => 3]
+                ['xp' => 0, 'rank_title' => 'Rookie 🔰', 'level' => 1]
             );
             if ($user->email === 'parsabe99@gmail.com') {
                 $rank->rank_title = 'Bossman 👑';

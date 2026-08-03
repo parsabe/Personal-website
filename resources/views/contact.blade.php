@@ -57,7 +57,8 @@
 
                 <h1
                     class="text-4xl lg:text-5xl font-extrabold mb-8 tracking-tight text-gray-900 dark:text-white drop-shadow-sm">
-                    {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Nehmen Sie' : 'Get in' }} <span
+                    {{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Nehmen Sie' : 'Get in' }}
+                    <span
                         class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-600">{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Kontakt auf.' : 'Touch.' }}</span>
                 </h1>
                 <hr class="border-gray-200 dark:border-gray-700 mb-8 opacity-50">
@@ -85,7 +86,8 @@
                         <span class="text-xs font-bold text-gray-900 dark:text-white">LinkedIn</span>
                     </a>
 
-                    <a href="https://www.researchgate.net/profile/Parsa-Besharat" target="_blank" rel="noopener noreferrer"
+                    <a href="https://www.researchgate.net/profile/Parsa-Besharat" target="_blank"
+                        rel="noopener noreferrer"
                         class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-black/40 transition-all group">
                         <svg class="w-7 h-7 mb-2 text-[#00ccbb] group-hover:scale-110 transition-transform"
                             fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -123,8 +125,8 @@
                     </div>
 
                     <div class="group">
-                        <label for="email"
-                            class="block text-sm font-bold text-gray-900 dark:text-white mb-2 ml-1">Email address</label>
+                        <label for="email" class="block text-sm font-bold text-gray-900 dark:text-white mb-2 ml-1">Email
+                            address</label>
                         <input type="email" id="email" name="email" required placeholder="your.email@example.com"
                             class="w-full px-5 py-3.5 rounded-2xl bg-white/50 dark:bg-black/20 border border-white/20 dark:border-white/10 focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 outline-none transition-all text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 backdrop-blur-sm hover:bg-white/60 dark:hover:bg-black/30">
                     </div>

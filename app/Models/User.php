@@ -148,5 +148,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserPost::class, 'user_id');
     }
+
+    /**
+     * Get avatar URL with proper fallback per user.
+     */
+    public function getAvatarUrlAttribute()
+    {
+        if (!empty($this->avatar)) {
+            return asset($this->avatar);
+        }
+        if ($this->email === 'parsabe99@gmail.com') {
+            return asset('images/profile.jpg');
+        }
+        return asset('images/default-avatar.svg');
+    }
 }
 
