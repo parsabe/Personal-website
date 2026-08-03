@@ -183,9 +183,10 @@ export async function fetchMessages() {
                 return; // On directory screen
             }
 
-            const currentHash = JSON.stringify(data.messages.map(m => ({ id: m.id, msg: m.message, file: m.file_url, reactions: m.reactions })));
+            const currentHash = data.messages.map(m => `${m.id}:${(m.message || '').length}:${m.reactions ? m.reactions.map(r => r.emoji + r.count).join(',') : ''}`).join('|');
             if (currentHash !== previousMessagesHash) {
-                const wasAtBottom = stream.scrollHeight - stream.scrollTop <= stream.clientHeight + 100;
+                const isInitialLoad = !previousMessagesHash;
+                const wasAtBottom = (stream.scrollHeight - stream.scrollTop) <= (stream.clientHeight + 150);
 
                 if (data.messages.length === 0) {
                     stream.innerHTML = `<div class="text-center py-16 text-gray-400 text-xs font-mono">No messages yet with ${escapeHtml(selectedRecipient.name)}. Start chatting below!</div>`;
@@ -202,8 +203,10 @@ export async function fetchMessages() {
                         }
                     }
 
-                    if (wasAtBottom || isNewMessageAdded) {
-                        stream.scrollTop = stream.scrollHeight;
+                    if (isInitialLoad || wasAtBottom || isNewMessageAdded) {
+                        setTimeout(() => {
+                            stream.scrollTop = stream.scrollHeight;
+                        }, 50);
                     }
                 }
                 lastMessageCount = data.messages.length;
@@ -628,7 +631,10 @@ export async function dispatchMessage() {
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': getCsrfToken() },
             body: JSON.stringify(payload)
         });
-        fetchMessages();
+        previousMessagesHash = '';
+        await fetchMessages();
+        const stream = document.getElementById('messageStream');
+        if (stream) stream.scrollTop = stream.scrollHeight;
     } catch (err) {
         console.error(err);
     }
