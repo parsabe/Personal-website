@@ -156,27 +156,32 @@ export function scrollToBottom(instant = true) {
     const stream = document.getElementById('messageStream');
     if (!stream) return;
 
-    const doScroll = () => {
+    const scrollFunc = () => {
         if (!stream) return;
-        const prevBehavior = stream.style.scrollBehavior;
-        if (instant) stream.style.scrollBehavior = 'auto';
-        stream.scrollTop = stream.scrollHeight + 999999;
-        if (instant) stream.style.scrollBehavior = prevBehavior;
+        const lastMsg = stream.lastElementChild;
+        if (lastMsg) {
+            lastMsg.scrollIntoView({ block: 'end', behavior: instant ? 'auto' : 'smooth' });
+        } else {
+            const prevBehavior = stream.style.scrollBehavior;
+            if (instant) stream.style.scrollBehavior = 'auto';
+            stream.scrollTop = stream.scrollHeight + 999999;
+            if (instant) stream.style.scrollBehavior = prevBehavior;
+        }
     };
 
-    doScroll();
+    scrollFunc();
 
     requestAnimationFrame(() => {
-        doScroll();
+        scrollFunc();
         requestAnimationFrame(() => {
-            doScroll();
+            scrollFunc();
         });
     });
 
-    setTimeout(doScroll, 50);
-    setTimeout(doScroll, 150);
-    setTimeout(doScroll, 350);
-    setTimeout(doScroll, 700);
+    setTimeout(scrollFunc, 50);
+    setTimeout(scrollFunc, 150);
+    setTimeout(scrollFunc, 350);
+    setTimeout(scrollFunc, 700);
 }
 
 // Fetch Messages & Notifications
@@ -257,11 +262,11 @@ export function renderMessageBubble(msg) {
     } else if (msg.type === 'image' || (msg.mime_type && msg.mime_type.startsWith('image/'))) {
         contentHtml = `
             ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
-            <img src="${fileUrl}" class="max-w-xs max-h-60 rounded-2xl border border-white/10 cursor-pointer hover:opacity-90 transition transform hover:scale-105 shadow-lg object-cover" onclick="window.open('${fileUrl}', '_blank')">`;
+            <img src="${fileUrl}" onload="if(window.chatPortal) window.chatPortal.scrollToBottom(true)" class="max-w-xs max-h-60 rounded-2xl border border-white/10 cursor-pointer hover:opacity-90 transition transform hover:scale-105 shadow-lg object-cover" onclick="window.open('${fileUrl}', '_blank')">`;
     } else if (msg.type === 'gif') {
         contentHtml = `
             ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
-            <img src="${fileUrl}" class="max-w-xs max-h-48 rounded-2xl border border-white/10 shadow-lg">`;
+            <img src="${fileUrl}" onload="if(window.chatPortal) window.chatPortal.scrollToBottom(true)" class="max-w-xs max-h-48 rounded-2xl border border-white/10 shadow-lg">`;
     } else if (msg.type === 'voice') {
         contentHtml = `
             ${msg.message ? `<p class="whitespace-pre-wrap mb-2 leading-relaxed">${escapeHtml(msg.message)}</p>` : ''}
