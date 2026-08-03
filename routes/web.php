@@ -117,6 +117,7 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [App\Http\Controllers\ChatController::class, 'myProfilePage'])->name('user.profile.show');
+    Route::get('/user/{id}/profile', [App\Http\Controllers\ChatController::class, 'publicProfilePage'])->name('user.public_profile.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -1314,40 +1314,70 @@ export async function submitMyUserPost(event) {
 }
 
 export async function openPublicProfileModal(userId) {
+    if (!userId) return;
     activePublicInspectorUserId = userId;
     const modal = document.getElementById('publicUserProfileModal');
     if (modal) modal.classList.remove('hidden');
+
+    // Pre-fill from cached users list if available
+    const cachedUser = (allUsersList || []).find(u => u.id == userId);
+    if (cachedUser) {
+        const nameElem = document.getElementById('publicUserName');
+        const handleElem = document.getElementById('publicUserHandle');
+        const avatarElem = document.getElementById('publicAvatarImg');
+        const bioElem = document.getElementById('publicUserBio');
+        const fullProfileLink = document.getElementById('publicFullProfilePageBtn');
+
+        if (nameElem) nameElem.innerText = cachedUser.name;
+        if (handleElem) handleElem.innerText = '@' + (cachedUser.username || 'user');
+        if (avatarElem) avatarElem.src = cachedUser.avatar_url || '/images/default-avatar.svg';
+        if (bioElem) bioElem.innerText = cachedUser.bio || 'Member';
+        if (fullProfileLink) fullProfileLink.href = `/user/${userId}/profile`;
+    }
 
     try {
         // Fetch stats
         const statsRes = await fetch(`/user/${userId}/stats`);
         const statsData = await statsRes.json();
         if (statsData.status === 'success') {
-            document.getElementById('publicPostsCount').innerText = statsData.stats.posts;
-            document.getElementById('publicFollowersCount').innerText = statsData.stats.followers;
-            document.getElementById('publicFollowingCount').innerText = statsData.stats.following;
+            const postsCount = document.getElementById('publicPostsCount');
+            const followersCount = document.getElementById('publicFollowersCount');
+            const followingCount = document.getElementById('publicFollowingCount');
+
+            if (postsCount) postsCount.innerText = statsData.stats.posts || 0;
+            if (followersCount) followersCount.innerText = statsData.stats.followers || 0;
+            if (followingCount) followingCount.innerText = statsData.stats.following || 0;
 
             const followBtn = document.getElementById('publicFollowBtn');
             if (followBtn) {
                 if (statsData.stats.is_following) {
                     followBtn.innerText = '✓ Following';
-                    followBtn.className = 'px-5 py-2 rounded-xl text-xs font-bold shadow-lg transition bg-gray-800 text-gray-300 hover:bg-rose-900 hover:text-white';
+                    followBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold shadow-lg transition bg-gray-800 text-gray-300 hover:bg-rose-900 hover:text-white';
                 } else {
                     followBtn.innerText = '+ Follow';
-                    followBtn.className = 'px-5 py-2 rounded-xl text-xs font-bold shadow-lg transition bg-blue-600 hover:bg-blue-500 text-white';
+                    followBtn.className = 'px-4 py-2 rounded-xl text-xs font-bold shadow-lg transition bg-blue-600 hover:bg-blue-500 text-white';
                 }
             }
         }
+    } catch (e) {
+        console.error('Stats fetch error:', e);
+    }
 
+    try {
         // Fetch posts
         const postsRes = await fetch(`/user/${userId}/posts`);
         const postsData = await postsRes.json();
-        if (postsData.status === 'success') {
-            document.getElementById('publicUserName').innerText = postsData.user.name;
-            document.getElementById('publicUserHandle').innerText = '@' + postsData.user.username;
-            document.getElementById('publicAvatarImg').src = postsData.user.avatar_url;
-
+        if (postsData.status === 'success' && postsData.user) {
+            const nameElem = document.getElementById('publicUserName');
+            const handleElem = document.getElementById('publicUserHandle');
+            const avatarElem = document.getElementById('publicAvatarImg');
             const headerImg = document.getElementById('publicHeaderBanner');
+            const bioElem = document.getElementById('publicUserBio');
+
+            if (nameElem) nameElem.innerText = postsData.user.name;
+            if (handleElem) handleElem.innerText = '@' + postsData.user.username;
+            if (avatarElem) avatarElem.src = postsData.user.avatar_url;
+
             if (headerImg) {
                 if (postsData.user.header_url) {
                     headerImg.src = postsData.user.header_url;
@@ -1357,7 +1387,6 @@ export async function openPublicProfileModal(userId) {
                 }
             }
 
-            const bioElem = document.getElementById('publicUserBio');
             if (bioElem) {
                 bioElem.innerText = postsData.user.bio || 'No bio added yet.';
             }
@@ -1383,17 +1412,13 @@ export async function openPublicProfileModal(userId) {
                                     </div>
                                 </div>
                             </div>
-
                             ${p.content ? `<p class="text-gray-200 leading-relaxed font-sans text-xs">${escapeHtml(p.content)}</p>` : ''}
-
                             ${p.media_url && p.media_type === 'image' ? `
                                 <img src="${p.media_url}" class="w-full max-h-64 object-cover rounded-xl border border-white/10 shadow-md">
                             ` : ''}
-
                             ${p.media_url && p.media_type === 'video' ? `
                                 <video src="${p.media_url}" controls class="w-full max-h-64 rounded-xl border border-white/10 shadow-md"></video>
                             ` : ''}
-
                             <div class="flex items-center space-x-4 pt-1 text-[11px] text-gray-400">
                                 <button onclick="toggleLikeUserPost(${p.id})" class="flex items-center space-x-1 hover:text-rose-400 transition ${p.is_liked ? 'text-rose-500 font-bold' : ''}">
                                     <span>${p.is_liked ? '❤️' : '🤍'}</span>
@@ -1406,7 +1431,7 @@ export async function openPublicProfileModal(userId) {
             }
         }
     } catch (e) {
-        console.error(e);
+        console.error('Posts fetch error:', e);
     }
 }
 
