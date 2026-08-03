@@ -47,9 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Select Recipient User Function (Switches to Direct Chat Screen)
 export function selectChatUser(userIdOrObj) {
-    let userObj = typeof userIdOrObj === 'object' ? userIdOrObj : allUsersList.find(u => u.id == userIdOrObj);
-    if (!userObj && typeof userIdOrObj === 'number') {
-        userObj = { id: userIdOrObj, name: `User #${userIdOrObj}`, username: `user${userIdOrObj}`, avatar_url: '/images/default-avatar.svg' };
+    let userObj = typeof userIdOrObj === 'object' ? userIdOrObj : (allUsersList || []).find(u => u.id == userIdOrObj);
+    if (!userObj && userIdOrObj) {
+        const idNum = parseInt(userIdOrObj, 10);
+        if (!isNaN(idNum)) {
+            userObj = { id: idNum, name: `User #${idNum}`, username: `user${idNum}`, avatar_url: '/images/default-avatar.svg' };
+        }
     }
     if (!userObj) return;
 
@@ -60,8 +63,14 @@ export function selectChatUser(userIdOrObj) {
     const chatScreen = document.getElementById('activeChatScreen');
     const backBtn = document.getElementById('btnBackToUsers');
 
-    if (directoryScreen) directoryScreen.classList.add('hidden');
-    if (chatScreen) chatScreen.classList.remove('hidden');
+    if (directoryScreen) {
+        directoryScreen.classList.add('hidden');
+        directoryScreen.style.display = 'none';
+    }
+    if (chatScreen) {
+        chatScreen.classList.remove('hidden');
+        chatScreen.style.display = 'flex';
+    }
     if (backBtn) backBtn.classList.remove('hidden');
 
     // Focus input
@@ -127,8 +136,14 @@ export function backToUserDirectory() {
     const backBtn = document.getElementById('btnBackToUsers');
     const callBtn = document.getElementById('btnCallUser');
 
-    if (chatScreen) chatScreen.classList.add('hidden');
-    if (directoryScreen) directoryScreen.classList.remove('hidden');
+    if (chatScreen) {
+        chatScreen.classList.add('hidden');
+        chatScreen.style.display = 'none';
+    }
+    if (directoryScreen) {
+        directoryScreen.classList.remove('hidden');
+        directoryScreen.style.display = 'flex';
+    }
     if (backBtn) backBtn.classList.add('hidden');
 
     if (callBtn) {
@@ -388,7 +403,7 @@ export function renderUsersGrid(users) {
 
                 <p class="text-xs text-gray-300 line-clamp-2 min-h-[32px]">${escapeHtml(u.bio || 'Member')}</p>
 
-                <button class="w-full py-2 bg-blue-600/40 border border-blue-400/40 text-blue-300 font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-md">
+                <button type="button" onclick="window.selectChatUser(${u.id}); event.stopPropagation();" class="w-full py-2 bg-blue-600/40 border border-blue-400/40 text-blue-300 font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-md">
                     <span>💬 Start Direct Chat</span>
                 </button>
             </div>`;
