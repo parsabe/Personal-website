@@ -183,12 +183,12 @@ export async function fetchMessages() {
                 return; // On directory screen
             }
 
-            const currentHash = JSON.stringify(data.messages.map(m => m.id + (m.message || '') + (m.reactions ? m.reactions.length : 0)));
+            const currentHash = JSON.stringify(data.messages.map(m => ({ id: m.id, msg: m.message, file: m.file_url, reactions: m.reactions })));
             if (currentHash !== previousMessagesHash) {
                 const wasAtBottom = stream.scrollHeight - stream.scrollTop <= stream.clientHeight + 100;
 
                 if (data.messages.length === 0) {
-                    stream.innerHTML = `<div class="text-center py-16 text-gray-400 text-xs animate-fade-in font-mono">No messages yet with ${escapeHtml(selectedRecipient.name)}. Start chatting below!</div>`;
+                    stream.innerHTML = `<div class="text-center py-16 text-gray-400 text-xs font-mono">No messages yet with ${escapeHtml(selectedRecipient.name)}. Start chatting below!</div>`;
                 } else {
                     const isNewMessageAdded = data.messages.length > lastMessageCount;
                     stream.innerHTML = data.messages.map(msg => renderMessageBubble(msg)).join('');
@@ -276,7 +276,7 @@ export function renderMessageBubble(msg) {
         : 'bg-white/10 text-gray-100 rounded-bl-none border border-white/10';
 
     return `
-        <div class="flex ${alignClass} mb-2 animate-scale-up">
+        <div class="flex ${alignClass} mb-2">
             <div class="flex items-start space-x-2 max-w-[88%] sm:max-w-md">
                 ${!msg.is_me ? `<img src="${msg.avatar_url}" onclick="window.chatPortal.openPublicProfileModal(${msg.user_id})" class="w-8 h-8 rounded-full border border-white/20 object-cover mt-1 cursor-pointer hover:scale-110 transition shadow-md" title="View ${escapeHtml(msg.sender_name)}'s Profile">` : ''}
                 <div>
@@ -958,7 +958,7 @@ export function switchGateTab(tab) {
 
 export function toggleContactsSidebar() { document.getElementById('contactsSidebar')?.classList.toggle('hidden'); }
 export function viewActiveContactProfile() {
-    if (selectedRecipient && !selectedRecipient.is_me) {
+    if (selectedRecipient) {
         openPublicProfileModal(selectedRecipient.id);
     } else {
         toggleProfileModal();

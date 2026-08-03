@@ -120,7 +120,7 @@
                             📞 <span>{{ (session('app_locale') === 'de' || app()->getLocale() === 'de') ? 'Anrufen' : 'Call' }}</span>
                         </button>
                         <button id="btnHeaderProfile" onclick="viewActiveContactProfile()" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-gray-200 text-xs font-semibold flex items-center space-x-1 transition transform hover:scale-105 active:scale-95">
-                            👤 <span id="btnHeaderProfileText">My Profile</span>
+                            👤 <span id="btnHeaderProfileText">View Profile</span>
                         </button>
                     </div>
                 </header>
