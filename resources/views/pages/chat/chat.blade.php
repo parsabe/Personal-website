@@ -202,11 +202,11 @@
 
                             <div class="flex items-center space-x-2">
                                 <textarea id="chatInput" rows="1" placeholder="Type a message..."
-                                    oninput="updateInputControlsState()"
-                                    onkeydown="handleKeyPress(event)"
+                                    oninput="if(window.autoResizeInput) autoResizeInput(this); updateInputControlsState();"
+                                    onkeydown="if(window.handleKeyPress) handleKeyPress(event);"
                                     class="flex-1 bg-white/5 border border-white/15 rounded-2xl px-4 py-2.5 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-blue-500 resize-none chat-scroll transition duration-200"></textarea>
                                 
-                                <button id="sendMsgBtn" onclick="dispatchMessage()" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl text-xs shadow-lg flex items-center space-x-1.5 transition transform active:scale-95 hover:scale-105">
+                                <button id="sendMsgBtn" type="button" onclick="if(window.dispatchMessage) dispatchMessage();" class="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl text-xs shadow-lg flex items-center space-x-1.5 transition transform active:scale-95 hover:scale-105">
                                     <span>Send</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />

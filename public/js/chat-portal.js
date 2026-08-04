@@ -21,6 +21,13 @@ let allUsersList = [];
 let knownNotifiedMsgIds = new Set();
 let previousMessagesHash = '';
 
+export function autoResizeInput(el) {
+    if (!el) return;
+    el.style.height = 'auto';
+    const newHeight = Math.min(Math.max(el.scrollHeight, 42), 140);
+    el.style.height = newHeight + 'px';
+}
+
 // Initialize on DOM Ready
 document.addEventListener('DOMContentLoaded', () => {
     const isAuth = document.body.dataset.authenticated === 'true';
@@ -33,6 +40,28 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(() => {
             fetchUsers();
         }, 10000);
+    }
+
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.addEventListener('keydown', (e) => {
+            if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey && !e.isComposing) {
+                e.preventDefault();
+                dispatchMessage();
+            }
+        });
+        chatInput.addEventListener('input', () => {
+            autoResizeInput(chatInput);
+            updateInputControlsState();
+        });
+    }
+
+    const sendMsgBtn = document.getElementById('sendMsgBtn');
+    if (sendMsgBtn) {
+        sendMsgBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            dispatchMessage();
+        });
     }
 
     // Auto-open Profile Settings modal if action=profile in query params
@@ -65,11 +94,11 @@ export function selectChatUser(userIdOrObj) {
 
     if (directoryScreen) {
         directoryScreen.classList.add('hidden');
-        directoryScreen.style.display = 'none';
+        directoryScreen.style.setProperty('display', 'none', 'important');
     }
     if (chatScreen) {
         chatScreen.classList.remove('hidden');
-        chatScreen.style.display = 'flex';
+        chatScreen.style.setProperty('display', 'flex', 'important');
     }
     if (backBtn) backBtn.classList.remove('hidden');
 
@@ -126,6 +155,7 @@ export function selectChatUser(userIdOrObj) {
     lastMessageCount = 0;
     fetchMessages();
 }
+window.selectChatUser = selectChatUser;
 
 // Back to User Directory List Screen
 export function backToUserDirectory() {
@@ -138,11 +168,11 @@ export function backToUserDirectory() {
 
     if (chatScreen) {
         chatScreen.classList.add('hidden');
-        chatScreen.style.display = 'none';
+        chatScreen.style.setProperty('display', 'none', 'important');
     }
     if (directoryScreen) {
         directoryScreen.classList.remove('hidden');
-        directoryScreen.style.display = 'flex';
+        directoryScreen.style.setProperty('display', 'flex', 'important');
     }
     if (backBtn) backBtn.classList.add('hidden');
 
@@ -164,6 +194,7 @@ export function backToUserDirectory() {
     }
     if (statusElem) statusElem.textContent = 'Select a user below to start chatting';
 }
+window.backToUserDirectory = backToUserDirectory;
 
 // Fetch Messages & Notifications
 export async function fetchMessages() {
@@ -624,18 +655,20 @@ function renderCurrentStory() {
 // Send Text Message
 export async function dispatchMessage() {
     const input = document.getElementById('chatInput');
-    if (!input || !selectedRecipient) return;
+    if (!input) return;
     const text = input.value.trim();
     if (!text && !selectedScheduledTime) return;
 
     const payload = { 
         message: text, 
         type: 'text', 
-        recipient_id: selectedRecipient.id,
+        recipient_id: selectedRecipient ? selectedRecipient.id : null,
         scheduled_at: selectedScheduledTime 
     };
     input.value = '';
+    autoResizeInput(input);
     clearSchedule();
+    updateInputControlsState();
 
     try {
         await fetch('/chat/send', {
@@ -645,7 +678,7 @@ export async function dispatchMessage() {
         });
         fetchMessages();
     } catch (err) {
-        console.error(err);
+        console.error('dispatchMessage error:', err);
     }
 }
 
@@ -1059,7 +1092,7 @@ export function showUploadProgress(show, percent) {
 }
 
 export function handleKeyPress(e) { 
-    if (e.key === 'Enter' && !e.shiftKey) { 
+    if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey && !e.isComposing) { 
         e.preventDefault(); 
         dispatchMessage(); 
     } 
@@ -1669,6 +1702,7 @@ window.chatPortal = {
     clearSchedule,
     showUploadProgress,
     handleKeyPress,
+    autoResizeInput,
     previewAvatarImage,
     previewHeaderImage,
     selectAvatarFromGallery,
