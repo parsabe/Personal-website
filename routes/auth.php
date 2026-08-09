@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+
 use App\Http\Controllers\Auth\TwoFactorAuthController;
 
 Route::get('2fa-verify', [TwoFactorAuthController::class, 'show'])->name('2fa.show');

@@ -72,6 +72,8 @@ Route::get('/publications/articles/{slug}', [App\Http\Controllers\BlogController
     // --- Projects ---
     Route::get('/projects', 'projects')->name('projects');
     Route::get('/projects/vectra', 'vectra')->name('projects.vectra');
+    Route::get('/projects/vectra-pc-game', 'vectra_pc_game')->name('projects.vectra-pc-game');
+    Route::get('/projects/vectra-pc', 'vectra_pc_game')->name('projects.vectra-pc');
     Route::get('/projects/blackwall', [App\Http\Controllers\BlackwallAiController::class, 'index'])->name('projects.blackwall');
     Route::post('/projects/blackwall/chat', [App\Http\Controllers\BlackwallAiController::class, 'sendMessage'])->name('projects.blackwall.chat');
     Route::get('/projects/mlmatrix', 'Mlmatrix')->name('projects.mlmatrix');
