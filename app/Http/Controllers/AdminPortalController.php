@@ -215,7 +215,7 @@ class AdminPortalController extends Controller
         $fullReason = $reason . ($customReason ? ' (' . $customReason . ')' : '');
 
         $user->deleted_reason = $fullReason;
-        $user->deleted_by_admin = true;
+        $user->deleted_custom_reason = $customReason;
         $user->save();
 
         if (!$user->trashed()) {
