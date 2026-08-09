@@ -19,10 +19,16 @@ class SearchController extends Controller
             // Dynamic fallback for Vectra items to guarantee search indexing
             $vectraItems = [
                 [
-                    'title' => 'Vectra',
+                    'title' => 'Vectra Framework',
                     'description' => 'An end-to-end spatial computing framework engineered to generate, extract, and simulate high-fidelity 3D objects directly from simple visual and textual data.',
                     'image' => 'images/vectra.png',
                     'route_name' => 'projects.vectra',
+                ],
+                [
+                    'title' => 'VECTRA: The Matrix TUBAF Simulation (PC Game)',
+                    'description' => 'An immersive first-person 3D cinematic Matrix game built in Unity C#, featuring Suno Bark AI voice generation, Ollama LLM Operator integration, and cryptographic mainframe puzzles.',
+                    'image' => 'images/vectra-pc.png',
+                    'route_name' => 'projects.vectra-pc-game',
                 ],
                 [
                     'title' => 'Vectra: The Quarantine Matrix, Constraining Neural Hallucinations in 3D Gaussian Environments',

@@ -53,6 +53,10 @@ class PageController extends Controller
     {
         return view('pages.projects.vectra');
     }
+    public function vectra_pc_game()
+    {
+        return view('pages.projects.vectra-pc-game');
+    }
     public function BlackWall()
     {
         return view('pages.projects.blackwall');
