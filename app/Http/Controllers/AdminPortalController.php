@@ -191,6 +191,62 @@ class AdminPortalController extends Controller
     }
 
     /**
+     * Delete user account with reason and dispatch clarification email.
+     */
+    public function deleteUser(Request $request, $id)
+    {
+        if (!auth()->check() || auth()->user()->email !== 'parsabe99@gmail.com') {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $user = User::withTrashed()->findOrFail($id);
+
+        if ($user->email === 'parsabe99@gmail.com' || $user->id === auth()->id()) {
+            return back()->withErrors(['user' => 'The Owner Admin account (parsabe99@gmail.com) cannot be deleted.']);
+        }
+
+        $request->validate([
+            'reason' => 'required|string',
+            'custom_reason' => 'nullable|string|max:1000',
+        ]);
+
+        $reason = $request->input('reason');
+        $customReason = $request->input('custom_reason');
+        $fullReason = $reason . ($customReason ? ' (' . $customReason . ')' : '');
+
+        $user->deleted_reason = $fullReason;
+        $user->deleted_by_admin = true;
+        $user->save();
+
+        if (!$user->trashed()) {
+            $user->delete();
+        }
+
+        // Send Clarification Email to the deleted user
+        $emailSent = false;
+        try {
+            Mail::to($user->email)->send(new \App\Mail\UserDeletedMail(
+                $user->name,
+                $user->email,
+                $fullReason,
+                now()->format('F j, Y, g:i a T')
+            ));
+            $emailSent = true;
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed sending user deletion email: ' . $e->getMessage());
+        }
+
+        $msg = 'User "' . $user->name . '" (' . $user->email . ') has been deleted.';
+        if ($emailSent) {
+            $msg .= ' Clarification email sent successfully to ' . $user->email . '.';
+        } else {
+            $msg .= ' (Clarification email queued/logged).';
+        }
+
+        return back()->with('success', $msg);
+    }
+
+    /**
      * Delete contact message.
      */
     public function deleteContact($id)

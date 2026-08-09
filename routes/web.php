@@ -194,6 +194,7 @@ Route::middleware(['auth', 'admin.2fa'])->group(function () {
     Route::post('/parsa/feedback/{id}/delete', [App\Http\Controllers\AdminPortalController::class, 'deleteFeedback'])->name('parsa.feedback.delete');
     Route::post('/parsa/article/{id}/delete', [App\Http\Controllers\AdminPortalController::class, 'adminDeleteArticle'])->name('parsa.article.delete');
     Route::get('/parsa/article/{id}', [App\Http\Controllers\AdminPortalController::class, 'adminReadArticle'])->name('parsa.article.read');
+    Route::post('/parsa/user/{id}/delete', [App\Http\Controllers\AdminPortalController::class, 'deleteUser'])->name('parsa.user.delete');
 });
 
 require __DIR__ . '/auth.php';

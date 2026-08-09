@@ -297,10 +297,18 @@
                                             DELETED ACCOUNT
                                         </span>
                                         @if($u->deleted_reason)
-                                            <div class="text-[10px] text-rose-400 font-mono mt-0.5">Reason: {{ $u->deleted_reason }}</div>
+                                            <div class="text-[10px] text-rose-400 font-mono mt-0.5 max-w-xs ml-auto truncate" title="{{ $u->deleted_reason }}">Reason: {{ $u->deleted_reason }}</div>
                                         @endif
                                     @else
-                                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active</span>
+                                        <div class="flex items-center justify-end gap-2">
+                                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Active</span>
+                                            @if($u->email !== 'parsabe99@gmail.com' && $u->id !== auth()->id())
+                                                <button onclick="openDeleteUserModal({{ $u->id }}, '{{ addslashes($u->name) }}', '{{ addslashes($u->email) }}')"
+                                                        class="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 border border-rose-500/40 rounded-lg font-bold text-[11px] transition flex items-center gap-1 shadow-sm">
+                                                    <span>🗑️ Delete</span>
+                                                </button>
+                                            @endif
+                                        </div>
                                     @endif
                                 </td>
                             </tr>
@@ -582,6 +590,70 @@
         </div>
     </div>
 
+    <!-- ADMIN USER DELETION & CLARIFICATION EMAIL MODAL -->
+    <div id="adminDeleteUserModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-rose-500/30 p-6 rounded-3xl w-full max-w-md shadow-2xl text-xs space-y-4 animate-page-zoom-in">
+            <div class="flex items-center justify-between border-b border-rose-500/20 pb-3">
+                <h3 class="text-sm font-bold text-rose-400 flex items-center gap-2">
+                    <span>🗑️ Delete User & Send Clarification Email</span>
+                </h3>
+                <button onclick="closeAdminDeleteUserModal()" class="text-slate-400 hover:text-white">✕</button>
+            </div>
+
+            <form id="adminDeleteUserForm" method="POST" action="" class="space-y-3">
+                @csrf
+                <div>
+                    <label class="block text-slate-400 mb-1">Target User</label>
+                    <input type="text" id="adminDeleteUserName" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-bold">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">Target Email</label>
+                    <input type="text" id="adminDeleteUserEmail" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-rose-300 font-mono">
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-bold mb-1.5">Select Deletion / Policy Reason (Emailed to User):</label>
+                    <div class="space-y-1.5 text-slate-300">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="reason" value="Administrative account cleanup & security policy enforcement" checked class="text-rose-500">
+                            <span>Administrative account cleanup & security policy</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="reason" value="Violation of Platform Terms of Service" class="text-rose-500">
+                            <span>Violation of Terms of Service</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="reason" value="User Account Inactivity / Audit Purge" class="text-rose-500">
+                            <span>Account Inactivity / Audit Purge</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="reason" value="Requested Account Termination" class="text-rose-500">
+                            <span>User Requested Account Removal</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="radio" name="reason" value="Custom Deletion Reason" class="text-rose-500">
+                            <span>Custom Deletion Reason</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-slate-400 mb-1">Additional Clarification Details (Optional):</label>
+                    <textarea name="custom_reason" rows="3" placeholder="Provide extra clarification explanation for the user (Optional)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white resize-none focus:outline-none focus:border-rose-500"></textarea>
+                </div>
+
+                <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px]">
+                    <strong>📧 Notification Note:</strong> A styled HTML clarification email will automatically be sent to <span id="modalTargetEmailText" class="font-mono underline"></span> notifying them of account deletion.
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeAdminDeleteUserModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl font-semibold">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl shadow-lg">Confirm Delete & Send Email</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- ARTICLE READER AUDIT MODAL -->
     <div id="articleReaderModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-white/20 p-6 rounded-3xl w-full max-w-2xl shadow-2xl text-xs space-y-4 animate-page-zoom-in max-h-[85vh] flex flex-col">
@@ -833,6 +905,26 @@
 
         function closeAdminReadArticleModal() {
             const modal = document.getElementById('articleReaderModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function openDeleteUserModal(userId, userName, userEmail) {
+            const modal = document.getElementById('adminDeleteUserModal');
+            const form = document.getElementById('adminDeleteUserForm');
+            const nameInput = document.getElementById('adminDeleteUserName');
+            const emailInput = document.getElementById('adminDeleteUserEmail');
+            const targetEmailText = document.getElementById('modalTargetEmailText');
+
+            if (form) form.action = '/parsa/user/' + userId + '/delete';
+            if (nameInput) nameInput.value = userName;
+            if (emailInput) emailInput.value = userEmail;
+            if (targetEmailText) targetEmailText.innerText = userEmail;
+
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeAdminDeleteUserModal() {
+            const modal = document.getElementById('adminDeleteUserModal');
             if (modal) modal.classList.add('hidden');
         }
     </script>
