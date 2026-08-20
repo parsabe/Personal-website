@@ -1,0 +1,16 @@
+[Unit]
+Description=AquaPulse AI Telemetry Background Engine
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/www/wwwroot/3 - AI process
+ExecStart=/usr/bin/python3 main.py
+Restart=always
+RestartSec=5s
+Nice=15
+MemoryMax=1024M
+
+[Install]
+WantedBy=multi-user.target

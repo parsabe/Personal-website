@@ -29,6 +29,14 @@ Route::get('/lang/{locale}', function ($locale) {
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store']);
 
+// AquaPulse AI Telemetry System Routes (parsabe.com/aquapulse)
+Route::get('/aquapulse', [\App\Http\Controllers\AquaPulseController::class, 'index'])->name('aquapulse.index');
+Route::get('/api/v1/telemetry', [\App\Http\Controllers\Api\TelemetryController::class, 'index']);
+Route::get('/api/v1/species', [\App\Http\Controllers\Api\SpeciesCensusController::class, 'index']);
+Route::get('/api/v1/species/search', [\App\Http\Controllers\Api\SpeciesCensusController::class, 'search']);
+Route::get('/api/v1/export-pdf', [\App\Http\Controllers\Api\SessionReportController::class, 'exportPdf']);
+Route::post('/api/v1/ollama/dialogue', [\App\Http\Controllers\Api\OllamaDialogueController::class, 'generate']);
+
 
 
 // ==========================================
