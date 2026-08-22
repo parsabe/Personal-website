@@ -99,6 +99,11 @@ class PageController extends Controller
         return view('pages.projects.funroot');
     }
 
+    public function aquapulse()
+    {
+        return view('pages.projects.aquapulse');
+    }
+
 
 
 
@@ -151,6 +156,11 @@ class PageController extends Controller
     public function qca()
     {
         return view('pages.publications.qca');
+    }
+
+    public function aquapulse_paper()
+    {
+        return view('pages.publications.aquapulse');
     }
 
 

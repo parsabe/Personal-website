@@ -67,6 +67,32 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
+                        <!-- AquaPulse -->
+                        <div
+                            class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-cyan-500/30 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
+                            <div
+                                class="h-48 w-full bg-gradient-to-tr from-cyan-950 via-slate-900 to-blue-900 rounded-xl mb-4 p-4 flex flex-col justify-between border border-cyan-500/30 relative">
+                                <div class="flex justify-between items-center z-10">
+                                    <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/40">📄 COMPUTER VISION & TELEMETRY</span>
+                                </div>
+                                <div class="z-10">
+                                    <div class="text-xl font-black text-white font-mono tracking-wider">
+                                        AQUAPULSE
+                                    </div>
+                                    <p class="text-[11px] text-cyan-200/80 font-mono">ResearchGate Publication</p>
+                                </div>
+                            </div>
+                            <h2 class="text-xl font-bold mb-1 text-gray-800 dark:text-gray-100">AquaPulse: Robust Computer Vision and Uncertainty Estimation for Aquatic Ecosystems</h2>
+                            <p class="text-xs font-semibold text-cyan-600 dark:text-cyan-400 mb-3">Aug 2026</p>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 flex-grow line-clamp-4">
+                                AquaPulse bridges multi-model YOLO neural vision, BotSORT multi-object tracking, Ensemble Kalman Filtering stochastic data assimilation, and local generative AI into an end-to-end ecosystem telemetry platform.
+                            </p>
+                            <a href="{{ route('publications.aquapulse') }}"
+                                class="inline-block text-center w-full py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl text-sm font-bold shadow-md transition-all">
+                                Show Publication
+                            </a>
+                        </div>
+
                         <!-- Vectra -->
                         <div
                             class="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
